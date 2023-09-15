@@ -66,7 +66,7 @@ class encoder_after_vgg(nn.Module):
 
 
 class decoder_conv(nn.Module):
-    def __init__(self, if_deconv):
+    def __init__(self, if_deconv, k_classes=4):
         super(decoder_conv, self).__init__()
 
         self.up1 = upsample(if_deconv=if_deconv, channels=128)
@@ -79,7 +79,7 @@ class decoder_conv(nn.Module):
         self.conv4 = double_conv(256, 256)
         self.up5 = upsample(if_deconv=if_deconv, channels=256)
         self.conv5 = double_conv(256, 256)
-        self.conv_out = nn.Conv2d(256, 4, 3, padding=1)
+        self.conv_out = nn.Conv2d(256, k_classes, 3, padding=1)
 
         self._initialize_weights()
 
@@ -115,13 +115,13 @@ class decoder_conv(nn.Module):
 
 class vae_mapping(nn.Module):
 
-    def __init__(self):
+    def __init__(self, k_classes=4):
         super(vae_mapping, self).__init__()
 
         self.vgg16 = models.vgg16_bn(weights=True)
         self.vgg16_feature = nn.Sequential(*list(self.vgg16.features.children())[:])
         self.encoder_afterv_vgg = encoder_after_vgg()
-        self.decoder = decoder_conv(if_deconv=True)
+        self.decoder = decoder_conv(if_deconv=True, k_classes=4)
 
     def reparameterize(self, is_training, mu, logvar):
         if is_training:
