@@ -121,7 +121,7 @@ class vae_mapping(nn.Module):
         self.vgg16 = models.vgg16_bn(weights=True)
         self.vgg16_feature = nn.Sequential(*list(self.vgg16.features.children())[:])
         self.encoder_afterv_vgg = encoder_after_vgg()
-        self.decoder = decoder_conv(if_deconv=True, k_classes=4)
+        self.decoder = decoder_conv(if_deconv=True, k_classes=k_classes)
 
     def reparameterize(self, is_training, mu, logvar):
         if is_training:
@@ -143,8 +143,8 @@ class vae_mapping(nn.Module):
 
 
 def loss_function_map(pred_map, map, mu, logvar):
-    CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=
-        torch.Tensor([0.6225708,  2.53963754, 15.46416047, 0.52885405]).to('cuda:0'), ignore_index=4)
+    CE = F.cross_entropy(pred_map, map.view(-1, 64, 64),)
+                     #     weight= torch.Tensor([0.6225708,  2.53963754, 15.46416047, 0.52885405]).to('cuda:0'), ignore_index=4)
     KLD = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
 
     return 0.9*CE + 0.1*KLD, CE, KLD
