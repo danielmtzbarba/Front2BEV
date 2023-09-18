@@ -1,4 +1,7 @@
-from dan.tools import dataset2CSV
+import sys
+sys.path.append("/home/aircv1/Data/Luis/aisyslab/Daniel/Projects/")
+
+from dan.tools.dataset2CSV import dataset2CSV
 from dan.torch_utils import get_torch_device
 
 from VAE.vae_train import train_model
@@ -11,8 +14,9 @@ device = get_torch_device()
 n_epochs = 5
 batch_size = 1
 n_workers = 1
+n_classes = 2
 
-ROOT_PATH = "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2023-CarlaBEV/TOWN01"
+ROOT_PATH = "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2023-CarlaBEV/TOWN01/"
 x_dir = ROOT_PATH + "rgb"
 y_dir = ROOT_PATH + "bev"
 csv_output_path = "dataset/Front2BEV/bev-vae-test.csv"
@@ -30,7 +34,7 @@ def main(create_csv=False):
         train_csv_path = dataset2CSV(csv_output_path, x_dir, y_dir, ".jpg", ".png")
         val_csv_path = dataset2CSV(csv_output_path, x_dir, y_dir, ".jpg", ".png")
 
-    train_model(device, batch_size, n_workers, n_epochs, train_csv_path, val_csv_path, ckpt_path, restore_ckpt=False)
+    train_model(device, batch_size, n_workers, n_epochs, n_classes, train_csv_path, val_csv_path, ckpt_path, restore_ckpt=False)
 
 if __name__ == '__main__':
     main()

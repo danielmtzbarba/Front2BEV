@@ -23,7 +23,7 @@ torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
 
 def train_model(device, batch_size, n_workers, n_epochs,
-                train_csv_path, val_csv_path,
+                n_classes, train_csv_path, val_csv_path,
                 ckpt_path = None, restore_ckpt=False):
     
     # Define dataloaders
@@ -35,7 +35,7 @@ def train_model(device, batch_size, n_workers, n_epochs,
     
     dataloaders = {'train': train_loader, 'val': val_loader}
 
-    model = vae_mapping()
+    model = vae_mapping(k_classes=n_classes)
     model = model.to(device)
 
     optimizer = optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.0001)
