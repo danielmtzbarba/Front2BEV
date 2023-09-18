@@ -24,7 +24,7 @@ def metric_eval(current_nn, current_gt):
     current_gt = current_gt.cpu().numpy().squeeze()
     current_nn = np.reshape(np.argmax(current_nn.cpu().numpy().transpose((0, 2, 3, 1)), axis=3), [64, 64])
 
-    FOVmsk = imageio.imread('misc/mask_64.png')
+    FOVmsk = imageio.imread('VAE/misc/mask_64.png')
     FOVmsk = FOVmsk[:, :, 0]
     valid_FOV_index = FOVmsk.reshape(-1) != 0
 

@@ -22,7 +22,7 @@ y_dir = ROOT_PATH + "map"
 csv_output_path = "dataset/Front2BEV/bev-vae-test.csv"
 
 restore_ckpt = False
-ckpt_path = '__checkpoints/vae_checkpoint_2.pth.tar'
+ckpt_path = 'VAE/__checkpoints/vae_front2bev_checkpoint.pth.tar'
 
 def main(create_csv=False):
     # Use train set for choosing hyper-parameters, and use train+val for final traning and testing
