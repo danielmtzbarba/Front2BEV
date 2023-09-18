@@ -1,6 +1,7 @@
 import os
 import random
 import numpy as np
+from tqdm import tqdm
 
 import torch
 import torch.optim as optim
@@ -70,7 +71,7 @@ def train_model(device, batch_size, n_workers, n_epochs,
             iou = 0.0
 
             # Iterate over data.
-            for i, temp_batch in enumerate(dataloaders[phase]):
+            for temp_batch in tqdm(dataloaders[phase]):
                 temp_rgb = temp_batch['rgb'].float().to(device)
                 temp_map = temp_batch['map'].long().to(device)
 
