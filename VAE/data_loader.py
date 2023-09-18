@@ -12,37 +12,37 @@ from torchvision import transforms, utils
 class OccMapDataset(Dataset):
 
     def __init__(self, csv_file, transform=None):
-        self.examples = pd.read_csv(csv_file, header=None)
+        self.samples = pd.read_csv(csv_file, header=None)
         self.transform = transform
 
     def __len__(self):
-        return len(self.examples)
+        return len(self.samples)
 
     def __getitem__(self, item):
-        rgb = io.imread(self.examples.iloc[item, 0])
-      #  map = io.imread(self.examples.iloc[item, 1])
+        rgb = io.imread(self.samples.iloc[item, 0])
+        map = io.imread(self.samples.iloc[item, 1])
 
-        example = {'rgb': rgb,
-              #     'map': map,
+        sample = {'rgb': rgb,
+                   'map': map,
                   }
         if self.transform:
-            example = self.transform(example)
+            sample = self.transform(sample)
 
-        return example
+        return sample
 
 
 class ToTensor(object):
 
     def __call__(self, sample):
         rgb = sample['rgb']
-#        map = np.expand_dims(sample['map'], 0)
+        map = np.expand_dims(sample['map'], 0)
 
         rgb = rgb.transpose((2, 0, 1))
         rgb = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])(torch.from_numpy(rgb))
- #       map = torch.from_numpy(map)
+        map = torch.from_numpy(map)
         return {'rgb': rgb,
-               # 'map': map
+                'map': map
                 }
 
 
@@ -53,12 +53,12 @@ class Rescale(object):
 
     def __call__(self, sample):
         rgb = sample['rgb']
-#        map = sample['map']
+        map = sample['map']
 
         rgb = transform.resize(rgb, self.output_size, mode='constant', preserve_range=False, anti_aliasing=False)
 
         return {'rgb': rgb,
-               # 'map': map
+                'map': map
                 }
 
 
@@ -70,7 +70,7 @@ class Img_distro(object):
 
     def __call__(self, sample):
         rgb = sample['rgb']
-      #  map = sample['map']
+        map = sample['map']
 
         tran_mat = transform.AffineTransform(translation=(0, self.pix_offset))
         shifted = transform.warp(rgb, tran_mat, preserve_range=True)
@@ -78,7 +78,7 @@ class Img_distro(object):
         rotated = transform.rotate(shifted, self.rot_deg)
 
         return {'rgb': rotated,
-                #'map': map
+                'map': map
                 }
 
 
@@ -87,11 +87,11 @@ class Normalize(object):
 
     def __call__(self, sample):
         rgb = sample['rgb']
-   #     map = sample['map']
+        map = sample['map']
         rgb = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])(rgb)
         return {'rgb': rgb,
-                #'map': map
+                'map': map
                 }
 
 

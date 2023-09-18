@@ -1,19 +1,18 @@
+import os
+import random
+import numpy as np
+from tqdm import tqdm
+
 import torch
-import torch.nn as nn
 import torch.optim as optim
 from torch.optim import lr_scheduler
-import numpy as np
-import torchvision
-from torchvision import datasets, models, transforms
-import matplotlib.pyplot as plt
-import time
-import os
-import copy
-import random
-from tensorboardX import SummaryWriter
-from data_loader import *
-from vae_nets import *
-from util import metric_eval
+from torchvision import transforms
+
+from VAE.data_loader import *
+from VAE.vae_nets import *
+from VAE.util import metric_eval
+
+from dan.torch_utils import get_torch_device, load_model
 
 seed = 8964
 torch.backends.cudnn.benchmark = True
@@ -23,22 +22,17 @@ random.seed(seed)
 torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
 
-num_epochs = 5
-batch_size = 1
-restore = True
-checkpoint_path = '__checkpoints/vae_checkpoint.pth.tar'
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-writer = SummaryWriter()
-
-def main():
-    # Define dataloaders
-    val_set = OccMapDataset('dataset/Cityscapes/CS_val_64.csv', transform=transforms.Compose([Rescale((256, 512)), ToTensor()]))
-    val_loader = DataLoader(val_set, batch_size=1, shuffle=True, num_workers=1)
+def train_model(device, batch_size, n_workers, n_epochs,
+                train_csv_path, val_csv_path,
+                ckpt_path = None, restore_ckpt=False):
     
-    # Use train set for choosing hyper-parameters, and use train+val for final traning and testing
-    # train_set = OccMapDataset('dataset/Cityscapes/CS_train_64.csv', transform=transforms.Compose([Rescale((256, 512)), ToTensor()]))
-    train_set = OccMapDataset('dataset/Cityscapes/CS_trainplusval_64.csv', transform=transforms.Compose([Rescale((256, 512)), ToTensor()]))
-    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=1)
+    # Define dataloaders
+    train_set = OccMapDataset(train_csv_path, transform=transforms.Compose([Rescale((256, 512)), ToTensor()]))
+    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=n_workers)
+
+    val_set = OccMapDataset(val_csv_path, transform=transforms.Compose([Rescale((256, 512)), ToTensor()]))
+    val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=True, num_workers=n_workers)
+    
     dataloaders = {'train': train_loader, 'val': val_loader}
 
     model = vae_mapping()
@@ -47,9 +41,9 @@ def main():
     optimizer = optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.0001)
     scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.97)
 
-    if restore:
-        if os.path.isfile(checkpoint_path):
-            checkpoint = torch.load(checkpoint_path)
+    if restore_ckpt:
+        if os.path.isfile(ckpt_path):
+            checkpoint = torch.load(ckpt_path)
             epoch = checkpoint['epoch']
             model.load_state_dict(checkpoint['state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer'])
@@ -60,8 +54,8 @@ def main():
         epoch = 0
 
 
-    while epoch < num_epochs:
-        print('Epoch {}/{}'.format(epoch, num_epochs - 1))
+    while epoch < n_epochs:
+        print('Epoch {}/{}'.format(epoch, n_epochs - 1))
         print('-' * 10)
 
         # Each epoch has a training and validation phase
@@ -102,9 +96,10 @@ def main():
 
                 # tensorboardX logging
             if phase == 'train':
-                    writer.add_scalar(phase+'_loss', loss.item(), epoch * len(train_set) / batch_size + i)
-                    writer.add_scalar(phase+'_loss_CE', CE.item(), epoch * len(train_set) / batch_size + i)
-                    writer.add_scalar(phase+'_loss_KLD', KLD.item(), epoch * len(train_set) / batch_size + i)
+                 pass
+                 #   writer.add_scalar(phase+'_loss', loss.item(), epoch * len(train_set) / batch_size + i)
+                 #   writer.add_scalar(phase+'_loss_CE', CE.item(), epoch * len(train_set) / batch_size + i)
+                 #   writer.add_scalar(phase+'_loss_KLD', KLD.item(), epoch * len(train_set) / batch_size + i)
                 
 
                 # statistics
@@ -114,8 +109,8 @@ def main():
             else:
                 running_loss = running_loss / len(val_set)
                 print(phase, running_loss, acc / len(val_set), iou / len(val_set))
-                writer.add_scalar(phase+'_acc', acc.item()/len(val_set), (epoch + 1) * len(train_set) / batch_size)
-                writer.add_scalar(phase+'_iou', iou.item()/len(val_set), (epoch + 1) * len(train_set) / batch_size)
+            #    writer.add_scalar(phase+'_acc', acc.item()/len(val_set), (epoch + 1) * len(train_set) / batch_size)
+            #    writer.add_scalar(phase+'_iou', iou.item()/len(val_set), (epoch + 1) * len(train_set) / batch_size)
 
 
 
@@ -125,11 +120,25 @@ def main():
             'state_dict': model.state_dict(),
             'optimizer': optimizer.state_dict(),
             'scheduler': scheduler.state_dict()
-            }, checkpoint_path)
+            }, ckpt_path)
         print('model after %d epoch saved...' % (epoch+1))
         epoch += 1
 
-    writer.close()
+    # writer.close()
 
 if __name__ == '__main__':
-    main()
+    n_epochs = 5
+    batch_size = 1
+    n_workers = 1
+
+    # Use train set for choosing hyper-parameters, and use train+val for final traning and testing
+    train_csv_path = 'dataset/Cityscapes/CS_train_64.csv'
+    train_plus_val_csv_path = 'dataset/Cityscapes/CS_trainplusval_64.csv'
+    val_csv_path = 'dataset/Cityscapes/CS_val_64.csv'
+
+    restore_ckpt = False
+    ckpt_path = '__checkpoints/vae_checkpoint_2.pth.tar'
+
+    device = get_torch_device()
+
+    train_model(device, batch_size, n_workers, n_epochs, train_csv_path, val_csv_path, ckpt_path, restore_ckpt=False)
