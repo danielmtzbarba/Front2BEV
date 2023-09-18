@@ -88,7 +88,7 @@ def train_model(device, batch_size, n_workers, n_epochs,
                         loss.backward()
                         optimizer.step()
                     else:
-                        temp_acc, temp_iou = metric_eval(pred_map, temp_map)
+                        temp_acc, temp_iou = metric_eval(batch_size, pred_map, temp_map)
                         acc += temp_acc
                         iou += temp_iou
 
