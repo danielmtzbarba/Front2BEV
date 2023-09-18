@@ -19,10 +19,10 @@ def get_upsampling_weight(in_channels, out_channels, kernel_size):
     return torch.from_numpy(weight).float()
 
 
-def metric_eval(current_nn, current_gt):
+def metric_eval(batch_size, current_nn, current_gt):
 
     current_gt = current_gt.cpu().numpy().squeeze()
-    current_nn = np.reshape(np.argmax(current_nn.cpu().numpy().transpose((0, 2, 3, 1)), axis=3), [64, 64])
+    current_nn = np.reshape(np.argmax(current_nn.cpu().numpy().transpose((0, 2, 3, 1)), axis=3), [batch_size, 64, 64])
 
     FOVmsk = imageio.imread('VAE/misc/mask_64.png')
     FOVmsk = FOVmsk[:, :, 0]
