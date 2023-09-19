@@ -9,7 +9,7 @@ ROOT_PATH = "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2023-CarlaBEV/T
 x_dir = ROOT_PATH + "rgb"
 y_dir = ROOT_PATH + "map"
 
-csv_dataset_path = "dataset/Front2BEV/bev-vae.csv"
+csv_dataset_path = "__dataset/Front2BEV/bev-vae.csv"
 
 train_csv_path, val_csv_path, _ = get_csv_datasets(csv_dataset_path, x_dir, y_dir)
 

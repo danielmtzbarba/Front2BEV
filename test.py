@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore")
 device = get_torch_device()
 
 CKPT_PATH = 'VAE/__checkpoints/vae_front2bev_checkpoint.pth.tar'
-DATASET_CSV_PATH = 'dataset/Front2BEV/bev-vae-test.csv'
+DATASET_CSV_PATH = '__dataset/Front2BEV/bev-vae-test.csv'
 BATCH_SIZE = 2
 
 TEST_DIR = "test_concept"
