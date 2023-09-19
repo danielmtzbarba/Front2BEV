@@ -9,7 +9,7 @@ from VAE.vae_nets import vae_mapping
 from VAE.util import vis_with_FOVmsk
 
 from dan.utils import make_folder
-from dan.torch_utils import get_torch_device, load_model
+from dan.utils.torch import get_torch_device, load_model
 
 def test_model(device, ckpt_path, datset_csv_path, batch_size, output_path):
 
