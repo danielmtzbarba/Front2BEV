@@ -2,9 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
+
 __checkpoints/
 __results/
-__dataset/
+__dataset/*/*
 
 # C extensions
 *.so
