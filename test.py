@@ -1,5 +1,5 @@
 from dan.utils import make_folder
-from dan.torch_utils import get_torch_device
+from dan.utils.torch import get_torch_device
 
 from VAE.vae_test import test_model
 

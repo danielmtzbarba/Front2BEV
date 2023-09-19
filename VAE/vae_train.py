@@ -12,7 +12,7 @@ from VAE.data_loader import *
 from VAE.vae_nets import *
 from VAE.util import metric_eval
 
-from dan.torch_utils import get_torch_device, load_model
+from dan.utils.torch import get_torch_device
 
 seed = 8964
 torch.backends.cudnn.benchmark = True

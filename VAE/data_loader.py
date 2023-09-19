@@ -1,12 +1,9 @@
 import pandas as pd
-import os
 import torch
-import random
 from skimage import io, transform
 import numpy as np
-import matplotlib.pyplot as plt
 from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms, utils
+from torchvision import transforms
 
 
 class OccMapDataset(Dataset):
@@ -93,21 +90,3 @@ class Normalize(object):
         return {'rgb': rgb,
                 'map': map
                 }
-
-
-if __name__ == '__main__':
-    val_set = OccMapDataset('dataset/Cityscapes/CS_val_64.csv',
-                            transform=transforms.Compose([Rescale((256, 512)), Img_distro(0., 0), ToTensor()]))
-    print('number of val examples:', len(val_set))
-    print(val_set[0]['rgb'].shape)
-    print(val_set[0]['map'].shape)
-
-
-    val_loader = DataLoader(val_set, batch_size=1, shuffle=True, num_workers=2)
-    print('show 3 examples')
-    for i, temp_batch in enumerate(val_loader):
-        if i == 0:
-            print(temp_batch['rgb'])
-            print(temp_batch['map'])
-        break
-
