@@ -22,19 +22,9 @@ random.seed(seed)
 torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
 
-def train_model(device, batch_size, n_workers, n_epochs,
-                n_classes, train_csv_path, val_csv_path,
+def train_model(device, dataloaders, n_epochs, n_classes,
                 ckpt_path = None, restore_ckpt=False):
     
-    # Define dataloaders
-    train_set = OccMapDataset(train_csv_path, transform=transforms.Compose([Rescale((256, 512)), ToTensor()]))
-    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=n_workers)
-
-    val_set = OccMapDataset(val_csv_path, transform=transforms.Compose([Rescale((256, 512)), ToTensor()]))
-    val_loader = DataLoader(val_set, batch_size=batch_size, shuffle=True, num_workers=n_workers)
-    
-    dataloaders = {'train': train_loader, 'val': val_loader}
-
     model = vae_mapping(k_classes=n_classes)
     model = model.to(device)
 
@@ -88,7 +78,7 @@ def train_model(device, batch_size, n_workers, n_epochs,
                         loss.backward()
                         optimizer.step()
                     else:
-                        temp_acc, temp_iou = metric_eval(batch_size, pred_map, temp_map)
+                        temp_acc, temp_iou = metric_eval(pred_map, temp_map)
                         acc += temp_acc
                         iou += temp_iou
 
