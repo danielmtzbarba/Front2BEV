@@ -94,11 +94,11 @@ def train_model(device, dataloaders, n_epochs, n_classes,
 
                 # statistics
             if phase == 'train':
-                running_loss = running_loss / len(train_set)
+                running_loss = running_loss / len(dataloaders["train"])
                 print(phase, running_loss)
             else:
-                running_loss = running_loss / len(val_set)
-                print(phase, running_loss, acc / len(val_set), iou / len(val_set))
+                running_loss = running_loss / len(dataloaders["val"])
+                print(phase, running_loss, acc / len(dataloaders["val"]), iou / len(dataloaders["val"]))
             #    writer.add_scalar(phase+'_acc', acc.item()/len(val_set), (epoch + 1) * len(train_set) / batch_size)
             #    writer.add_scalar(phase+'_iou', iou.item()/len(val_set), (epoch + 1) * len(train_set) / batch_size)
 
