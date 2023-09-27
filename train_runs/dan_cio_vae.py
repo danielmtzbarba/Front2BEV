@@ -28,8 +28,8 @@ def get_test_dirs(dataset_path):
     
     x_dirs, y_dirs = [], []
     for test in tests:
-        x_dirs.append(test / "rgb")
-        y_dirs.append(test / "bev2")
+        x_dirs.append(str(test / "rgb"))
+        y_dirs.append(str(test / "bev2"))
 
     return x_dirs, y_dirs
 
