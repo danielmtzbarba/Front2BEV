@@ -6,13 +6,10 @@ from tqdm import tqdm
 import torch
 import torch.optim as optim
 from torch.optim import lr_scheduler
-from torchvision import transforms
 
 from VAE.data_loader import *
 from VAE.vae_nets import *
 from VAE.util import metric_eval
-
-from dan.utils.torch import get_torch_device
 
 seed = 8964
 torch.backends.cudnn.benchmark = True
@@ -102,8 +99,6 @@ def train_model(device, dataloaders, n_epochs, n_classes,
             #    writer.add_scalar(phase+'_acc', acc.item()/len(val_set), (epoch + 1) * len(train_set) / batch_size)
             #    writer.add_scalar(phase+'_iou', iou.item()/len(val_set), (epoch + 1) * len(train_set) / batch_size)
 
-
-
         # save model per epoch
         torch.save({
             'epoch': epoch + 1,
@@ -115,20 +110,3 @@ def train_model(device, dataloaders, n_epochs, n_classes,
         epoch += 1
 
     # writer.close()
-
-if __name__ == '__main__':
-    n_epochs = 5
-    batch_size = 1
-    n_workers = 1
-
-    # Use train set for choosing hyper-parameters, and use train+val for final traning and testing
-    train_csv_path = 'dataset/Cityscapes/CS_train_64.csv'
-    train_plus_val_csv_path = 'dataset/Cityscapes/CS_trainplusval_64.csv'
-    val_csv_path = 'dataset/Cityscapes/CS_val_64.csv'
-
-    restore_ckpt = False
-    ckpt_path = '__checkpoints/vae_checkpoint_2.pth.tar'
-
-    device = get_torch_device()
-
-    train_model(device, batch_size, n_workers, n_epochs, train_csv_path, val_csv_path, ckpt_path, restore_ckpt=False)
