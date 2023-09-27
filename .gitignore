@@ -5,7 +5,6 @@ __pycache__/
 
 __checkpoints/
 __results/*
-__dataset/*/*
 
 # C extensions
 *.so
