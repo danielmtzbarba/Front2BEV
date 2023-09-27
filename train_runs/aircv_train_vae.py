@@ -15,7 +15,7 @@ ckpt_path = 'VAE/__checkpoints/front2bev_260923.pth.tar'
 n_epochs = 10
 batch_size = 32
 n_workers = 8
-n_classes = 4
+n_classes = 6
 
 # Use train set for choosing hyper-parameters, and use train+val for final traning and testing
 # train_plus_val_csv_path = 'dataset/Cityscapes/CS_trainplusval_64.csv'
@@ -33,8 +33,8 @@ def get_test_dirs(dataset_path):
     
     x_dirs, y_dirs = [], []
     for test in tests:
-        x_dirs.append(str(test / "rgb"))
-        y_dirs.append(str(test / "bev2"))
+        x_dirs.append(test / "rgb")
+        y_dirs.append(test / "bev2")
 
     return x_dirs, y_dirs
 
