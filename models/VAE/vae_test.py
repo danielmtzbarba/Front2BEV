@@ -4,20 +4,20 @@ import torch
 import numpy as np
 from torchvision import transforms
 
-from VAE.data_loader import *
-from VAE.vae_nets import vae_mapping
-from VAE.util import vis_with_FOVmsk
+from models.VAE.data_loader import *
+from models.VAE.vae_nets import vae_mapping
+from models.VAE.util import vis_with_FOVmsk
 
 from dan.utils import make_folder
 from dan.utils.torch import get_torch_device, load_model
 
-def test_model(device, ckpt_path, datset_csv_path, batch_size, output_path):
+def test_model(device, n_classes, ckpt_path, datset_csv_path, batch_size, output_path):
 
     # Define dataloaders
     test_set = OccMapDataset(datset_csv_path, transform=transforms.Compose([Rescale((256, 512)), ToTensor()]))
     test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False, num_workers=0)
 
-    model = vae_mapping()
+    model = vae_mapping(k_classes=n_classes)
     model = load_model(model, ckpt_path)
     model = model.to(device)
 

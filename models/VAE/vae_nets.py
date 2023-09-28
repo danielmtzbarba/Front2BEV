@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.models as models
-from VAE.util import get_upsampling_weight
+from models.VAE.util import get_upsampling_weight
 
 
 class upsample(nn.Module):
