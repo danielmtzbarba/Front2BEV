@@ -12,14 +12,14 @@ from models.VAE.data_loader import ToTensor, Rescale
 restore_ckpt = False
 ckpt_path = '/home/aircv1/Data/Luis/aisyslab/Daniel/Checkpoints/front2bev_3k.pth.tar'
 
-n_epochs = 10
-batch_size = 64
-n_workers = 16
+n_epochs = 5
+batch_size = 16
+n_workers = 8
 n_classes = 3
 
 # Use train set for choosing hyper-parameters, and use train+val for final traning and testing
 # train_plus_val_csv_path = 'dataset/Cityscapes/CS_trainplusval_64.csv'
-ROOT_PATH = "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets"
+ROOT_PATH = "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/"
 
 train_csv_path = "__datasets/Dan-2023-Front2bev/front2bev-train.csv"
 val_csv_path = "__datasets/Dan-2023-Front2bev/front2bev-val.csv"

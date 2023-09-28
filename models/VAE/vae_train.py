@@ -79,7 +79,7 @@ def train_model(device, dataloaders, n_epochs, n_classes,
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
                     pred_map, mu, logvar = model(temp_rgb, phase == 'train')
-                    loss, CE, KLD = loss_function_map(pred_map, temp_map, mu, logvar)
+                    loss, CE, KLD = loss_function_map(pred_map, temp_map, mu, logvar,n_classes)
                     # backward + optimize only if in training phase
                     if phase == 'train':
                         loss.backward()
