@@ -5,7 +5,7 @@ import cv2
 from time import sleep
 
 from utils.front2bev import Front2BEV
-from utils.vis_map import vis_bev_img
+from utils.bev import vis_bev_img
 from models.VAE.vae_nets import vae_mapping
 
 from dan.utils.data import get_dataset_from_path
