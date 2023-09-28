@@ -10,9 +10,9 @@ restore_ckpt = False
 ckpt_path = '__ckpts/Dan-2023-Front2BEV/front2bev_3k.pth.tar'
 
 n_epochs = 1
-batch_size = 4
-n_workers = 2
-n_classes = 4
+batch_size = 1
+n_workers = 1
+n_classes = 3
 
 # Use train set for choosing hyper-parameters, and use train+val for final traning and testing
 # train_plus_val_csv_path = 'dataset/Cityscapes/CS_trainplusval_64.csv'

@@ -37,18 +37,3 @@ def test_model(device, n_classes, ckpt_path, datset_csv_path, batch_size, output
             io.imsave(output_path / f'{i}_pred.png', output_pred)
             io.imsave(output_path / "vis" / f'{i}_pred_vis.png', vis_with_FOVmsk(output_pred))
     
-    
-if __name__ == '__main__':
-    #
-    device = get_torch_device()
-
-    CKPT_PATH = 'VAE/__checkpoints/vae_checkpoint.pth.tar'
-    DATASET_CSV_PATH = 'dataset/Cityscapes/test_vae.csv'
-    BATCH_SIZE = 1
-
-    TEST_DIR = "TEST"
-    OUTPUT_PATH = make_folder("__results", TEST_DIR)
-    make_folder(OUTPUT_PATH / "vis")
-
-    test_model(device, CKPT_PATH, DATASET_CSV_PATH, BATCH_SIZE, OUTPUT_PATH)
-    #

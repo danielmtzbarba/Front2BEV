@@ -9,7 +9,7 @@ from torch.optim import lr_scheduler
 
 from models.VAE.data_loader import *
 from models.VAE.vae_nets import *
-from models.VAE.util import metric_eval
+from utils.eval import metric_eval
 
 seed = 8964
 torch.backends.cudnn.benchmark = True
@@ -18,6 +18,16 @@ np.random.seed(seed)
 random.seed(seed)
 torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
+
+
+# weights for LU-2019-Cityscapes VAE
+# class_weights = torch.Tensor([0.6225708,  2.53963754, 15.46416047, 0.52885405]).to(device)
+# ignore index 4
+
+def loss_function_map(pred_map, map, mu, logvar, n_classes):
+    CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=None, ignore_index=n_classes)
+    KLD = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
+    return 0.9*CE + 0.1*KLD, CE, KLD
 
 def train_model(device, dataloaders, n_epochs, n_classes,
                 ckpt_path = None, restore_ckpt=False):

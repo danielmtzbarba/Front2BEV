@@ -18,13 +18,3 @@ def replace_abs_path(csv_path, old_path, new_path):
 
     new_df.to_csv(csv_path, header=False, index=False)
     return new_df
-
-def setup_mask():
-    mask64 = cv2.imread(str(Path("utils") / "_mask64.png"), 0)
-    mask = np.zeros_like(mask64)
-    fov = mask64 > 128
-    mask[fov] = 1
-    out_of_fov = mask == 0
-    return mask, fov, out_of_fov
-
-mask64, fov, out_of_fov = setup_mask()
