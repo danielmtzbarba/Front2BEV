@@ -1,14 +1,4 @@
-import numpy as np
 import cv2
-
-color_list = np.array([
-    [0],
-    [255],
-    [100],
-    [200],  
-    [128],
-    [75]
-    ], dtype=np.uint8)
 
 DIM_BEV_OUT = (64, 64)
 
@@ -17,6 +7,9 @@ bev_color2class = {
     50: 0, # Vehicle
     90:  1, # Free space
     190: 1, # Road Lines
+    78: 1, # Cable
+    153: 1, # Post
+    178: 1, #TrafficLight
     120: 2, # Banqueta prro
 }
 
@@ -25,7 +18,6 @@ bev_class2color = {
     1:  255, # Free space
     2: 128, # Road Lines
 }
-
 
 def mask_img(img, mask):
     return cv2.bitwise_and(img, img, mask=mask)
@@ -36,20 +28,22 @@ def resize_img(img):
 def remap_seg(bev_img, bev_map):
     for val, klass in bev_map.items():
         bev_img[bev_img == val] = klass
-    bev_img[bev_img > 10] = 0
+    bev_img[bev_img > 10] = 1
     return bev_img
 
 def postprocess(img, bev_map, mask):
     masked = mask_img(img, mask)
     resized = resize_img(masked)
     segmented = remap_seg(resized, bev_map)
+    segmented[30:33,32] = 1
     return segmented
 
 def vis_bev_img(bev_im, bev_map, mask):
-    masked = bev_im.copy()
+    bev_im = bev_im.copy()
+    bev_im[mask] = 10
+    masked = bev_im
     for klass, color in bev_map.items():
         masked[bev_im == klass] = color
-    masked = mask_img(masked, mask)
+    bev_im[mask] = 0
 
-  #  bev_vis = masked[OUT_OF_FOV] = 0
     return cv2.resize(masked, (512,512), interpolation=cv2.INTER_AREA)

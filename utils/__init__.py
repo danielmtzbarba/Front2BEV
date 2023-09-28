@@ -4,7 +4,6 @@ import pandas as pd
 import cv2
 import os
 
-
 def get_test_dirs(dataset_path):
     maps = [ Path(f.path) for f in os.scandir(dataset_path) if f.is_dir() ]
     tests = []
@@ -19,14 +18,14 @@ def replace_abs_path(csv_path, old_path, new_path):
     return new_df
 
 def setup_mask():
-    mask = cv2.imread(str(Path("utils") / "mask64.png"), 0)
-    mask64 = np.zeros_like(mask)
+    mask64 = cv2.imread(str(Path("utils") / "_mask64.png"), 0)
+    mask = np.zeros_like(mask64)
 
     fov = mask64 > 128
-    mask64[fov] = 1
+    mask[fov] = 1
 
-    out_of_fov = mask64 == 0
+    out_of_fov = mask == 0
 
-    return mask64, fov, out_of_fov
+    return mask, fov, out_of_fov
 
 mask64, fov, out_of_fov = setup_mask()
