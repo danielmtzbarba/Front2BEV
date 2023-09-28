@@ -7,9 +7,9 @@ import torch
 import torch.optim as optim
 from torch.optim import lr_scheduler
 
-from VAE.data_loader import *
-from VAE.vae_nets import *
-from VAE.util import metric_eval
+from models.VAE.data_loader import *
+from models.VAE.vae_nets import *
+from models.VAE.util import metric_eval
 
 seed = 8964
 torch.backends.cudnn.benchmark = True
