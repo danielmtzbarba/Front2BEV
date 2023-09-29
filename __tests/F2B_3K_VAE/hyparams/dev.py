@@ -3,12 +3,13 @@
 
 TEST_NAME = "F2B_3K_VAE"
 
-train_args = {
-    
+args = {
+    'test_name': TEST_NAME,
+    'res_path': f'__tests/{TEST_NAME}/results/',
     'seed': 8964,
 
     'restore_ckpt': False,
-    'ckpt_path': '__ckpts/Dan-2023-Front2BEV/front2bev_3k.pth.tar',
+    'ckpt_path': f'D:/Checkpoints/{TEST_NAME}/{TEST_NAME}.pth.tar',
 
     'n_epochs':  1,
     'batch_size': 1,
@@ -16,13 +17,14 @@ train_args = {
 
     'n_classes': 3,
     'class_weights': None,
-    'ignore_index': False,
+    'ignore_class': False,
 
     # Dataset absolute path
-    'dataset_root_path': "E:/Datasets/",
+    'dataset_root_path': "D:/Datasets/",
     # Relative paths to csv datasets
     'train_csv_path':  "__datasets/Dan-2023-Front2bev/front2bev-train.csv",
     'val_csv_path': "__datasets/Dan-2023-Front2bev/front2bev-val.csv",
+    'test_csv_path': "__datasets/Dan-2023-Front2bev/front2bev-test.csv",
     'log_path': f"__tests/{TEST_NAME}/train_logs/{TEST_NAME}.pkl"
 }
 
@@ -30,6 +32,6 @@ from dan.utils import dict2obj
 from __tests.F2B_3K_VAE.hyparams import get_dataloaders
 from dan.utils.torch import get_torch_device
 
-train_args = dict2obj(train_args)
-train_args.data_loaders = get_dataloaders(train_args)
-train_args.device = get_torch_device()
+args = dict2obj(args)
+args.dataloaders = get_dataloaders(args)
+args.device = get_torch_device()

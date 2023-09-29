@@ -7,8 +7,8 @@ from torch.optim import lr_scheduler
 
 from models.VAE.data_loader import *
 from models.VAE.vae_nets import *
-from utils.eval import metric_eval
 
+from utils.eval import metric_eval
 from dan.utils import save_pkl_file
 
 def loss_function_map(pred_map, map, mu, logvar, args):
@@ -113,13 +113,13 @@ def train_model(args):
             if phase == 'train':
                 running_loss = running_loss / len(args.dataloaders["train"])
                 log_epoch['mean_train_loss'].append(running_loss)
-                print("epoch_train_loss: ", running_loss)
+                print("\nEpoch:", epoch, "Train loss (mean):", running_loss)
                 print('-' * 50)
 
             else:
                 running_loss = running_loss / len(args.dataloaders["val"])
                 log_epoch['mean_val_loss'].append(running_loss)
-                print("Epoch val loss: ", running_loss)
+                print("\nEpoch:", epoch, "Val loss (mean):", running_loss)
                 print('-' * 50)
 
         # ------------------------------
@@ -130,7 +130,9 @@ def train_model(args):
         print("Val acc: ", acc / len(args.dataloaders["val"]))
 
         log_epoch['val_iou'].append(iou / len(args.dataloaders["val"])) 
-        print("val_iou: ", iou / len(args.dataloaders["val"]))
+        print("Val mIoU: ", iou / len(args.dataloaders["val"]))
+        print('-' * 50)
+
 
         torch.save({
             'epoch': epoch + 1,
@@ -139,17 +141,17 @@ def train_model(args):
             'scheduler': scheduler.state_dict()
             }, args.ckpt_path)
         
-        print('Model saved at epoch', (epoch+1))
+        print('\nModel saved at epoch', (epoch+1))
         print('-' * 50)
         epoch += 1
 
+        log_dict = {
+            'batches':log_batch,
+            'epochs': log_epoch
+        }    
+
+        save_pkl_file(log_dict, args.log_path)
+        
     # --------------------------
-    log_dict = {
-        'batches':log_batch,
-        'epochs': log_epoch
-    }    
-
-    save_pkl_file(log_dict, args.log_path)
-
     print('\nTraining ended')
     # --------------------------

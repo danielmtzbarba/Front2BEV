@@ -6,7 +6,7 @@ sys.path.append("/home/aircv1/Data/Luis/aisyslab/Daniel/Projects/")
 
 TEST_NAME = "F2B_3K_VAE"
 
-train_args = {
+args = {
     
     'seed': 8964,
 
@@ -19,13 +19,15 @@ train_args = {
 
     'n_classes': 3,
     'class_weights': None,
-    'ignore_index': True,
+    'ignore_class': True,
 
     # Dataset absolute path
     'dataset_root_path': "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/",
     # Relative paths to csv datasets
     'train_csv_path':  "__datasets/Dan-2023-Front2bev/front2bev-train.csv",
     'val_csv_path': "__datasets/Dan-2023-Front2bev/front2bev-val.csv",
+    'test_csv_path': "__datasets/Dan-2023-Front2bev/front2bev-test.csv",
+
     'log_path': f"__tests/{TEST_NAME}/train_logs/{TEST_NAME}.pkl"
 }
 
@@ -33,7 +35,6 @@ from dan.utils import dict2obj
 from __tests.F2B_3K_VAE.hyparams import get_dataloaders
 from dan.utils.torch import get_torch_device
 
-
-train_args = dict2obj(train_args)
-train_args.dataloaders = get_dataloaders(train_args)
-train_args.device = get_torch_device()
+args = dict2obj(args)
+args.dataloaders = get_dataloaders(args)
+args.device = get_torch_device()

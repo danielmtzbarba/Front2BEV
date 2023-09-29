@@ -1,39 +1,36 @@
-import io
-import torch
-
+from tqdm import tqdm
 import numpy as np
-from torchvision import transforms
+import torch
 
 from models.VAE.data_loader import *
 from models.VAE.vae_nets import vae_mapping
-from models.VAE.util import vis_with_FOVmsk
 
-from dan.utils import make_folder
-from dan.utils.torch import get_torch_device, load_model
+from dan.utils.torch import load_model
+from utils.eval import metric_eval
 
-def test_model(device, n_classes, ckpt_path, datset_csv_path, batch_size, output_path):
-
-    # Define dataloaders
-    test_set = OccMapDataset(datset_csv_path, transform=transforms.Compose([Rescale((256, 512)), ToTensor()]))
-    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False, num_workers=0)
-
-    model = vae_mapping(k_classes=n_classes)
-    model = load_model(model, ckpt_path)
-    model = model.to(device)
+def test_model(args):
+    model = vae_mapping(k_classes=args.n_classes)
+    model = load_model(model, args.ckpt_path)
+    model = model.to(args.device)
 
     # Set model to evaluate mode
     model.eval()  
 
+    acc = 0.0
+    iou = 0.0
+
     # Iterate over data.
-    for i, temp_batch in enumerate(test_loader):
-        print('Test Sample no. ', i)
-        temp_rgb = temp_batch['rgb'].float().to(device)
+    for temp_batch in tqdm(args.dataloaders['test']):
+        temp_rgb = temp_batch['rgb'].float().to(args.device)
+        temp_map = temp_batch['map'].long().to(args.device)
 
         # forward
         with torch.set_grad_enabled(False):
-            pred_map, mu, logvar = model(temp_rgb, False)
-
-            output_pred = np.reshape(np.argmax(pred_map.cpu().numpy().transpose((0, 2, 3, 1)), axis=3), [64, 64]).astype(np.uint8)
-            io.imsave(output_path / f'{i}_pred.png', output_pred)
-            io.imsave(output_path / "vis" / f'{i}_pred_vis.png', vis_with_FOVmsk(output_pred))
+            pred_map, _, _ = model(temp_rgb, False)
+            temp_acc, temp_iou = metric_eval(pred_map, temp_map, args.n_classes)
+            acc += temp_acc
+            iou += temp_iou
+    
+    print("\nTest acc: ", acc / len(args.dataloaders["test"]))
+    print("\nTest mIoU: ", iou / len(args.dataloaders["test"]))
     
