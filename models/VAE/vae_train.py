@@ -12,10 +12,8 @@ from utils.eval import metric_eval
 from dan.utils import save_pkl_file
 
 def loss_function_map(pred_map, map, mu, logvar, args):
-    if args.class_weights:
-        args.class_weights = torch.Tensor(args.class_weights).to(args.device)
     if args.ignore_class:
-        CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=args.class_weights, ignore_index=args.n_classes)
+        CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=None, ignore_index=args.n_classes)
     else:
         CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=args.class_weights)
 
