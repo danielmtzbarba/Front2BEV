@@ -13,8 +13,8 @@ from dan.utils.data import get_filenames_list
 from utils import get_test_dirs
 from utils.bev import postprocess, bev_color2class
 
-#DATASET_PATH = Path("E:/Datasets/Dan-2023-Front2BEV/")
-DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Dan-2023-Front2BEV/")
+DATASET_PATH = Path("E:/Datasets/Dan-2023-Front2BEV/")
+#DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Dan-2023-Front2BEV/")
 
 N_CLASSES = 3
 def main():
