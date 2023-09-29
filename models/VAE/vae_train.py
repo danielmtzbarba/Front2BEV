@@ -58,7 +58,7 @@ def train_model(args):
 
     while epoch < args.n_epochs:
 
-        log_dict['epoch'].append(epoch)
+        log_epoch['epoch'].append(epoch)
 
         print('\nEpoch {}/{}'.format(epoch, args.n_epochs - 1))
         print('-' * 50)
