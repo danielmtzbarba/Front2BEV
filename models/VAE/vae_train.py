@@ -12,8 +12,10 @@ from utils.eval import metric_eval
 from dan.utils import save_pkl_file
 
 def loss_function_map(pred_map, map, mu, logvar, args):
+    if args.class_weights:
+        args.class_weights = torch.Tensor(args.class_weights).to(args.device)
     if args.ignore_class:
-        CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=None, ignore_index=args.n_classes)
+        CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=args.class_weights, ignore_index=args.n_classes)
     else:
         CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=args.class_weights)
 
@@ -84,7 +86,7 @@ def train_model(args):
                 # forward: Track history only if training
                 with torch.set_grad_enabled(phase == 'train'):
                     pred_map, mu, logvar = model(temp_rgb, phase == 'train')
-                    loss, CE, KLD = loss_function_map(pred_map, temp_map, mu, logvar, args.n_classes)
+                    loss, CE, KLD = loss_function_map(pred_map, temp_map, mu, logvar, args)
                     # backward + optimize only if in training phase
                     if phase == 'train':
                         loss.backward()
