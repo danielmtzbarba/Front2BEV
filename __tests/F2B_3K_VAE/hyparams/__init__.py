@@ -8,7 +8,7 @@ from dan.utils.torch.datasets import Front2BEVDataset
 from torch.utils.data import DataLoader
 
 def get_dataloaders(args):
-    root_path = args.root_path
+    root_path = args.dataset_root_path
     train_csv_path = args.train_csv_path
     val_csv_path = args.val_csv_path
 

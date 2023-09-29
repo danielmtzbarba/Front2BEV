@@ -1,6 +1,9 @@
 import warnings
 warnings.filterwarnings("ignore")
 
+import sys
+sys.path.append("/home/aircv1/Data/Luis/aisyslab/Daniel/Projects/")
+
 from __tests.F2B_3K_VAE.hyparams.aircv import train_args
 #from train_runs.Front2BEV.VAE.aircv import dev_args
 
