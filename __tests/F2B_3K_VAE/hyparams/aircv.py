@@ -19,7 +19,7 @@ train_args = {
 
     'n_classes': 3,
     'class_weights': None,
-    'ignore_index': False,
+    'ignore_index': True,
 
     # Dataset absolute path
     'dataset_root_path': "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/",
