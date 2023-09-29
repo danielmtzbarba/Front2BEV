@@ -35,5 +35,5 @@ from dan.utils.torch import get_torch_device
 
 
 train_args = dict2obj(train_args)
-train_args.data_loaders = get_dataloaders(train_args)
+train_args.dataloaders = get_dataloaders(train_args)
 train_args.device = get_torch_device()
