@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from dan.utils.torch.datasets import Front2BEVDataset
 from dan.utils.torch.transforms import Transforms
 
-from models.VAE.data_loader import ToTensor, Rescale
+from models.VAE.data_loader import Rescale, ToTensor
 
 restore_ckpt = False
 ckpt_path = '__ckpts/Dan-2023-Front2BEV/front2bev_3k.pth.tar'
@@ -16,7 +16,7 @@ n_classes = 3
 
 # Use train set for choosing hyper-parameters, and use train+val for final traning and testing
 # train_plus_val_csv_path = 'dataset/Cityscapes/CS_trainplusval_64.csv'
-ROOT_PATH = "D:/Datasets/"
+ROOT_PATH = "E:/Datasets/"
 
 train_csv_path = "__datasets/Dan-2023-Front2bev/front2bev-train.csv"
 val_csv_path = "__datasets/Dan-2023-Front2bev/front2bev-val.csv"

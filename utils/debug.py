@@ -4,7 +4,7 @@ from utils.bev import *
 
 from tqdm import tqdm
 
-ROOT_PATH = "D:/Datasets/Dan-2023-Front2BEV/"
+ROOT_PATH = "E:/Datasets/Dan-2023-Front2BEV/"
 
 MAP = 'Town10HD/'
 LAYERS = 'layers_all/'
@@ -18,9 +18,6 @@ n_classes = 3
 
 import matplotlib.pyplot as plt
 from time import sleep
-
-plt.imshow(cv2.imread('utils/1461.jpg', 0))
-plt.show()
 
 for img_path in tqdm(bev_img_paths):
     bev_sem_img = cv2.imread(img_path, 0)
