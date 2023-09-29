@@ -26,8 +26,8 @@ bev_class2color = {
 }
 
 def setup_mask():
-    mask_1024 = cv2.imread(str(Path("utils") / "_mask1024.png"), 0)
-    mask64 = cv2.imread(str(Path("utils") / "_mask64.png"), 0)
+    mask_1024 = cv2.imread(str(Path("__assets") / "_mask1024.png"), 0)
+    mask64 = cv2.imread(str(Path("__assets") / "_mask64.png"), 0)
     mask = np.zeros_like(mask64)
     fov = mask64 > 128
     mask[fov] = 1

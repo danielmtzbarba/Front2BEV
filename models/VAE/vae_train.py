@@ -1,6 +1,4 @@
 import os
-import random
-import numpy as np
 from tqdm import tqdm
 
 import torch
@@ -11,36 +9,44 @@ from models.VAE.data_loader import *
 from models.VAE.vae_nets import *
 from utils.eval import metric_eval
 
-seed = 8964
-torch.backends.cudnn.benchmark = True
-torch.backends.cudnn.deterministic = True
-np.random.seed(seed)
-random.seed(seed)
-torch.manual_seed(seed)
-torch.cuda.manual_seed(seed)
+from dan.utils import save_pkl_file
 
+def loss_function_map(pred_map, map, mu, logvar, args):
+    if args.class_weights:
+        args.class_weights = torch.Tensor(args.class_weights).to(args.device)
+    if args.ignore_class:
+        CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=args.class_weights, ignore_index=args.n_classes)
+    else:
+        CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=args.class_weights)
 
-# weights for LU-2019-Cityscapes VAE
-# class_weights = torch.Tensor([0.6225708,  2.53963754, 15.46416047, 0.52885405]).to(device)
-# ignore index 4
-
-def loss_function_map(pred_map, map, mu, logvar, n_classes):
-    CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=None, ignore_index=n_classes)
     KLD = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
     return 0.9*CE + 0.1*KLD, CE, KLD
 
-def train_model(device, dataloaders, n_epochs, n_classes,
-                ckpt_path = None, restore_ckpt=False):
-    
-    model = vae_mapping(k_classes=n_classes)
-    model = model.to(device)
+def train_model(args):
+
+    log_batch = {
+        'loss': [],
+        'CE_loss': [],
+        'KLD_loss': [],
+    }
+
+    log_epoch = {
+        'epoch': [],
+        'mean_train_loss': [],
+        'mean_val_loss': [],
+        'val_acc': [],
+        'val_iou': [],
+    }
+
+    model = vae_mapping(k_classes=args.n_classes)
+    model = model.to(args.device)
 
     optimizer = optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.0001)
     scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.97)
 
-    if restore_ckpt:
-        if os.path.isfile(ckpt_path):
-            checkpoint = torch.load(ckpt_path)
+    if args.restore_ckpt:
+        if os.path.isfile(args.ckpt_path):
+            checkpoint = torch.load(args.ckpt_path)
             epoch = checkpoint['epoch']
             model.load_state_dict(checkpoint['state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer'])
@@ -50,10 +56,12 @@ def train_model(device, dataloaders, n_epochs, n_classes,
     else:
         epoch = 0
 
+    while epoch < args.n_epochs:
 
-    while epoch < n_epochs:
-        print('Epoch {}/{}'.format(epoch, n_epochs - 1))
-        print('-' * 10)
+        log_dict['epoch'].append(epoch)
+
+        print('\nEpoch {}/{}'.format(epoch, args.n_epochs - 1))
+        print('-' * 50)
 
         # Each epoch has a training and validation phase
         for phase in ['train', 'val']:
@@ -68,55 +76,80 @@ def train_model(device, dataloaders, n_epochs, n_classes,
             iou = 0.0
 
             # Iterate over data.
-            for temp_batch in tqdm(dataloaders[phase]):
-                temp_rgb = temp_batch['rgb'].float().to(device)
-                temp_map = temp_batch['map'].long().to(device)
+            for temp_batch in tqdm(args.dataloaders[phase]):
+                temp_rgb = temp_batch['rgb'].float().to(args.device)
+                temp_map = temp_batch['map'].long().to(args.device)
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
 
-                # forward
-                # track history if only in train
+                # forward: Track history only if training
                 with torch.set_grad_enabled(phase == 'train'):
                     pred_map, mu, logvar = model(temp_rgb, phase == 'train')
-                    loss, CE, KLD = loss_function_map(pred_map, temp_map, mu, logvar,n_classes)
+                    loss, CE, KLD = loss_function_map(pred_map, temp_map, mu, logvar, args.n_classes)
                     # backward + optimize only if in training phase
                     if phase == 'train':
                         loss.backward()
                         optimizer.step()
                     else:
-                        temp_acc, temp_iou = metric_eval(pred_map, temp_map, n_classes)
+                        temp_acc, temp_iou = metric_eval(pred_map, temp_map, args.n_classes)
                         acc += temp_acc
                         iou += temp_iou
 
                 running_loss += loss.item()
 
-                # tensorboardX logging
-            if phase == 'train':
-                 pass
-                 #   writer.add_scalar(phase+'_loss', loss.item(), epoch * len(train_set) / batch_size + i)
-                 #   writer.add_scalar(phase+'_loss_CE', CE.item(), epoch * len(train_set) / batch_size + i)
-                 #   writer.add_scalar(phase+'_loss_KLD', KLD.item(), epoch * len(train_set) / batch_size + i)
-                
+                # ------------------------------
+                # Logging per batch
+                # ------------------------------
+                if phase == 'train':
+                    log_batch['loss'].append(loss.item())
+                    log_batch['CE_loss'].append(CE.item())
+                    log_batch['KLD_loss'].append(KLD.item())
+                # ------------------------------
 
-                # statistics
+            # ------------------------------
+            # Logging per epoch
+            # ------------------------------
             if phase == 'train':
-                running_loss = running_loss / len(dataloaders["train"])
-                print(phase, running_loss)
+                running_loss = running_loss / len(args.dataloaders["train"])
+                log_epoch['mean_train_loss'].append(running_loss)
+                print("epoch_train_loss: ", running_loss)
+                print('-' * 50)
+
             else:
-                running_loss = running_loss / len(dataloaders["val"])
-                print(phase, running_loss, acc / len(dataloaders["val"]), iou / len(dataloaders["val"]))
-            #    writer.add_scalar(phase+'_acc', acc.item()/len(val_set), (epoch + 1) * len(train_set) / batch_size)
-            #    writer.add_scalar(phase+'_iou', iou.item()/len(val_set), (epoch + 1) * len(train_set) / batch_size)
+                running_loss = running_loss / len(args.dataloaders["val"])
+                log_epoch['mean_val_loss'].append(running_loss)
+                print("Epoch val loss: ", running_loss)
+                print('-' * 50)
 
-        # save model per epoch
+        # ------------------------------
+        # Logging metrics and save model
+        # ------------------------------
+
+        log_epoch['val_acc'].append(acc / len(args.dataloaders["val"]))
+        print("Val acc: ", acc / len(args.dataloaders["val"]))
+
+        log_epoch['val_iou'].append(iou / len(args.dataloaders["val"])) 
+        print("val_iou: ", iou / len(args.dataloaders["val"]))
+
         torch.save({
             'epoch': epoch + 1,
             'state_dict': model.state_dict(),
             'optimizer': optimizer.state_dict(),
             'scheduler': scheduler.state_dict()
-            }, ckpt_path)
-        print('model after %d epoch saved...' % (epoch+1))
+            }, args.ckpt_path)
+        
+        print('Model saved at epoch', (epoch+1))
+        print('-' * 50)
         epoch += 1
 
-    # writer.close()
+    # --------------------------
+    log_dict = {
+        'batches':log_batch,
+        'epochs': log_epoch
+    }    
+
+    save_pkl_file(log_dict, args.log_path)
+
+    print('\nTraining ended')
+    # --------------------------
