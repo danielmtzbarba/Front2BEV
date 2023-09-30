@@ -26,7 +26,7 @@ MAP = 'Town01/'
 LAYERS = 'layers_none/'
 
 x_dir = ROOT_PATH + MAP + LAYERS + "rgb"
-y_dir = ROOT_PATH + MAP + LAYERS + "bev2"
+y_dir = ROOT_PATH + MAP + LAYERS + "bev/3k"
 
 _, bev_img_paths = get_dataset_from_path(x_dir, y_dir, '.jpg', '.png')
 

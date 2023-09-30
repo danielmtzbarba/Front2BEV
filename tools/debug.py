@@ -10,7 +10,7 @@ MAP = 'Town10HD/'
 LAYERS = 'layers_all/'
 
 x_dir = ROOT_PATH + MAP + LAYERS + "rgb"
-y_dir = ROOT_PATH + MAP + LAYERS + "bev"
+y_dir = ROOT_PATH + MAP + LAYERS + "bev/sem"
 
 _, bev_img_paths = get_dataset_from_path(x_dir, y_dir, '.jpg', '.jpg')
 

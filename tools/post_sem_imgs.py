@@ -22,9 +22,11 @@ def main():
     test_paths = get_test_dirs(DATASET_PATH)
     for test_path in tqdm(test_paths):
         bev_raw_path = test_path / "bev"
-        save_bev = make_folder(test_path, "bev2")
-        print("Ssaving in: ", save_bev)
+        save_bev = make_folder(bev_raw_path, f"{N_CLASSES}k")
+        print("Saving in: ", save_bev)
 
+        bev_raw_path = test_path / "bev" / "sem"
+        
         bev_imgs = get_filenames_list(bev_raw_path, ".jpg")
         for bev_img_name in tqdm(bev_imgs):
             bev_img = cv2.imread(str(bev_raw_path / bev_img_name), cv2.IMREAD_GRAYSCALE)

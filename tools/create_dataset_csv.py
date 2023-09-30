@@ -17,7 +17,7 @@ def get_test_dirs(dataset_path):
     x_dirs, y_dirs = [], []
     for test in tests:
         x_dirs.append(test / "rgb")
-        y_dirs.append(test / "bev2")
+        y_dirs.append(test / "bev" / "3k")
 
     return x_dirs, y_dirs
 

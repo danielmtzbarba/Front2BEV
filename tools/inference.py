@@ -15,8 +15,8 @@ from dan.utils.torch.transforms import Transforms, Normalize, Rescale
 
 # -------------------------------------------
 TEST_NAME = "F2B_3K_VAE"
-ckpt_path = f'D:/Checkpoints/{TEST_NAME}/{TEST_NAME}.pth.tar'
-dataset_root_path = "D:/Datasets/Dan-2023-Front2BEV/"
+ckpt_path = f'E:/Checkpoints/Dan-2023-Front2BEV/{TEST_NAME}.pth.tar'
+dataset_root_path = "E:/Datasets/Dan-2023-Front2BEV/"
 # -------------------------------------------
 
 # -------------------------------------------
@@ -24,7 +24,7 @@ MAP = 'Town10HD/'
 LAYERS = 'layers_all/'
 # -------------------------------------------
 x_dir = dataset_root_path + MAP + LAYERS + "rgb"
-y_dir = dataset_root_path + MAP + LAYERS + "bev2"
+y_dir = dataset_root_path + MAP + LAYERS + "bev/3k"
 # -------------------------------------------
 
 front_img_paths, _ = get_dataset_from_path(x_dir, y_dir, '.jpg', '.png')
