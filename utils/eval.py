@@ -1,31 +1,13 @@
-import numpy as np
+import Front2BEV.utils.segm_metrics as eval_segm
 
+from Front2BEV.utils.bev import mask64, get_FOV_pixels
 
-import models.VAE.py_img_seg_eval.eval_segm as eval_segm
+def metric_eval_bev(bev_nn, bev_gt, n_classes):
 
-from utils.bev import mask64
+    fov_pixels_nn = get_FOV_pixels(bev_nn, mask64, n_classes)
+    fov_pixels_gt = get_FOV_pixels(bev_gt, mask64, n_classes)
 
-
-def metric_eval(current_nn, current_gt, n_classes):
-
-    current_gt = current_gt.cpu().numpy().squeeze()
-    current_nn = np.reshape(np.argmax(current_nn.cpu().numpy().transpose((0, 2, 3, 1)), axis=3), [64, 64])
-
-    FOVmsk = mask64.copy()
-
-    valid_FOV_index = FOVmsk.reshape(-1) != 0
-
-    valid_index = current_gt.reshape(-1) != n_classes
-    valid_index = valid_index * valid_FOV_index
-
-    current_gt = current_gt.reshape(-1)[valid_index]
-    current_nn = current_nn.reshape(-1)[valid_index]
-
-    current_gt = current_gt.reshape(1, -1)
-    current_nn = current_nn.reshape(1, -1)
-
-    # eval_segm.pixel_accuracy(current_nn, current_gt)
-    acc = eval_segm.mean_accuracy(current_nn, current_gt)
-    iou = eval_segm.mean_IU(current_nn, current_gt)
+    acc = eval_segm.mean_accuracy(fov_pixels_nn, fov_pixels_gt)
+    iou = eval_segm.mean_IU(fov_pixels_nn, fov_pixels_gt)
     # eval_segm.frequency_weighted_IU(current_nn, current_gt)
     return acc, iou

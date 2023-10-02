@@ -8,7 +8,7 @@ from torch.optim import lr_scheduler
 from models.VAE.data_loader import *
 from models.VAE.vae_nets import *
 
-from utils.eval import metric_eval
+from utils.eval import metric_eval_bev
 from dan.utils import save_pkl_file
 
 def loss_function_map(pred_map, map, mu, logvar, args):
@@ -77,23 +77,31 @@ def train_model(args):
             iou = 0.0
 
             # Iterate over data.
-            for temp_batch in tqdm(args.dataloaders[phase]):
-                temp_rgb = temp_batch['rgb'].float().to(args.device)
-                temp_map = temp_batch['map'].long().to(args.device)
+            for batch in tqdm(args.dataloaders[phase]):
+                batch_rgb = batch['rgb'].float().to(args.device)
+                batch_map_gt = batch['map'].long().to(args.device)
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
 
                 # forward: Track history only if training
                 with torch.set_grad_enabled(phase == 'train'):
-                    pred_map, mu, logvar = model(temp_rgb, phase == 'train')
-                    loss, CE, KLD = loss_function_map(pred_map, temp_map, mu, logvar, args)
+                    pred_map, mu, logvar = model(batch_rgb, phase == 'train')
+
+                    loss, CE, KLD = loss_function_map(pred_map, batch_map_gt, mu, logvar, args)
                     # backward + optimize only if in training phase
                     if phase == 'train':
                         loss.backward()
                         optimizer.step()
+
                     else:
-                        temp_acc, temp_iou = metric_eval(pred_map, temp_map, args.n_classes)
+                        # Validation
+                        bev_gt = batch_map_gt.cpu().numpy().squeeze()
+                        bev_nn = np.reshape(
+                                    np.argmax(pred_map.cpu().numpy().transpose((0, 2, 3, 1)),
+                                                axis=3), [64, 64])
+                    
+                        temp_acc, temp_iou = metric_eval_bev(bev_nn, bev_gt, args.n_classes)
                         acc += temp_acc
                         iou += temp_iou
 
