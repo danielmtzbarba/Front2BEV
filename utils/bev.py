@@ -48,6 +48,7 @@ def resize_img(img):
                        interpolation = cv2.INTER_NEAREST)
 
 def remap_seg(bev_img, bev_mapping, n_classes):
+    bev_img = bev_img.copy()
     for val, klass in bev_mapping.items():
         bev_img[bev_img == val] = klass
     bev_img[bev_img > n_classes] = 0
@@ -69,8 +70,8 @@ def apply_morph(img, kernel_size = 2):
 def postprocess(img, bev_map, n_classes):
     segmented = remap_seg(img, bev_map, n_classes)
     resized = resize_img(segmented)
-    morphed = apply_morph(resized, 2)
-    return mask_img(morphed, mask64, n_classes)
+   # morphed = apply_morph(resized, 2)
+    return mask_img(resized, mask64, n_classes)
 
 def vis_bev_img(bev_im, bev_map):
     bev_im = bev_im.copy()

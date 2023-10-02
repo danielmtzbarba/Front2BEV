@@ -12,7 +12,7 @@ from utils.eval import metric_eval_bev
 from dan.utils import save_pkl_file
 
 def loss_function_map(pred_map, map, mu, logvar, args):
-    if args.class_weights:
+    if args.class_weights is not None:
         args.class_weights = torch.Tensor(args.class_weights).to(args.device)
 
     if args.ignore_class:

@@ -1,36 +1,35 @@
 import cv2
 from dan.utils.data import get_dataset_from_path
-from utils.bev import *
+from Front2BEV.utils.bev import *
 
 from tqdm import tqdm
 
-ROOT_PATH = "E:/Datasets/Dan-2023-Front2BEV/"
+ROOT_PATH = "/media/aisyslab/BICHO/Datasets/Dan-2023-Front2BEV/"
 
 MAP = 'Town10HD/'
-LAYERS = 'layers_all/'
+LAYERS = 'traffic/'
 
 x_dir = ROOT_PATH + MAP + LAYERS + "rgb"
 y_dir = ROOT_PATH + MAP + LAYERS + "bev/sem"
 
 _, bev_img_paths = get_dataset_from_path(x_dir, y_dir, '.jpg', '.jpg')
 
-n_classes = 3
+from Front2BEV.utils.bev_classes import bev_cls
+
+n_classes = 4
 
 import matplotlib.pyplot as plt
 from time import sleep
 
 for img_path in tqdm(bev_img_paths):
     bev_sem_img = cv2.imread(img_path, 0)
-    bev_gt = postprocess(bev_sem_img, bev_color2class, n_classes)
+    bev_gt = postprocess(bev_sem_img, bev_cls[n_classes], n_classes)
     vis = vis_bev_img(bev_gt, bev_class2color)
 
     cv2.imshow('vis', vis)
     cv2.imshow('bev', bev_sem_img)
     sleep(0.05)
 
-    plt.imshow(bev_gt)
-    plt.show()
-    break
     if (cv2.waitKey(1) & 0xFF) == ord('q'): # Hit `q` to exit
         break
 cv2.destroyAllWindows()
