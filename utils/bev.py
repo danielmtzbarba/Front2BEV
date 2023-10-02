@@ -34,7 +34,10 @@ def setup_mask():
     out_of_fov = mask == 0
     return mask_1024, mask, fov, out_of_fov
 
-mask_1024, mask64, fov, out_of_fov = setup_mask()
+mask_1024, mask64, fov_mask, out_of_fov_mask = setup_mask()
+
+
+
 
 def resize_img(img):
     return cv2.resize(img, DIM_BEV_OUT, interpolation = cv2.INTER_NEAREST)
@@ -45,20 +48,30 @@ def remap_seg(bev_img, bev_mapping, n_classes):
     bev_img[bev_img > n_classes] = 0
     return bev_img
 
+def mask_img(img, mask64, n_classes):
+    img = img.copy()
+    img[30:33,32] = 1
+    out_of_fov = (mask64 == 0)
+    img *=  mask64
+    img[out_of_fov] = n_classes
+    return img
+
+def apply_morph(img, kernel_size = 2):
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT,
+                                        (kernel_size,kernel_size))
+    return cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
+
 def postprocess(img, bev_map, n_classes):
-    resized = resize_img(img)
-    segmented = remap_seg(resized, bev_map, n_classes)
-    segmented[30:33,32] = 1
-    # apply morphology
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2,2))
-    morph = cv2.morphologyEx(segmented, cv2.MORPH_CLOSE, kernel)
-    return morph
+    segmented = remap_seg(img, bev_map, n_classes)
+    resized = resize_img(segmented)
+    morphed = apply_morph(resized, 2)
+    return mask_img(morphed, mask64, n_classes)
 
 def vis_bev_img(bev_im, bev_map):
     bev_im = bev_im.copy()
-    bev_im[out_of_fov] = 10
+    bev_im[out_of_fov_mask] = 10
     for klass, color in bev_map.items():
         bev_im[bev_im == klass] = color
-    bev_im[out_of_fov] = 0
+    bev_im[out_of_fov_mask] = 0
 
     return cv2.resize(bev_im, (512,512), interpolation=cv2.INTER_AREA)

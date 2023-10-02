@@ -10,10 +10,10 @@ import cv2
 from dan.utils import make_folder
 from dan.utils.data import get_filenames_list
 
-from utils import get_test_dirs
-from utils.bev import postprocess, bev_color2class
+from Front2BEV.utils import get_test_dirs
+from Front2BEV.utils.bev import postprocess, bev_color2class
 
-DATASET_PATH = Path("E:/Datasets/Dan-2023-Front2BEV/")
+DATASET_PATH = Path("/media/aisyslab/BICHO/Datasets/Dan-2023-Front2BEV/")
 #DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Dan-2023-Front2BEV/")
 
 N_CLASSES = 3
