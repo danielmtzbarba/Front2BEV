@@ -4,7 +4,7 @@ warnings.filterwarnings("ignore")
 import sys
 sys.path.append("/home/aircv1/Data/Luis/aisyslab/Daniel/Projects/")
 
-from __tests.F2B_3K_VAE.hyparams.dev import args
+from __tests.Front2BEV.hyparams.vae_3k import args
 
 from dan.utils.torch import set_deterministic
 
