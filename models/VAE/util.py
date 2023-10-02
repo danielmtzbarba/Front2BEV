@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-import VAE.py_img_seg_eval.eval_segm as eval_segm
+import models.VAE.py_img_seg_eval.eval_segm as eval_segm
 import imageio
 
 def get_upsampling_weight(in_channels, out_channels, kernel_size):
@@ -24,7 +24,7 @@ def metric_eval(current_nn, current_gt):
     current_gt = current_gt.cpu().numpy().squeeze()
     current_nn = np.reshape(np.argmax(current_nn.cpu().numpy().transpose((0, 2, 3, 1)), axis=3), [64, 64])
 
-    FOVmsk = imageio.imread('VAE/misc/mask_64.png')
+    FOVmsk = imageio.imread('models/VAE/misc/mask_64.png')
     FOVmsk = FOVmsk[:, :, 0]
     valid_FOV_index = FOVmsk.reshape(-1) != 0
 
@@ -45,7 +45,7 @@ def metric_eval(current_nn, current_gt):
 
 
 def vis_with_FOVmsk(curr_map):
-    mask = imageio.imread('VAE/misc/mask_64.png')
+    mask = imageio.imread('models/VAE/misc/mask_64.png')
     mask = mask[:, :, 0]
     valid_FOV_index = mask == 0
 

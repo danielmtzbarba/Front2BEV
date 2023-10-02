@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.models as models
-from VAE.util import get_upsampling_weight
+from models.VAE.util import get_upsampling_weight
 
 
 class upsample(nn.Module):
@@ -112,7 +112,6 @@ class decoder_conv(nn.Module):
 
         return x
 
-
 class vae_mapping(nn.Module):
 
     def __init__(self, k_classes=4):
@@ -140,11 +139,3 @@ class vae_mapping(nn.Module):
         pred_map = self.decoder(z)
 
         return pred_map, mu, logvar
-
-
-def loss_function_map(pred_map, map, mu, logvar):
-    CE = F.cross_entropy(pred_map, map.view(-1, 64, 64),)
-                     #     weight= torch.Tensor([0.6225708,  2.53963754, 15.46416047, 0.52885405]).to('cuda:0'), ignore_index=4)
-    KLD = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
-
-    return 0.9*CE + 0.1*KLD, CE, KLD

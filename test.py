@@ -1,25 +1,15 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 import sys
 sys.path.append("/home/aircv1/Data/Luis/aisyslab/Daniel/Projects/")
 
-from dan.utils import make_folder
-from dan.utils.torch import get_torch_device
+from __tests.F2B_3K_VAE.hyparams.dev import args
 
-from VAE.vae_test import test_model
+from dan.utils.torch import set_deterministic
 
-import warnings
-warnings.filterwarnings("ignore")
-#
-
-device = get_torch_device()
-
-CKPT_PATH = 'VAE/__checkpoints/vae_front2bev_checkpoint.pth.tar'
-DATASET_CSV_PATH = '__dataset/Front2BEV/bev-vae-test.csv'
-BATCH_SIZE = 2
-
-TEST_DIR = "test_concept"
-OUTPUT_PATH = make_folder("__results", TEST_DIR)
-make_folder(OUTPUT_PATH / "vis")
-#
+from models.VAE.vae_test import test_model
 
 if __name__ == '__main__':
-    test_model(device, CKPT_PATH, DATASET_CSV_PATH, BATCH_SIZE, OUTPUT_PATH)
+    set_deterministic(args.seed)
+    test_model(args)

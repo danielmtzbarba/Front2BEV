@@ -1,17 +1,33 @@
-from dan.tools.dataset2CSV import dataset2CSV
+from pathlib import Path
+import os
 
-"""
-ROOT_PATH = "C:\\Users\\Danie\\OneDrive\\dan\\RESEARCH\\DATASETS\\"
-Y_DIR = ROOT_PATH + "Lu-2019-Monocular2BEV\\Cityscapes\\val\\frankfurt\\"
-X_DIR = ROOT_PATH + "Cityscapes\\leftImg8bit\\val\\frankfurt\\"
-dataset2CSV("test.csv", X_DIR, Y_DIR, "_leftImg8bit.png", "_occ_map.png")
-"""
+from dan.tools.dataset2CSV import get_csv_datasets
+from utils import replace_abs_path
 
-X_DIR = "C:\\Users\\Danie\\OneDrive\\dan\\RESEARCH\\DATASETS\\Dan-2023-CarlaBEV\\TOWN01\\rgb"
-Y_DIR = "C:\\Users\\Danie\\OneDrive\\dan\\RESEARCH\\DATASETS\\Dan-2023-CarlaBEV\\TOWN01\\map"
+dataset_data_path =  "D:/Datasets/Dan-2023-Front2BEV/"
 
-#ROOT_PATH = "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2023-CarlaBEV/TOWN01"
-#X_DIR = ROOT_PATH + "rgb"
-#Y_DIR = ROOT_PATH + "bev"
+output_csv_path = "__datasets/Dan-2023-Front2bev/front2bev.csv"
 
-dataset2CSV("dataset/Front2BEV/bev-vae-test.csv", X_DIR, Y_DIR, ".jpg", ".png")
+def get_test_dirs(dataset_path):
+    maps = [ Path(f.path) for f in os.scandir(dataset_path) if f.is_dir() ]
+    tests = []
+    for map in maps:
+        tests.extend([ Path(f.path) for f in os.scandir(map) if f.is_dir() ])
+    
+    x_dirs, y_dirs = [], []
+    for test in tests:
+        x_dirs.append(test / "rgb")
+        y_dirs.append(test / "bev" / "3k")
+
+    return x_dirs, y_dirs
+
+x_dirs, y_dirs = get_test_dirs(dataset_data_path)
+
+train_csv_path, val_csv_path, test_csv_path = get_csv_datasets(output_csv_path, x_dirs, y_dirs)
+
+old_path = r"D:\\Datasets\\"
+
+replace_abs_path(train_csv_path, old_path, "")
+replace_abs_path(val_csv_path, old_path, "")
+replace_abs_path(test_csv_path, old_path, "")
+
