@@ -1,28 +1,6 @@
 from pathlib import Path
 import numpy as np
 import cv2
-
-# --------------------------------------------------------------------------
-bev_color2class = {
-    0:   0, # Non-Free
-    50: 0, # Vehicle
-    90:  1, # Free space
-    190: 1, # Road Lines
-    127: 1, #idk
-    119: 1, # greens
-    78: 1, # Cable
-    153: 1, # Post
-    178: 1, #TrafficLight
-    120: 2, # Banqueta prro
-    33: 2, # islands
-
-}
-
-bev_class2color = {
-    0:  50, # Non-Free
-    1:  255, # Free space
-    2: 128, # Road Lines
-}
 # --------------------------------------------------------------------------
 def setup_mask():
     mask64 = cv2.imread(str(Path("__assets") / "_mask64.png"), 0)
@@ -47,6 +25,21 @@ def resize_img(img):
     return cv2.resize(img, (64, 64),
                        interpolation = cv2.INTER_NEAREST)
 
+def dilated_class(sem_img, bev_img, cmap,
+                   k= 3, i=3, morph=False):
+    bev_img = bev_img.copy()
+    cls_mask = sem_img.copy()
+    cls_mask = (sem_img == cmap[0]).astype(np.uint8)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT,
+                                        (k, k))
+    cls_mask = cv2.resize(cv2.dilate(cls_mask, kernel,
+                          iterations = i), (64,64))
+    if morph:
+        cls_mask = apply_morph(cls_mask, 2)
+
+    bev_img[cls_mask == 1] = cmap[1]
+    return bev_img
+
 def remap_seg(bev_img, bev_mapping, n_classes):
     bev_img = bev_img.copy()
     for val, klass in bev_mapping.items():
@@ -67,11 +60,32 @@ def apply_morph(img, kernel_size = 2):
                                         (kernel_size,kernel_size))
     return cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
 
-def postprocess(img, bev_map, n_classes):
-    segmented = remap_seg(img, bev_map, n_classes)
-    resized = resize_img(segmented)
-   # morphed = apply_morph(resized, 2)
-    return mask_img(resized, mask64, n_classes)
+def postprocess(sem_img, bev_map, n_classes, morph=False):
+    remapped = remap_seg(sem_img, bev_map, n_classes)
+    bev_img = resize_img(remapped)
+
+    if morph:
+        bev_img = apply_morph(bev_img, 2)
+
+        if n_classes > 4:
+            bev_img = dilated_class(sem_img, bev_img,
+                                     [190, 5], k=5, i=3,
+                                     morph=True)
+            bev_img = dilated_class(sem_img, bev_img,
+                                     [84, 4], k=3, i=3)
+            return mask_img(bev_img, mask64, n_classes)
+
+    return mask_img(bev_img, mask64, n_classes)
+
+def bevAsRGB(bev_img, n_classes, cmap):
+    bev_img = bev_img.copy()
+    bev_rgb = np.stack((bev_img,)*3, axis=-1)
+    print(bev_rgb.shape)
+    for cl in range(n_classes):
+        bev_rgb[bev_img == cl, :] = cmap[cl]
+    bev_rgb[bev_img == n_classes, :] = (0, 0, 0)
+    bev_rgb[31, 32, :] = (25, 126, 0)
+    return bev_rgb
 
 def vis_bev_img(bev_im, bev_map):
     bev_im = bev_im.copy()
