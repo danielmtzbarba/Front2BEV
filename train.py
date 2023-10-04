@@ -19,7 +19,7 @@ def set_console_args(console_args):
     n = console_args.kclasses
     test_name = f"F2B_VAE_{config}_{n}k"
     args.test_name = test_name
-    args.n_classes = n
+    args.n_classes = int(n)
 
     args.res_path = args.res_path.replace("TEST_NAME", test_name)
     args.ckpt_path = args.ckpt_path.replace("TEST_NAME", test_name)
