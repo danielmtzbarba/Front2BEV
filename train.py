@@ -9,7 +9,7 @@ import ast
 import pandas as pd
 
 from models.VAE.vae_train import train_model
-from dan.utils.torch import set_all_seeds
+from dan.utils.torch import set_deterministic
 
 from __tests.Front2BEV.hyparams import get_dataloaders
 from __tests.Front2BEV.hyparams.vae import args
@@ -57,7 +57,7 @@ def main():
     
     console_args = argparser.parse_args()
     args = set_console_args(console_args)
-    set_all_seeds(args.seed)
+    set_deterministic(args.seed)
     weights = get_datset_weights(console_args)
     args.class_weights = weights
 
