@@ -6,7 +6,7 @@ from models.VAE.data_loader import *
 from models.VAE.vae_nets import vae_mapping
 
 from dan.utils.torch import load_model
-from utils.eval import metric_eval
+from Front2BEV.utils.eval import metric_eval_bev
 
 def test_model(args):
     model = vae_mapping(k_classes=args.n_classes)
@@ -21,13 +21,18 @@ def test_model(args):
 
     # Iterate over data.
     for temp_batch in tqdm(args.dataloaders['test']):
-        temp_rgb = temp_batch['rgb'].float().to(args.device)
-        temp_map = temp_batch['map'].long().to(args.device)
+        batch_rgb = temp_batch['rgb'].float().to(args.device)
+        batch_map_gt = temp_batch['map'].long().to(args.device)
 
         # forward
         with torch.set_grad_enabled(False):
-            pred_map, _, _ = model(temp_rgb, False)
-            temp_acc, temp_iou = metric_eval(pred_map, temp_map, args.n_classes)
+            pred_map, _, _ = model(batch_rgb, False)
+            bev_gt = batch_map_gt.cpu().numpy().squeeze()
+            bev_nn = np.reshape(
+                        np.argmax(pred_map.cpu().numpy().transpose((0, 2, 3, 1)),
+                                    axis=3), [64, 64])
+            
+            temp_acc, temp_iou = metric_eval_bev(bev_nn, bev_gt, args.n_classes)
             acc += temp_acc
             iou += temp_iou
     

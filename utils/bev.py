@@ -67,10 +67,11 @@ def postprocess(sem_img, bev_map, n_classes, morph=False):
     if morph:
         bev_img = apply_morph(bev_img, 2)
 
-        if n_classes > 4:
+        if n_classes > 5:
             bev_img = dilated_class(sem_img, bev_img,
                                      [190, 5], k=5, i=3,
                                      morph=True)
+        if n_classes > 4:
             bev_img = dilated_class(sem_img, bev_img,
                                      [84, 4], k=3, i=3)
             return mask_img(bev_img, mask64, n_classes)
@@ -80,7 +81,6 @@ def postprocess(sem_img, bev_map, n_classes, morph=False):
 def bevAsRGB(bev_img, n_classes, cmap):
     bev_img = bev_img.copy()
     bev_rgb = np.stack((bev_img,)*3, axis=-1)
-    print(bev_rgb.shape)
     for cl in range(n_classes):
         bev_rgb[bev_img == cl, :] = cmap[cl]
     bev_rgb[bev_img == n_classes, :] = (0, 0, 0)
