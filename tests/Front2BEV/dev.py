@@ -13,6 +13,8 @@ args = {
     'restore_ckpt': False,
     'ckpt_path': f"/media/dan/dan/Checkpoints/Dan-2023-Front2BEV/BEV_VAE_05oct/{TEST_NAME}.pth.tar",
     'log_path': f"/media/dan/dan/Logs/Dan-2023-Front2BEV/BEV_VAE_05oct/{TEST_NAME}.pkl",
+    'save_every': 1,
+
 
     'distributed': True,
     'n_gpus': 1,

@@ -41,7 +41,7 @@ class Trainer:
         self.optimizer = optimizer
         self.scheduler = scheduler
         self.args = args
-        self.model = DDP(model, device_ids=[gpu_id])
+        self.model = DDP(model, device_ids=[gpu_id], find_unused_parameters=True)
 
     def _run_batch(self, batch_rgb, batch_map_gt):
         self.optimizer.zero_grad()
@@ -81,7 +81,7 @@ class Trainer:
         self.dataloaders[self.phase].sampler.set_epoch(epoch)
 
         # Iterate over data.
-        for batch in tqdm(self.dataloaders[self.phase]):
+        for batch in self.dataloaders[self.phase]:
             batch_rgb = batch['rgb'].float().to(self.gpu_id)
             batch_map_gt = batch['map'].long().to(self.gpu_id)
 
@@ -172,7 +172,7 @@ class Trainer:
                 self.log_epoch['val_iou'].append(self.iou / len(self.dataloaders["val"])) 
                 print("Val mIoU: ", self.iou / len(self.dataloaders["val"]), "\n", '-' * 50)
 
-                if self.gpu_id == 0 and epoch % self.save_every == 0:
+                if self.gpu_id == 0:
                     self._save_checkpoint(epoch)
                 # ------------------------------
                 # Epoch end

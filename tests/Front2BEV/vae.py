@@ -13,6 +13,7 @@ args = {
     'restore_ckpt': False,
     'ckpt_path': f'/home/aircv1/Data/Luis/aisyslab/Daniel/Checkpoints/{TEST_NAME}.pth.tar',
     'log_path': f"/home/aircv1/Data/Luis/aisyslab/Daniel/Logs/{TEST_NAME}.pkl",
+    'save_every': 1,
 
     'distributed': True,
     'n_gpus': 4,

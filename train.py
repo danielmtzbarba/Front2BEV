@@ -68,7 +68,7 @@ def train(rank: int, args):
                                         distributed = args.distributed)
     
     val_loader = get_f2b_dataloader(args.dataset_root_path, args.val_csv_path,
-                                    batch_size = 1, n_workers = 1, distributed = False)
+                                    batch_size = 1, n_workers = 1, distributed= True)
     
     dataloaders = {"train": train_loader, "val": val_loader}
 
