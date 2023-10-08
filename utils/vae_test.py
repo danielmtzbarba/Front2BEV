@@ -21,7 +21,7 @@ def test_model(args):
     # Iterate over data.
     for temp_batch in tqdm(args.test_loader):
         batch_rgb = temp_batch['rgb'].float().to(0)
-        batch_map_gt = temp_batch['map'].long().to(args.device)
+        batch_map_gt = temp_batch['map'].long().to(0)
 
         # forward
         with torch.set_grad_enabled(False):
