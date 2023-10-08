@@ -110,16 +110,8 @@ class Trainer:
             'scheduler': self.scheduler.state_dict()
             }, self.args.ckpt_path)
         
-        print(f"Epoch {epoch + 1} | Training checkpoint saved at {self.args.ckpt_path}")
+        print(f"Epoch {epoch} | Training checkpoint saved at {self.args.ckpt_path}")
         print('-' * 50)
-
-        log_dict = {
-            'batches':self.log_batch,
-            'epochs': self.log_epoch
-        }    
-
-        save_pkl_file(log_dict, str(self.args.log_path).replace(".pkl", f"gpu_{self.gpu_id}.pkl"))
-    
 
     def train(self):
 
@@ -172,11 +164,19 @@ class Trainer:
                 self.log_epoch['val_iou'].append(self.iou / len(self.dataloaders["val"])) 
                 print("Val mIoU: ", self.iou / len(self.dataloaders["val"]), "\n", '-' * 50)
 
-                if self.gpu_id == 0:
-                    self._save_checkpoint(epoch)
+        
                 # ------------------------------
                 # Epoch end
                 # ------------------------------
+                log_dict = {
+                    'batches':self.log_batch,
+                    'epochs': self.log_epoch
+                }    
+
+                save_pkl_file(log_dict, str(self.args.log_path).replace(".pkl", f"gpu_{self.gpu_id}.pkl"))
+
+                if self.gpu_id == 0:
+                    self._save_checkpoint(epoch)
 
             epoch += 1
 
