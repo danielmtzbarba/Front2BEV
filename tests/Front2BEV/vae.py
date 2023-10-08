@@ -32,7 +32,3 @@ args = {
     'val_csv_path': f"_datasets/Dan-2023-Front2bev/{CONFIG}/{N_CLASSES}k/front2bev_{N_CLASSES}k-val.csv",
     'test_csv_path': f"_datasets/Dan-2023-Front2bev/{CONFIG}/{N_CLASSES}k/front2bev_{N_CLASSES}k-test.csv",
 }
-
-from dan.utils import dict2obj
-
-args = dict2obj(args)

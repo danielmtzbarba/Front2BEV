@@ -20,7 +20,7 @@ import argparse
 
 def set_console_args():
     
-    from tests.Front2BEV.dev import args
+    from tests.Front2BEV.vae import args
 
     argparser = argparse.ArgumentParser(description='Front2BEV Trainer')
     
