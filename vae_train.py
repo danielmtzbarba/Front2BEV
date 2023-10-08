@@ -1,15 +1,17 @@
-import os
 from tqdm import tqdm
+import numpy as np
+import os
 
 import torch
 import torch.optim as optim
 from torch.optim import lr_scheduler
 
-from models.VAE.data_loader import *
-from models.VAE.vae_nets import *
+from models.VAE import VAE
 
 from utils.eval import metric_eval_bev
 from dan.utils import save_pkl_file
+
+import torch.nn.functional as F
 
 def loss_function_map(pred_map, map, mu, logvar, args):
     if args.class_weights is not None:
@@ -39,7 +41,7 @@ def train_model(args):
         'val_iou': [],
     }
 
-    model = vae_mapping(k_classes=args.n_classes)
+    model = VAE(k_classes=args.n_classes)
     model = model.to(args.device)
 
     optimizer = optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.0001)

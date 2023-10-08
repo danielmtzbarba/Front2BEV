@@ -3,13 +3,13 @@ import numpy as np
 import torch
 
 from models.VAE.data_loader import *
-from models.VAE.vae_nets import vae_mapping
+from models.VAE.model import VAE
 
 from dan.utils.torch import load_model
 from Front2BEV.utils.eval import metric_eval_bev
 
 def test_model(args):
-    model = vae_mapping(k_classes=args.n_classes)
+    model = VAE(k_classes=args.n_classes)
     model = load_model(model, args.ckpt_path)
     model = model.to(args.device)
 

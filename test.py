@@ -6,15 +6,13 @@ sys.path.append("/home/aircv1/Data/Luis/aisyslab/Daniel/Projects/")
 
 
 import argparse
-import ast
-import pandas as pd
 
-from __tests.Front2BEV.hyparams.dev import args
-from __tests.Front2BEV.hyparams import get_dataloaders
+from tests.Front2BEV.dev import args
+from utils.dataloader import get_dataloaders
 
 from dan.utils.torch import set_deterministic
 
-from models.VAE.vae_test import test_model
+from vae_test import test_model
 
 
 def set_console_args(console_args):
@@ -40,18 +38,15 @@ def set_console_args(console_args):
     return args
 
 def main():
-    """Main method"""
+    """
+    Main method
+    """
 
-    argparser = argparse.ArgumentParser(
-        description='Front2BEV Test')
+    argparser = argparse.ArgumentParser(description='Front2BEV Test')
     
-    argparser.add_argument(
-        '-c', '--mapconfig',
-        help='Map Config')
+    argparser.add_argument('-c', '--mapconfig', help='Map Config')
 
-    argparser.add_argument(
-        '-k', '--kclasses',
-        help='K classes')
+    argparser.add_argument('-k', '--kclasses', help='K classes')
     
     console_args = argparser.parse_args()
     args = set_console_args(console_args)

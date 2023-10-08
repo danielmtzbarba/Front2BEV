@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 # --------------------------------------------------------------------------
 def setup_mask():
-    mask64 = cv2.imread(str(Path("__assets") / "_mask64.png"), 0)
+    mask64 = cv2.imread(str(Path("_assets") / "_mask64.png"), 0)
     mask = np.zeros_like(mask64)
     fov = mask64 > 128
     mask[fov] = 1
@@ -86,16 +86,6 @@ def bevAsRGB(bev_img, n_classes, cmap):
     bev_rgb[bev_img == n_classes, :] = (0, 0, 0)
     bev_rgb[31, 32, :] = (25, 126, 0)
     return bev_rgb
-
-def vis_bev_img(bev_im, bev_map):
-    bev_im = bev_im.copy()
-    out_of_fov_mask = (mask64 == 0)
-    bev_im[out_of_fov_mask] = 10
-    for klass, color in bev_map.items():
-        bev_im[bev_im == klass] = color
-    bev_im[out_of_fov_mask] = 0
-
-    return cv2.resize(bev_im, (512,512), interpolation=cv2.INTER_AREA)
 
 # --------------------------------------------------------------------------
 def count_pixels(img, count_dict, n_classes, only_fov=False):

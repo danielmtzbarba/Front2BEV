@@ -1,32 +1,8 @@
-import pandas as pd
-import torch
-from skimage import io, transform
+from skimage import transform
 import numpy as np
-from torch.utils.data import Dataset, DataLoader
+
 from torchvision import transforms
-
-
-class OccMapDataset(Dataset):
-
-    def __init__(self, csv_file, transform=None):
-        self.samples = pd.read_csv(csv_file, header=None)
-        self.transform = transform
-
-    def __len__(self):
-        return len(self.samples)
-
-    def __getitem__(self, item):
-        rgb = io.imread(self.samples.iloc[item, 0])
-        map = io.imread(self.samples.iloc[item, 1])
-
-        sample = {'rgb': rgb,
-                   'map': map,
-                  }
-        if self.transform:
-            sample = self.transform(sample)
-
-        return sample
-
+import torch
 
 class ToTensor(object):
 
@@ -42,7 +18,6 @@ class ToTensor(object):
                 'map': map
                 }
 
-
 class Rescale(object):
 
     def __init__(self, output_size):
@@ -57,7 +32,6 @@ class Rescale(object):
         return {'rgb': rgb,
                 'map': map
                 }
-
 
 class Img_distro(object):
 
@@ -77,8 +51,6 @@ class Img_distro(object):
         return {'rgb': rotated,
                 'map': map
                 }
-
-
 
 class Normalize(object):
 
