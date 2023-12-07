@@ -1,6 +1,6 @@
-import Front2BEV.utils.segm_metrics as eval_segm
+import utils.segm_metrics as eval_segm
 
-import Front2BEV.tools.bev as bev
+import tools.bev as bev
 
 def metric_eval_bev(bev_nn, bev_gt, n_classes):
 
