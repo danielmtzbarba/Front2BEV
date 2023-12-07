@@ -99,6 +99,16 @@ class Trainer:
             self.running_loss = self.running_loss / len(self.dataloaders["val"])
             self.log_epoch['mean_val_loss'].append(self.running_loss)
             print("\nEpoch:", epoch + 1, "Val loss (mean):", self.running_loss, "\n", '-' * 50)
+
+            # ------------------------------
+            # Logging metrics and save model
+            # ------------------------------
+
+            self.log_epoch['val_acc'].append(self.acc / len(self.dataloaders["val"]))
+            print("Val acc: ", self.acc / len(self.dataloaders["val"]))
+
+            self.log_epoch['val_iou'].append(self.iou / len(self.dataloaders["val"])) 
+            print("Val mIoU: ", self.iou / len(self.dataloaders["val"]), "\n", '-' * 50)
         
     def _save_checkpoint(self, epoch):
         ckp = self.model.module.state_dict()
@@ -154,17 +164,6 @@ class Trainer:
 
                 self._run_epoch(epoch)
 
-                # ------------------------------
-                # Logging metrics and save model
-                # ------------------------------
-
-                self.log_epoch['val_acc'].append(self.acc / len(self.dataloaders["val"]))
-                print("Val acc: ", self.acc / len(self.dataloaders["val"]))
-
-                self.log_epoch['val_iou'].append(self.iou / len(self.dataloaders["val"])) 
-                print("Val mIoU: ", self.iou / len(self.dataloaders["val"]), "\n", '-' * 50)
-
-        
                 # ------------------------------
                 # Epoch end
                 # ------------------------------

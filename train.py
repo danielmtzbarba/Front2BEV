@@ -1,14 +1,11 @@
 import warnings
 warnings.filterwarnings("ignore")
 
-import sys
-sys.path.append("/home/aircv1/Data/Luis/aisyslab/Daniel/Projects/")
-
 # -----------------------------------------------------------------------------
 import torch.multiprocessing as mp
 import torch.distributed as dist 
 
-from utils.dataloader import get_f2b_dataloader
+from utils.dataloader import get_f2b_dataloaders
 from utils.trainer import ddp_setup, Trainer
 from utils import get_dataset_weights
 
@@ -41,14 +38,6 @@ def set_console_args():
     args["ckpt_path"] = args["ckpt_path"].replace("TEST_NAME", test_name)
     args["log_path"] =  args["log_path"].replace("TEST_NAME", test_name)
 
-    args["train_csv_path"] = args["train_csv_path"].replace("CONFIG", config)
-    args["val_csv_path"] = args["val_csv_path"].replace("CONFIG", config)
-    args["test_csv_path"] = args["test_csv_path"].replace("CONFIG", config)
-
-    args["train_csv_path"] = args["train_csv_path"].replace("N_CLASSES", n)
-    args["val_csv_path"] = args["val_csv_path"].replace("N_CLASSES", n)
-    args["test_csv_path"] = args["test_csv_path"].replace("N_CLASSES", n)
-
     weights = get_dataset_weights(console_args)
     args["class_weights"] = weights
 
@@ -63,14 +52,7 @@ def train(rank: int, args):
 
     vae = get_vae_train_objs(args.n_classes)
 
-    train_loader = get_f2b_dataloader(args.dataset_root_path, args.train_csv_path,
-                                        args.batch_size, n_workers=args.n_workers,
-                                        distributed = args.distributed)
-    
-    val_loader = get_f2b_dataloader(args.dataset_root_path, args.val_csv_path,
-                                    batch_size = 1, n_workers = 1, distributed= True)
-    
-    dataloaders = {"train": train_loader, "val": val_loader}
+    dataloaders = get_f2b_dataloaders(args)
 
     trainer = Trainer(dataloaders, vae['model'], vae['optimizer'],
                        vae["scheduler"], rank, args)
@@ -82,6 +64,6 @@ if __name__ == '__main__':
     set_deterministic(args["seed"])
 
     print("\n", args["test_name"])
-    print("\n", args["train_csv_path"])
+   # print("\n", args["train_csv_path"])
     
     mp.spawn(train, args=([args]), nprocs=args["n_gpus"])

@@ -19,18 +19,27 @@ args = {
     'distributed': True,
     'n_gpus': 1,
 
-    'n_epochs':  1,
-    'batch_size': 16,
+    'n_epochs':  3,
+    'batch_size': 4,
     'n_workers': 4,
 
-    'n_classes': 0,
+    'n_classes': 3,
+    
     'class_weights': None,
     'ignore_class': True,
 
+    'num_class': 3,
+    'map_config': "layers_all",
+    "num_workers": 1,
+
     # Dataset absolute path
-    'dataset_root_path': "/media/dan/dan/Datasets/",
+    'dataset_root_path': "/media/dan/dan/Datasets/Dan-2023-Front2BEV",
+    'dataset_root': "/media/dan/dan/Datasets/Dan-2023-Front2BEV/",
+
     # Relative paths to csv datasets
-    'train_csv_path':  f"_datasets/Dan-2023-Front2bev/{CONFIG}/{N_CLASSES}k/front2bev_{N_CLASSES}k-train.csv",
-    'val_csv_path': f"_datasets/Dan-2023-Front2bev/{CONFIG}/{N_CLASSES}k/front2bev_{N_CLASSES}k-val.csv",
-    'test_csv_path': f"_datasets/Dan-2023-Front2bev/{CONFIG}/{N_CLASSES}k/front2bev_{N_CLASSES}k-test.csv",
+    #'train_csv_path':  f"_datasets/Dan-2023-Front2bev/{CONFIG}/{N_CLASSES}k/front2bev_{N_CLASSES}k-train.csv",
+    #'val_csv_path': f"_datasets/Dan-2023-Front2bev/{CONFIG}/{N_CLASSES}k/front2bev_{N_CLASSES}k-val.csv",
+    #'test_csv_path': f"_datasets/Dan-2023-Front2bev/{CONFIG}/{N_CLASSES}k/front2bev_{N_CLASSES}k-test.csv",
+
+    'csv_path': 'src/datasets/Front2BEV-debug'
 }
