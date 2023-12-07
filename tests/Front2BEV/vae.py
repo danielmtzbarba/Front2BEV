@@ -26,10 +26,11 @@ args = {
     'class_weights': None,
     'ignore_class': True,
 
-    # Dataset absolute path
-    'dataset_root_path': "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/",
-    # Relative paths to csv datasets
-    'train_csv_path':  f"_datasets/Dan-2023-Front2bev/{CONFIG}/{N_CLASSES}k/front2bev_{N_CLASSES}k-train.csv",
-    'val_csv_path': f"_datasets/Dan-2023-Front2bev/{CONFIG}/{N_CLASSES}k/front2bev_{N_CLASSES}k-val.csv",
-    'test_csv_path': f"_datasets/Dan-2023-Front2bev/{CONFIG}/{N_CLASSES}k/front2bev_{N_CLASSES}k-test.csv",
+    # new config
+    'num_class': 3,
+    'map_config': "layers_all",
+    "num_workers": 1,
+
+    'dataset_root': "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2023-Front2BEV/",
+    'csv_path': 'src/datasets/Front2BEV-debug'
 }

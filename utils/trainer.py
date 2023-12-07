@@ -16,7 +16,7 @@ def loss_function_map(pred_map, map, mu, logvar, args, rank):
         args.class_weights = torch.Tensor(args.class_weights).to(rank)
 
     if args.ignore_class:
-        CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=args.class_weights, ignore_index=args.n_classes)
+        CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=args.class_weights, ignore_index=args.num_class)
     else:
         CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=args.class_weights)
 
@@ -69,7 +69,7 @@ class Trainer:
                             np.argmax(pred_map.cpu().numpy().transpose(
                                 (0, 2, 3, 1)), axis=3), [64, 64])
             
-                temp_acc, temp_iou = metric_eval_bev(bev_nn, bev_gt, self.args.n_classes)
+                temp_acc, temp_iou = metric_eval_bev(bev_nn, bev_gt, self.args.num_class)
                 self.acc += temp_acc
                 self.iou += temp_iou
 

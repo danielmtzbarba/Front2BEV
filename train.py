@@ -17,7 +17,7 @@ import argparse
 
 def set_console_args():
     
-    from tests.Front2BEV.dev import args
+    from tests.Front2BEV.vae import args
 
     argparser = argparse.ArgumentParser(description='Front2BEV Trainer')
     
@@ -30,9 +30,9 @@ def set_console_args():
     config = console_args.mapconfig
     n = console_args.kclasses
 
-    test_name = f"F2B_VAE_{config}_{n}k"
+    test_name = f"DEBUG-VED-{config}-{n}k"
     args["test_name"] = test_name
-    args["n_classes"] = int(n)
+    args["num_class"] = int(n)
 
     args["res_path"] = args["res_path"].replace("TEST_NAME", test_name)
     args["ckpt_path"] = args["ckpt_path"].replace("TEST_NAME", test_name)
@@ -50,7 +50,7 @@ def train(rank: int, args):
     
     ddp_setup(rank, args.n_gpus)
 
-    vae = get_vae_train_objs(args.n_classes)
+    vae = get_vae_train_objs(args.num_class)
 
     dataloaders = get_f2b_dataloaders(args)
 
