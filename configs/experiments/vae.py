@@ -15,7 +15,7 @@ args = {
     'distributed': True,
     'n_gpus': 4,
 
-    'n_epochs':  5,
+    'num_epochs':  3,
     'batch_size': 32,
     'n_workers': 16,
 

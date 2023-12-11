@@ -6,7 +6,6 @@ class TrainLog(object):
     def __init__(self, config):
         
         self.config = config
-        
         self._batches = {
             'loss': [],
         }
@@ -21,10 +20,8 @@ class TrainLog(object):
         }
     
     def new_epoch(self, epoch, gpu_id, steps):
-        if gpu_id == 0:
-            print('-' * 50,'\nEpoch {}/{}'.format(epoch, self.config.num_epochs))
-        
-        print( '-' * 50,f"\n[GPU{gpu_id}] Epoch {epoch} | Batchsize: {self.config.batch_size} | Steps: {steps}", "\n", '-' * 50)
+        print('-' * 50,'\nEpoch {}/{}'.format(epoch, self.config.num_epochs))
+        print('-' * 50,f"\n[GPU{gpu_id}] Epoch {epoch} | Batchsize: {self.config.batch_size} | Steps: {steps}")
         self._epochs['epoch'].append(epoch)
         
 

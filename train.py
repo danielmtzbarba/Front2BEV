@@ -60,6 +60,5 @@ if __name__ == '__main__':
     set_deterministic(args["seed"])
 
     print("\n", args["name"])
-   # print("\n", args["train_csv_path"])
     
     mp.spawn(train, args=([args]), nprocs=args["n_gpus"])

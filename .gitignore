@@ -5,6 +5,7 @@ __pycache__/
 
 __results/
 *.tar
+*.pkl
 
 # C extensions
 *.so

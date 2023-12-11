@@ -1,15 +1,16 @@
 from tqdm import tqdm
 import numpy as np
 import torch
+import os
 
 from models.VAE import VAE
 
 from dan.utils.torch import load_model
-from Front2BEV.utils.eval import metric_eval_bev
+from utils.eval import metric_eval_bev
 
 def test_model(args):
-    model = VAE(k_classes=args.n_classes)
-    model = load_model(model, args.ckpt_path)
+    model = VAE(k_classes=args.num_class)
+    model = load_model(model, os.path.join(args.logdir, f"{args.name}.pth.tar"))
     model = model.to(0)
 
     # Set model to evaluate mode
@@ -31,7 +32,7 @@ def test_model(args):
                         np.argmax(pred_map.cpu().numpy().transpose((0, 2, 3, 1)),
                                     axis=3), [64, 64])
             
-            temp_acc, temp_iou = metric_eval_bev(bev_nn, bev_gt, args.n_classes)
+            temp_acc, temp_iou = metric_eval_bev(bev_nn, bev_gt, args.num_class)
             acc += temp_acc
             iou += temp_iou
     

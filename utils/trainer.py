@@ -44,8 +44,7 @@ class Trainer:
         self.config = config
         self.model = DDP(model, device_ids=[gpu_id], find_unused_parameters=True)
         self.train_log = TrainLog(self.config)
-
-        
+        self.log = True if gpu_id == 0 else False
 
     def _run_batch(self, batch_rgb, batch_map_gt):
         self.optimizer.zero_grad()
@@ -62,7 +61,8 @@ class Trainer:
                 self.optimizer.step()
                 
                 # Log
-                self.train_log.log_batch(loss.item())
+                if self.log:
+                    self.train_log.log_batch(loss.item())
                 
             else:
                 # Validation
@@ -106,8 +106,9 @@ class Trainer:
         self.model.train()  
         self._run_epoch(epoch)
 
-        # Logging per epoch
-        self.train_log.log_epoch(epoch, self.running_loss, self.phase)
+        # Logging epoch loss
+        if self.log:
+            self.train_log.log_epoch(epoch, self.running_loss, self.phase)
 
     def _run_val_iter(self, epoch):
         self.phase = 'val'
@@ -121,12 +122,13 @@ class Trainer:
         self.model.eval()  
         self._run_epoch(epoch)
 
-        # Logging per epoch
-        self.train_log.log_epoch(epoch, self.running_loss, self.phase)
+        if self.log:
+            # Logging epoch loss
+            self.train_log.log_epoch(epoch, self.running_loss, self.phase)
+            # Logging metrics
+            self.train_log.log_metrics(self.confusion_m, self.acc, self.iou)
 
-        # Logging metrics
-        self.train_log.log_metrics(self.confusion_m, self.acc, self.iou)
-        return #self.confusion_m.mean_iou
+        return self.iou #self.confusion_m.mean_iou
     
     def _save_checkpoint(self, epoch, best_iou):
 
@@ -158,21 +160,21 @@ class Trainer:
         self.phase = 'train'
 
         while epoch <= self.config.num_epochs:
-
-            self.train_log.new_epoch(epoch, self.gpu_id,
-                                     len(self.dataloaders[self.phase]))
+            if self.log:
+                self.train_log.new_epoch(epoch, self.gpu_id,
+                                        len(self.dataloaders[self.phase]))
 
             self._run_train_iter(epoch)
             iou = self._run_val_iter(epoch)
     
             # Epoch end
-            if self.gpu_id == 0:
+            if self.log:
                 self.train_log.save_log()
 
-            #if iou > self.best_iou:
-            if True:
-                self._save_checkpoint(epoch, iou)
-                self.best_iou = iou
+                #if iou > self.best_iou:
+                if True:
+                    self._save_checkpoint(epoch, iou)
+                    self.best_iou = iou
 
             epoch += 1
 

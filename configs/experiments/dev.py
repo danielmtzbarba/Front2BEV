@@ -30,7 +30,7 @@ args = {
     "num_workers": 1,
 
     'dataset_root': "/media/dan/data/OneDrive/Datasets/Dan-2023-Front2BEV/",
-    'csv_path': 'src/datasets/Front2BEV-debug',
+    'csv_path': 'src/datasets/Front2BEV-debug/',
     'logdir': 'logs/',
 
 }
