@@ -18,7 +18,7 @@ args = {
     'distributed': True,
     'n_gpus': 4,
 
-    'n_epochs':  10,
+    'n_epochs':  5,
     'batch_size': 32,
     'n_workers': 16,
 
@@ -32,5 +32,5 @@ args = {
     "num_workers": 1,
 
     'dataset_root': "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2023-Front2BEV/",
-    'csv_path': 'src/datasets/Front2BEV-debug'
+    'csv_path': 'src/datasets/Dan-2023-Front2BEV'
 }

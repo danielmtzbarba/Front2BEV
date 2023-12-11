@@ -17,7 +17,7 @@ import argparse
 
 def set_console_args():
     
-    from tests.Front2BEV.vae import args
+    from configs.experiments.vae import args
 
     argparser = argparse.ArgumentParser(description='Front2BEV Trainer')
     
@@ -30,7 +30,7 @@ def set_console_args():
     config = console_args.mapconfig
     n = console_args.kclasses
 
-    test_name = f"DEBUG-VED-{config}-{n}k"
+    test_name = f"FRONT2BEV-VED-{config}-{n}k"
     args["test_name"] = test_name
     args["num_class"] = int(n)
 
