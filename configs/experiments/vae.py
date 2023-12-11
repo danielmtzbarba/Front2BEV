@@ -24,8 +24,8 @@ args = {
 
     # new config
     'model': 'ved',
-    'num_class': 3,
-    'map_config': "layers_all",
+    'num_class': 0,
+    'map_config': "",
     "num_workers": 8,
 
     'dataset_root': "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2023-Front2BEV/",

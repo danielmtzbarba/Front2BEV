@@ -65,15 +65,16 @@ def postprocess(sem_img, bev_map, n_classes, morph=False):
     bev_img = resize_img(remapped)
 
     if morph:
-        bev_img = apply_morph(bev_img, 2)
+        eroded_img = apply_morph(bev_img, 2)
 
         if n_classes > 5:
-            bev_img = dilated_class(sem_img, bev_img,
+            bev_img = dilated_class(sem_img, eroded_img,
                                      [190, 5], k=5, i=3,
                                      morph=True)
         if n_classes > 4:
-            bev_img = dilated_class(sem_img, bev_img,
-                                     [84, 4], k=3, i=3)
+            bev_img = dilated_class(sem_img, eroded_img,
+                                     [84, 4], k=3, i=3, morph=True)
+            
             return mask_img(bev_img, mask64, n_classes)
 
     return mask_img(bev_img, mask64, n_classes)
@@ -82,7 +83,10 @@ def bevAsRGB(bev_img, n_classes, cmap):
     bev_img = bev_img.copy()
     bev_rgb = np.stack((bev_img,)*3, axis=-1)
     for cl in range(n_classes):
-        bev_rgb[bev_img == cl, :] = cmap[cl]
+        try:
+            bev_rgb[bev_img == cl, :] = cmap[cl]
+        except:
+            continue
     bev_rgb[bev_img == n_classes, :] = (0, 0, 0)
     bev_rgb[31, 32, :] = (25, 126, 0)
     return bev_rgb

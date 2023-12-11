@@ -2,11 +2,19 @@ from tqdm import tqdm
 import numpy as np
 import torch
 import os
+import matplotlib.pyplot as plt
 
 from models.VAE import VAE
 
 from dan.utils.torch import load_model
 from utils.eval import metric_eval_bev
+import tools.bev as bev
+
+def plot(imgs):
+    fig, ax = plt.subplots(1, 2)
+    ax[0].imshow(imgs[0])
+    ax[1].imshow(imgs[1])
+    plt.show()  
 
 def test_model(args):
     model = VAE(k_classes=args.num_class)
@@ -35,6 +43,8 @@ def test_model(args):
             temp_acc, temp_iou = metric_eval_bev(bev_nn, bev_gt, args.num_class)
             acc += temp_acc
             iou += temp_iou
+
+      #  plot([bev.mask_img(bev_nn, bev.mask64, 3), bev_gt])
     
     print("\nTest acc: ", acc / len(args.test_loader))
     print("\nTest mIoU: ", iou / len(args.test_loader))
