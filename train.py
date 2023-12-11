@@ -33,6 +33,7 @@ def set_console_args():
     test_name = f"FRONT2BEV-VED-{config}-{n}k"
     args["name"] = test_name
     args["num_class"] = int(n)
+    args["map_config"] = config
 
     weights = get_dataset_weights(console_args)
     args["class_weights"] = weights

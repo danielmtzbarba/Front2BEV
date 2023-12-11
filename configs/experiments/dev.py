@@ -24,8 +24,8 @@ args = {
 
     # new config
     'model': 'ved',
-    'num_class': 3,
-    'map_config': "layers_all",
+    'num_class': 0,
+    'map_config': "",
     "num_workers": 1,
 
     'dataset_root': "/media/dan/data/OneDrive/Datasets/Dan-2023-Front2BEV/",
