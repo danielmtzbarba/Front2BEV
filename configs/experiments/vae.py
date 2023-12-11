@@ -19,7 +19,6 @@ args = {
     'batch_size': 32,
     'n_workers': 16,
 
-    'n_classes': 0,
     'class_weights': None,
     'ignore_class': True,
 

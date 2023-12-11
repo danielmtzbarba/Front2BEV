@@ -12,7 +12,6 @@ args = {
     'restore_ckpt': False,
     'save_every': 1,
 
-
     'distributed': True,
     'n_gpus': 1,
 
