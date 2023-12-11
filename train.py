@@ -25,6 +25,8 @@ def set_console_args():
 
     argparser.add_argument('-k','--kclasses', help='K classes')
 
+    argparser.add_argument('-e','--epochs', help='N epochs')
+
     console_args = argparser.parse_args()
 
     config = console_args.mapconfig
@@ -34,6 +36,7 @@ def set_console_args():
     args["name"] = test_name
     args["num_class"] = int(n)
     args["map_config"] = config
+    args["num_epochs"] = console_args.epochs
 
     weights = get_dataset_weights(console_args)
     args["class_weights"] = weights
