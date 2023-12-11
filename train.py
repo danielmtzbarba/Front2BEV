@@ -17,7 +17,7 @@ import argparse
 
 def set_console_args():
     
-    from configs.experiments.vae import args
+    from configs.experiments.dev import args
 
     argparser = argparse.ArgumentParser(description='Front2BEV Trainer')
     
@@ -31,12 +31,8 @@ def set_console_args():
     n = console_args.kclasses
 
     test_name = f"FRONT2BEV-VED-{config}-{n}k"
-    args["test_name"] = test_name
+    args["name"] = test_name
     args["num_class"] = int(n)
-
-    args["res_path"] = args["res_path"].replace("TEST_NAME", test_name)
-    args["ckpt_path"] = args["ckpt_path"].replace("TEST_NAME", test_name)
-    args["log_path"] =  args["log_path"].replace("TEST_NAME", test_name)
 
     weights = get_dataset_weights(console_args)
     args["class_weights"] = weights
@@ -63,7 +59,7 @@ if __name__ == '__main__':
     args = set_console_args()
     set_deterministic(args["seed"])
 
-    print("\n", args["test_name"])
+    print("\n", args["name"])
    # print("\n", args["train_csv_path"])
     
     mp.spawn(train, args=([args]), nprocs=args["n_gpus"])

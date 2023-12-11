@@ -6,13 +6,10 @@ CONFIG = "CONFIG"
 N_CLASSES = "N_CLASSES"
 
 args = {
-    'test_name': TEST_NAME,
-    'res_path': f'__results/{TEST_NAME}/',
+    'name': TEST_NAME,
     'seed': 1596,
 
     'restore_ckpt': False,
-    'ckpt_path': f'/home/aircv1/Data/Luis/aisyslab/Daniel/Checkpoints/{TEST_NAME}.pth.tar',
-    'log_path': f"/home/aircv1/Data/Luis/aisyslab/Daniel/Logs/{TEST_NAME}.pkl",
     'save_every': 1,
 
     'distributed': True,
@@ -27,10 +24,12 @@ args = {
     'ignore_class': True,
 
     # new config
+    'model': 'ved',
     'num_class': 3,
     'map_config': "layers_all",
-    "num_workers": 1,
+    "num_workers": 8,
 
     'dataset_root': "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2023-Front2BEV/",
-    'csv_path': 'src/datasets/Dan-2023-Front2BEV'
+    'csv_path': 'src/datasets/Dan-2023-Front2BEV',
+    'logdir': f"/home/aircv1/Data/Luis/aisyslab/Daniel/Logs/",
 }
