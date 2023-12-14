@@ -28,8 +28,8 @@ args = {
     'map_config': "",
     "num_workers": 1,
 
-    'dataset_root': "/media/dan/data/OneDrive/Datasets/Dan-2023-Front2BEV/",
+    'dataset_root': "/media/danielmtz/data/datasets/Dan-2023-Front2BEV/",
     'csv_path': 'src/datasets/Front2BEV-debug/',
-    'logdir': 'logs/',
+    'logdir': '/media/danielmtz/data/ckpts/F2B/',
 
 }

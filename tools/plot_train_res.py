@@ -1,25 +1,16 @@
-from pathlib import Path
+import matplotlib
+matplotlib.use('qtagg')
+
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 
-from dan.utils import load_pkl_file
-
 def style_fig(ax, title):
-    ax.set_title(title, fontsize=20, y =0.9)
-    plt.suptitle('Variational Auto Encoder', fontsize=28, fontweight='bold', x=0.32, y = 0.94)
+    ax.set_title(title, fontsize=35, y =1.01)
 
-    plt.xlabel('Batch', fontsize=20, fontweight='bold')
-    plt.ylabel('Loss (mean)', fontsize=20, fontweight='bold')
-    ax.xaxis.labelpad = 7
+    ax.xaxis.labelpad = 6
     ax.yaxis.labelpad = 7
 
-    ax.xaxis.set_major_locator(MultipleLocator(500))
-    ax.xaxis.set_minor_locator(MultipleLocator(100))
-
-    ax.yaxis.set_major_locator(MultipleLocator(0.15))
-    ax.yaxis.set_minor_locator(MultipleLocator(0.05))
-
-    ax.tick_params(axis='both', which='major', labelsize=16)
+    ax.tick_params(axis='both', which='major', labelsize=33)
     ax.tick_params(axis='both', which='minor', labelsize=20)
     
     return ax
@@ -30,28 +21,63 @@ def plot_epoch_loss(epoch_dict, title="Title", figsize=(12, 8)):
     ax.plot(epoch_dict['epoch'], epoch_dict['mean_val_loss'])
     plt.xlabel('epoch', fontsize=16)
     plt.ylabel('mean_loss', fontsize=16)
-    plt.tight_layout()
+    plt.show()
 
-def plot_batch_loss(batch_loss, title="Title", figsize=(8, 4)):
+def plot_train_loss(batch_loss, title=["Title", "", ""], figsize=(25, 10), save_path=None):
+    
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
+    ax = style_fig(ax, title[0])
 
-    ax.plot(batch_loss, 'k.', markersize=3, label='loss')
-    ax.legend()
+    plt.suptitle('Train Loss', fontsize=45, fontweight='bold', x=0.5, y = 1.0)
 
-    ax = style_fig(ax, title)
+    ax.xaxis.set_major_locator(MultipleLocator(100))
+    ax.xaxis.set_minor_locator(MultipleLocator(10))
+
+    ax.yaxis.set_major_locator(MultipleLocator(0.1))
+    ax.yaxis.set_minor_locator(MultipleLocator(0.05))
+
+    plt.xlabel('Batch', fontsize=40, fontweight='bold')
+    plt.ylabel('Loss (mean)', fontsize=40, fontweight='bold')
+
+    ax.plot(batch_loss, 'k.', markersize=8, label='loss')
+    ax.legend(fontsize=28, loc='upper right', bbox_to_anchor=(0.99, 0.99))
+    ax.text(0.3, 0.935, f'config:', fontweight='bold', fontsize=30, transform = ax.transAxes)
+    ax.text(0.39, 0.935, f'{title[1]}', fontsize=28, transform = ax.transAxes)
+
+    ax.text(0.55, 0.93, f'k-classes:', fontweight='bold', fontsize=30, transform = ax.transAxes)
+    ax.text(0.675, 0.93, f'{title[2]}', fontsize=28, transform = ax.transAxes)
+
+    if save_path:
+        fig.savefig(save_path.replace(".png", ".eps"))
+        fig.savefig(save_path)
 
     return ax
-    
+
+def plot_val_metrics(data, title=["Title", "", ""], figsize=(25, 10), save_path=None):
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
+    ax = style_fig(ax, title[0])
+
+    plt.suptitle('Validation metrics', fontsize=45, fontweight='bold', x=0.5, y = 1.0)
+
+    ax.xaxis.set_major_locator(MultipleLocator(1))
+
+    plt.xlabel('Epoch', fontsize=40, fontweight='bold')
+    plt.ylabel('Score', fontsize=40, fontweight='bold')
+
+    ax.plot(data['val_acc'], '--ko', markersize=8, label='acc')
+    ax.plot(data['val_iou'], '--bo', markersize=8, label='iou')
 
 
+    ax.legend(fontsize=28, loc='upper right', bbox_to_anchor=(0.13, 0.99))
+    ax.text(0.3, 0.935, f'config:', fontweight='bold', fontsize=30, transform = ax.transAxes)
+    ax.text(0.39, 0.935, f'{title[1]}', fontsize=28, transform = ax.transAxes)
 
-logs_path = Path('D:/Logs/Dan-2023-Front2BEV/')
+    ax.text(0.55, 0.93, f'k-classes:', fontweight='bold', fontsize=30, transform = ax.transAxes)
+    ax.text(0.675, 0.93, f'{title[2]}', fontsize=28, transform = ax.transAxes)
+    ax = style_fig(ax, title[0])
 
-log_file = load_pkl_file(str(logs_path / 'F2B_VAE_3K.pkl'))
-
-ax = plot_batch_loss(log_file['batches']['loss'], 'VAE mean loss')
-
-
-#ax2 = plot_batch_loss(log_file['batches']['CE_loss'], 'VAE mean loss')
-
-plt.show()
+    if save_path:
+        fig.savefig(save_path.replace(".png", ".eps"))
+        fig.savefig(save_path)
+        
+    return ax

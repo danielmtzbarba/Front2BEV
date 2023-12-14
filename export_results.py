@@ -1,16 +1,16 @@
 import warnings
 warnings.filterwarnings("ignore")
 
-from utils.dataloader import get_f2b_dataloaders
-
+from dan.utils import load_pkl_file
 from dan.utils.torch import set_deterministic
 
-from utils.vae_test import test_model
+from utils.dataloader import get_f2b_dataloaders
+import tools.plot_train_res as graph
 
 # -----------------------------------------------------------------------------
 import argparse
 
-def set_console_args():
+def set_console_args(name):
     
     from configs.experiments.dev import args
 
@@ -25,7 +25,7 @@ def set_console_args():
     config = console_args.mapconfig
     n = console_args.kclasses
 
-    test_name = f"FRONT2BEV-VED-{config}-{n}k"
+    test_name = f"{name}-{config}-{n}k"
     args["name"] = test_name
     args["num_class"] = int(n)
     args["map_config"] = config
@@ -35,7 +35,8 @@ def set_console_args():
 from dan.utils import dict2obj
 
 def main():
-    args = set_console_args()
+    name = "F2B-VED"
+    args = set_console_args(name)
     set_deterministic(args["seed"])
 
     args = dict2obj(args)
@@ -46,7 +47,19 @@ def main():
     args.test_loader = dataloaders['test']
 
     print("\n", args.name)
-    test_model(args)
+  
+    log_file = load_pkl_file(args.logdir + f'/{args.name}.pkl')
 
+    
+    ax = graph.plot_train_loss(log_file['batches']['loss'],
+                                    ['Variational Encoder Decoder', args.map_config, args.num_class],
+                                    save_path=f'_results/{args.name}-train.png')
+    
+
+    ax = graph.plot_val_metrics(log_file['epochs'],
+                                ['Variational Encoder Decoder', args.map_config, args.num_class],
+                                save_path=f'_results/{args.name}-val.png')
+   
+    
 if __name__ == '__main__':
     main()
