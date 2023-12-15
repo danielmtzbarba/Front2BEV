@@ -1,0 +1,106 @@
+#******************  Experiment options ******************
+
+# Random seed
+seed: 0
+
+# Experiment name
+name: none
+
+resume: False
+
+# Dataset to train on
+train_dataset: none
+
+# Directory to save experiment to
+logdir: none
+
+# Save model every n epochs
+save_every: 1
+
+#******************  Dataset options ******************
+
+# Number of output classes to predict
+num_class: 0
+
+# Input image size after downsampling
+img_size: [0, 0]
+
+# Top-left and bottom right coordinates of map region, in meters
+map_extents: [0, 0]
+
+# Spacing between adjacent grid cells in the map, in meters
+map_resolution: 0.0
+
+# BEV map configuration
+map_config: none
+
+# Path of CSV files of dataset splits
+csv_path: none
+
+dataset_root: none
+
+#******************  Model options ******************
+# Architecture to train [pyramid | ved | vpn ]
+model: none
+optimizer: none
+learning_rate: 0.0
+weight_decay: 0.0
+# Scheduler
+lr_scheduler: none
+lr_step_size: 0
+
+#******************  Loss options ******************
+
+# Loss function
+loss_fn: none
+
+#******************  Training options ******************
+
+# Number of epochs to train for
+num_epochs: 0
+
+# Multi GPU Training
+distributed: False
+
+# IDs of GPUs to use during training
+num_gpus: 1
+
+# Number of examples per mini-batch
+batch_size: 1
+
+# Number of dataloader threads
+num_workers: 1
+
+# Decay learning rate by a factor 10 after the following number of epochs
+lr_milestones: [0, 0]
+lr_gamma: 0.0
+
+
+# Prior probability of a positive prediction, used to initialise classifier
+prior: 
+  - 0.0
+
+# Class-specific weighting factors to balance cross entropy loss
+class_weights: 
+  - 0.0
+
+# Method of weighting classes in loss function
+weight_mode: none
+
+# Binary cross entropy loss weight
+xent_weight: 0.0
+
+# Max entropy uncertainty loss weight
+uncert_weight: 0.0
+
+# Focal loss parameters
+focal: 
+  - 0.0
+
+# KL-Divergence loss weight (used by VED network)
+kld_weight: 0.0
+
+# Threshold to treat prediction as positive
+score_thresh: 0.0
+
+#***********************************************************************

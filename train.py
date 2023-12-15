@@ -2,67 +2,52 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # -----------------------------------------------------------------------------
+from src.utils import configs
+
 import torch.multiprocessing as mp
 import torch.distributed as dist 
 
-from utils.dataloader import get_f2b_dataloaders
-from utils.trainer import ddp_setup, Trainer
-from utils import get_dataset_weights
+from src.factory.builder import Builder
+from src.utils.dataloader import get_f2b_dataloaders
 
-from models.VAE import get_vae_train_objs
-
+import src.utils.trainer as train
 from dan.utils.torch import set_deterministic
 # -----------------------------------------------------------------------------
-import argparse
 
-def set_console_args():
-    
-    from configs.experiments.dev import args
+def main(rank: int, config: object):
+    if config.distributed:
+        # Setup training gpu thread
+        train.ddp_setup(rank, config.num_gpus)
 
-    argparser = argparse.ArgumentParser(description='Front2BEV Trainer')
-    
-    argparser.add_argument('-c','--mapconfig', help='Map Config')
+    # Get model, optimzer and lr_scheduler
+    builder = Builder(config, rank)
+    model, optimizer, lr_scheduler, criterion = builder.get_train_objs()
 
-    argparser.add_argument('-k','--kclasses', help='K classes')
+    dataloaders = get_f2b_dataloaders(config)
 
-    argparser.add_argument('-e','--epochs', help='N epochs')
+    trainer = train.Trainer(
+        dataloaders=dataloaders,
+        model=model,
+        optimizer=optimizer,
+        scheduler=lr_scheduler,
+        criterion=criterion,
+        gpu_id=rank,
+        config=config
+    )
 
-    console_args = argparser.parse_args()
-
-    config = console_args.mapconfig
-    n = console_args.kclasses
-
-    test_name = f"FRONT2BEV-VED-{config}-{n}k"
-    args["name"] = test_name
-    args["num_class"] = int(n)
-    args["map_config"] = config
-    args["num_epochs"] = console_args.epochs
-
-    weights = get_dataset_weights(console_args)
-    args["class_weights"] = weights
-
-    return args
-# -----------------------------------------------------------------------------
-from dan.utils import dict2obj
-
-def train(rank: int, args):
-    args = dict2obj(args)
-    
-    ddp_setup(rank, args.n_gpus)
-
-    vae = get_vae_train_objs(args.num_class)
-
-    dataloaders = get_f2b_dataloaders(args)
-
-    trainer = Trainer(dataloaders, vae['model'], vae['optimizer'],
-                       vae["scheduler"], rank, args)
     trainer.train()
-    dist.destroy_process_group()
+
+    if config.distributed:
+        dist.destroy_process_group()
 
 if __name__ == '__main__':
-    args = set_console_args()
-    set_deterministic(args["seed"])
 
-    print("\n", args["name"])
+    config = configs.get_configuration()
+    logdir = configs.create_experiment(config, None)
     
-    mp.spawn(train, args=([args]), nprocs=args["n_gpus"])
+    set_deterministic(config.seed)
+
+    if config.distributed:
+        mp.spawn(main, args=([config]), nprocs=config.num_gpus)
+    else:
+        main(0, config)

@@ -1,0 +1,24 @@
+#******* Lu et al. VED config *******
+
+img_size: [256, 512]
+
+# optimizer
+optimizer: adam
+learning_rate: 0.0001
+weight_decay: 0.0001
+
+# Scheduler
+lr_scheduler: steplr
+lr_step_size: 1
+lr_gamma: 0.97
+
+# Binary cross entropy loss weight
+xent_weight: 1.0
+
+# Max entropy uncertainty loss weight
+uncert_weight: 0.001
+
+# KL-Divergence loss weight
+kld_weight: 0.1
+
+#******* Lu et al. VED config *******

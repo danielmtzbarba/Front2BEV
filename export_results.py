@@ -4,8 +4,8 @@ warnings.filterwarnings("ignore")
 from dan.utils import load_pkl_file
 from dan.utils.torch import set_deterministic
 
-from utils.dataloader import get_f2b_dataloaders
-import tools.plot_train_res as graph
+from src.utils.dataloader import get_f2b_dataloaders
+import scripts.plot_train_res as graph
 
 # -----------------------------------------------------------------------------
 import argparse
@@ -14,7 +14,7 @@ def set_console_args(name):
     
     from configs.experiments.dev import args
 
-    argparser = argparse.ArgumentParser(description='Front2BEV Trainer')
+    argparser = argparse.ArgumentParser(description='Front2BEV export results')
     
     argparser.add_argument('-c','--mapconfig', help='Map Config')
 
