@@ -1,15 +1,5 @@
 #******************  Dataset options ******************
 
-dataset_root: /media/danielmtz/dan/Datasets/Dan-2023-Front2BEV/
-csv_path: src/datasets/Front2BEV-debug
+csv_path: src/datasets/Dan-2023-Front2BEV
 
-class_weights:
-  -    2.8    # non_drivable_area
-  -    1.5    # drivable_area
-
-prior:
-  - 0.44679   # drivable_area
-  - 0.55321   # non-drivable_area
-  - 0.3  # non-drivable_area
-  
 #******************  Dataset options ******************

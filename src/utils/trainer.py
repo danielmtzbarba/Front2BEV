@@ -6,7 +6,7 @@ import torch.distributed as dist
 import torch.nn.functional as F
 import torch
 
-from utils.eval import metric_eval_bev
+from src.utils.eval import metric_eval_bev
 from src.utils.logger import TrainLog
 
 # ----------------------------------------------------------------------------
@@ -134,7 +134,8 @@ class Trainer:
         else:
             model_ckpt = self.model
 
-        ckpt_path = os.path.join(self.config.logdir, f'{self.config.name}.pth.tar')
+        logdir = os.path.join(os.path.expandvars(self.config.logdir), self.name, self.model)
+        ckpt_path = os.path.join(logdir, f'{self.config.name}.pth.tar')
 
         ckpt = {
             'model' : model_ckpt.state_dict(),
@@ -168,8 +169,7 @@ class Trainer:
             if self.log:
                 self.train_log.save_log()
 
-                #if iou > self.best_iou:
-                if True:
+                if iou > self.best_iou:
                     self._save_checkpoint(epoch, iou)
                     self.best_iou = iou
 
@@ -178,7 +178,8 @@ class Trainer:
         # ------------------------------
         # Training end
         # ------------------------------
-        print('\nTraining ended')
+        print('-' * 50, f"\nTraining ended successfully")
+        print('-' * 50)
         # ------------------------------
 
 # -----------------------------------------------------------------------------

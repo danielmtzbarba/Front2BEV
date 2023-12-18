@@ -1,0 +1,12 @@
+#******************  Directory options ******************
+
+dataset_root: /media/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2023-Front2BEV/
+
+# Directory to save experiment to
+logdir: /media/aircv1/Data/Luis/aisyslab/Daniel/results
+
+# GPU Options
+distributed: True
+num_gpus: 4
+
+#******************  Directory options ******************
