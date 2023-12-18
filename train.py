@@ -27,10 +27,9 @@ def main(rank: int, config: object):
 
     trainer = train.Trainer(
         dataloaders=dataloaders,
-        model=model,
+        model_trainer=model,
         optimizer=optimizer,
         scheduler=lr_scheduler,
-        criterion=criterion,
         gpu_id=rank,
         config=config
     )

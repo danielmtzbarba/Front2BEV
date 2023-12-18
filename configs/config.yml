@@ -103,4 +103,16 @@ kld_weight: 0.0
 # Threshold to treat prediction as positive
 score_thresh: 0.0
 
+tfm_channels: 0
+ymin: 0
+ymax: 0
+focal_length: 0.0
+topdown:
+  channels: 0
+  layers: [0, 0]
+  strides: [0, 0]
+  blocktype: none
+
+# Whether to use Bayesian classifier
+bayesian: False
 #***********************************************************************

@@ -36,6 +36,12 @@ def get_configuration():
     # Load config defaults
     config = get_default_configuration()
 
+    # Load experiment options
+    config.merge_from_file(f'configs/experiments/{args.experiment}.yml')
+
+    # Override with command line options
+    config.merge_from_list(args.options)
+
     # Load pc options
     config.merge_from_file(f'configs/pc/{args.pc}.yml')
 
@@ -43,17 +49,11 @@ def get_configuration():
     config.merge_from_file(f'configs/datasets/{args.dataset}.yml')
 
     # Load model options
-    config.merge_from_file(f'configs/models/{args.model}.yml')
-
-    # Load experiment options
-    config.merge_from_file(f'configs/experiments/{args.experiment}.yml')
+    config.merge_from_file(f'configs/models/{config.model}.yml')
 
     # Restore config from an existing experiment
     if args.resume is not None:
         config.merge_from_file(os.path.join(args.resume, 'config.yml'))
-
-    # Override with command line options
-    config.merge_from_list(args.options)
 
     config.class_weights = get_dataset_weights(config)
 
