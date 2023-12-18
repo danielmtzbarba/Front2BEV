@@ -1,5 +1,6 @@
 #******************  Dataset options ******************
 
 csv_path: src/datasets/Dan-2023-Front2BEV
+csv_path: src/datasets/F2B-debug
 
 #******************  Dataset options ******************

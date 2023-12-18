@@ -86,15 +86,10 @@ class Trainer:
 
             self._run_batch(images, labels)
 
-        if self.phase == 'train':
-            self.running_loss = self.running_loss / len(self.dataloaders["train"])
+        self.running_loss = self.running_loss / len(self.dataloaders[self.phase])
 
-        else:
-            self.running_loss = self.running_loss / len(self.dataloaders["val"])
 
     def _run_train_iter(self, epoch):
-        self.phase = 'train'
-
         # Reset variables
         self.running_loss = 0.0
         self.scheduler.step()
@@ -108,7 +103,6 @@ class Trainer:
             self.train_log.log_epoch(epoch, self.running_loss, self.phase)
 
     def _run_val_iter(self, epoch):
-        self.phase = 'val'
         # Reset variables
         self.confusion_m = None #BinaryConfusionMatrix(self.config.num_class)
         self.running_loss = 0.0
@@ -134,7 +128,7 @@ class Trainer:
         else:
             model_ckpt = self.model
 
-        logdir = os.path.join(os.path.expandvars(self.config.logdir), self.name, self.model)
+        logdir = os.path.join(os.path.expandvars(self.config.logdir), self.config.name, self.config.model)
         ckpt_path = os.path.join(logdir, f'{self.config.name}.pth.tar')
 
         ckpt = {
@@ -155,14 +149,19 @@ class Trainer:
 
         epoch = 1
         self.best_iou = 0.0
-        self.phase = 'train'
+        
 
         while epoch <= self.config.num_epochs:
+            self.phase = 'train'
             if self.log:
-                self.train_log.new_epoch(epoch, self.gpu_id,
-                                        len(self.dataloaders[self.phase]))
-
+                self.train_log.log_phase(epoch, self.gpu_id,
+                                        len(self.dataloaders[self.phase]), self.phase)
             self._run_train_iter(epoch)
+
+            self.phase = 'val'
+            if self.log:
+                self.train_log.log_phase(epoch, self.gpu_id,
+                                        len(self.dataloaders[self.phase]), self.phase)
             iou = self._run_val_iter(epoch)
     
             # Epoch end

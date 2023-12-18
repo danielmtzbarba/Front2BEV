@@ -81,6 +81,8 @@ def create_experiment(config, resume):
     # Save the current config
     with open(os.path.join(logdir, 'config.yml'), 'w') as f:
         f.write(config.dump())
+
+    print(config.name, config.map_config, config.num_class)
     
     return logdir
 
