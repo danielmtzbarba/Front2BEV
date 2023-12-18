@@ -13,7 +13,7 @@ lr_step_size: 1
 lr_gamma: 0.97
 
 # Binary cross entropy loss weight
-xent_weight: 1.0
+xent_weight: 0.9
 
 # Max entropy uncertainty loss weight
 uncert_weight: 0.001

@@ -22,9 +22,7 @@ def build_model(config):
         model = build_view_parsing_network(config)
     else:
         raise ValueError("Unknown model name '{}'".format(model_name))
-    
     return model
-
 
 def build_pyramid_occupancy_network(config):
 

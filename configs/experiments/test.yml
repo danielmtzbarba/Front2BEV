@@ -11,9 +11,9 @@ resume: False
 # Dataset to train on
 train_dataset: front2bev
 
-map_config: traffic
+map_config: layers_none
 model: ved
-num_class: 3
+num_class: 2
 
 # Save model every n epochs
 save_every: 1
@@ -26,13 +26,9 @@ loss_fn: bce
 # Method of weighting classes in loss function
 weight_mode: inverse
 
-# GPU Options
-distributed: False
-num_gpus: 1
-
 # Training Options
-num_epochs: 3
-batch_size: 1
+num_epochs: 10
+batch_size: 16
 num_workers: 4
 
 #***********************************************************************

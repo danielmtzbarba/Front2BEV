@@ -63,32 +63,17 @@ class PriorOffsetCriterion(nn.Module):
         return prior_offset_loss(logits, labels, mask, self.priors)
 
 class VedCriterion(nn.Module):
-    def __init__(self, priors, weight_mode='sqrt_inverse', 
-            xent_weight=0.9, kld_weight=0.1, uncert_weight=0.):
+    def __init__(self, num_class, class_weights, gpu_id,
+            xent_weight=0.9, kld_weight=0.1):
         super().__init__()
-        self.class_weights = calc_weights(torch.tensor(priors), weight_mode).to(0)
+        self._num_class = num_class
         self._kld_w = kld_weight
         self._xent_w = xent_weight
-        self._uncert_w = uncert_weight
-    
-    def forward(self, logits, labels, _, mu, logvar):
-        CE = F.cross_entropy(logits, labels.view(-1, 64, 64),
-                              weight=self.class_weights, ignore_index=len(self.class_weights))
+        self._class_weights = torch.Tensor(class_weights).to(gpu_id)
         
+    def forward(self, logits, labels, mu, logvar):
+        CE = F.cross_entropy(logits, labels.view(-1, 64, 64),
+                              weight=self._class_weights, ignore_index=self._num_class)
+
         KLD = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
         return self._xent_w*CE + self._kld_w*KLD
-
-class VaeOccupancyCriterion(OccupancyCriterion):
-
-    def __init__(self, priors, xent_weight=0.9, uncert_weight=0.,
-                  weight_mode='sqrt_inverse',  kld_weight=0.1):
-        
-        super().__init__(priors, xent_weight, uncert_weight, weight_mode)
-
-        self.kld_weight = kld_weight
-    
-    def forward(self, logits, labels, mask, mu, logvar):
-
-        kld_loss = kl_divergence_loss(mu, logvar)
-        occ_loss = super().forward(logits, labels, mask)
-        return occ_loss + kld_loss * self.kld_weight

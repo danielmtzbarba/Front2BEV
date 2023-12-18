@@ -19,19 +19,23 @@ class TrainLog(object):
             'val_miou': [],
         }
     
-    def new_epoch(self, epoch, gpu_id, steps):
+    def log_phase(self, epoch, gpu_id, steps, phase="train"):
         print('-' * 50,'\nEpoch {}/{}'.format(epoch, self.config.num_epochs))
-        print('-' * 50,f"\n[GPU{gpu_id}] Epoch {epoch} | Batchsize: {self.config.batch_size} | Steps: {steps}")
-        self._epochs['epoch'].append(epoch)
+        print('-' * 50, f"\n{phase.capitalize()}")
+        print('-' * 50, f"\n[GPU{gpu_id}] Epoch {epoch} | Batchsize: {self.config.batch_size} | Steps: {steps}")
+        print('-' * 50)
         
-
+        if phase == "train":
+            self._epochs['epoch'].append(epoch)
+        
     def log_batch(self, loss):
         self._batches['loss'].append(loss)
 
     def log_epoch(self, epoch, running_loss, phase):
         self._epochs[f'mean_{phase}_loss'].append(running_loss)
-        print('-' * 50, "\nEpoch:", epoch, f"{phase} loss (mean):", running_loss)
-    
+        
+        print("Epoch:", epoch, f"{phase} loss (mean):", running_loss)
+        
     def log_metrics(self, cm, acc, iou):
         self._epochs['val_iou'].append(iou)
         print('-' * 50, "\nVal IoU: ", iou)

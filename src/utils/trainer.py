@@ -3,43 +3,27 @@ import numpy as np
 import os
 
 import torch.distributed as dist 
-import torch.nn.functional as F
 import torch
 
-from src.utils.eval import metric_eval_bev
 from src.utils.logger import TrainLog
-
-# ----------------------------------------------------------------------------
-def loss_function_map(pred_map, map, mu, logvar, config, rank):
-    if config.class_weights is not None:
-        class_weights = torch.Tensor(config.class_weights).to(rank)
-
-    CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=class_weights, ignore_index=config.num_class)
-
-    KLD = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
-    return 0.9*CE + 0.1*KLD, CE, KLD
-# -----------------------------------------------------------------------------
 
 class Trainer:
     def __init__(
         self,
         dataloaders: dict,
-        model: torch.nn.Module,
+        model_trainer: torch.nn.Module,
         optimizer: torch.optim.Optimizer,
         scheduler: torch.optim.lr_scheduler,
-        criterion: any,
         gpu_id: int,
         config: object):
         
         self.gpu_id = gpu_id
-        self.model = model.to(gpu_id)
+        self._model_trainer = model_trainer
         self.dataloaders = dataloaders
 
         self.optimizer = optimizer
         self.scheduler = scheduler
-        self.criterion = criterion
         self.config = config
-        self.model = model
         self.train_log = TrainLog(self.config)
         self.log = True if gpu_id == 0 else False
 
@@ -48,9 +32,8 @@ class Trainer:
 
         # forward: Track history only if training
         with torch.set_grad_enabled(self.phase == 'train'):
-            pred_map, mu, logvar = self.model(images, self.phase == 'train')
-
-            loss, CE, KLD = loss_function_map(pred_map, labels, mu, logvar, self.config, self.gpu_id)
+            
+            logits, loss = self._model_trainer(images, labels, self.phase)
 
             # backward + optimize only if in training phase
             if self.phase == 'train':
@@ -63,12 +46,8 @@ class Trainer:
                 
             else:
                 # Validation
-                bev_gt = labels.cpu().numpy().squeeze()
-                bev_nn = np.reshape(
-                            np.argmax(pred_map.cpu().numpy().transpose(
-                                (0, 2, 3, 1)), axis=3), [64, 64])
-            
-                temp_acc, temp_iou = metric_eval_bev(bev_nn, bev_gt, self.config.num_class)
+                temp_acc, temp_iou = self._model_trainer.metrics(logits, labels)
+
                 self.acc += temp_acc / len(self.dataloaders["val"])
                 self.iou += temp_iou / len(self.dataloaders["val"])
 
@@ -86,21 +65,16 @@ class Trainer:
 
             self._run_batch(images, labels)
 
-        if self.phase == 'train':
-            self.running_loss = self.running_loss / len(self.dataloaders["train"])
+        self.running_loss = self.running_loss / len(self.dataloaders[self.phase])
 
-        else:
-            self.running_loss = self.running_loss / len(self.dataloaders["val"])
 
     def _run_train_iter(self, epoch):
-        self.phase = 'train'
-
         # Reset variables
         self.running_loss = 0.0
         self.scheduler.step()
 
         # Set model to training mode
-        self.model.train()  
+        self._model_trainer.model.train()  
         self._run_epoch(epoch)
 
         # Logging epoch loss
@@ -108,7 +82,6 @@ class Trainer:
             self.train_log.log_epoch(epoch, self.running_loss, self.phase)
 
     def _run_val_iter(self, epoch):
-        self.phase = 'val'
         # Reset variables
         self.confusion_m = None #BinaryConfusionMatrix(self.config.num_class)
         self.running_loss = 0.0
@@ -116,7 +89,7 @@ class Trainer:
         self.iou = 0.0
     
         # Set model to eval mode
-        self.model.eval()  
+        self._model_trainer.model.eval()  
         self._run_epoch(epoch)
 
         if self.log:
@@ -130,11 +103,11 @@ class Trainer:
     def _save_checkpoint(self, epoch, best_iou):
 
         if self.config.distributed:
-            model_ckpt = self.model.module
+            model_ckpt = self._model_trainer.model.module
         else:
-            model_ckpt = self.model
+            model_ckpt = self._model_trainer.model
 
-        logdir = os.path.join(os.path.expandvars(self.config.logdir), self.name, self.model)
+        logdir = os.path.join(os.path.expandvars(self.config.logdir), self.config.name, self.config.model)
         ckpt_path = os.path.join(logdir, f'{self.config.name}.pth.tar')
 
         ckpt = {
@@ -155,14 +128,19 @@ class Trainer:
 
         epoch = 1
         self.best_iou = 0.0
-        self.phase = 'train'
+        
 
         while epoch <= self.config.num_epochs:
+            self.phase = 'train'
             if self.log:
-                self.train_log.new_epoch(epoch, self.gpu_id,
-                                        len(self.dataloaders[self.phase]))
-
+                self.train_log.log_phase(epoch, self.gpu_id,
+                                        len(self.dataloaders[self.phase]), self.phase)
             self._run_train_iter(epoch)
+
+            self.phase = 'val'
+            if self.log:
+                self.train_log.log_phase(epoch, self.gpu_id,
+                                        len(self.dataloaders[self.phase]), self.phase)
             iou = self._run_val_iter(epoch)
     
             # Epoch end
