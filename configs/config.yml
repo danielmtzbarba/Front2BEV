@@ -95,7 +95,8 @@ uncert_weight: 0.0
 
 # Focal loss parameters
 focal: 
-  - 0.0
+  alpha: 0.0
+  gamma: 0
 
 # KL-Divergence loss weight (used by VED network)
 kld_weight: 0.0

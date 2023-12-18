@@ -27,8 +27,8 @@ loss_fn: bce
 weight_mode: inverse
 
 # Training Options
-num_epochs: 3
-batch_size: 1
+num_epochs: 10
+batch_size: 16
 num_workers: 4
 
 #***********************************************************************

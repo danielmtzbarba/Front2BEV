@@ -1,6 +1,6 @@
 #******************  Directory options ******************
 
-dataset_root: /media/danielmtz/dan/Datasets/Dan-2023-Front2BEV/
+dataset_root: /media/danielmtz/data/datasets/Dan-2023-Front2BEV/
 
 # Directory to save experiment to
 logdir: /media/danielmtz/data/results

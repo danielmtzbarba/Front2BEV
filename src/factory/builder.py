@@ -88,6 +88,8 @@ class Builder(object):
         self.lr_scheduler.load_state_dict(ckpt['scheduler'])
 
         return ckpt
+    
+# ----------------------------------------------------------------------------
 
     def attach2trainer(self):
         if self._config.model == "ved":
@@ -95,12 +97,11 @@ class Builder(object):
                                 self._config.num_class, self._gpu_id)
             
         if self._config.model == "pyramid":
-            trainer = trainers.PonTrainer(self.model, self.criterion, self._gpu_id)
+            trainer = trainers.PonTrainer(self.model, self.criterion,
+                                self._config.num_class, self._gpu_id)
         
         return trainer
         
-
-
     def get_train_objs(self):
         return self.attach2trainer(), self.optimizer, self.lr_scheduler, self.criterion
     
