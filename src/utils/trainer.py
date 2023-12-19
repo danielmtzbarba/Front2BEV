@@ -27,13 +27,14 @@ class Trainer:
         self.train_log = TrainLog(self.config)
         self.log = True if gpu_id == 0 else False
 
-    def _run_batch(self, images, labels):
+    def _run_batch(self, batch):
         self.optimizer.zero_grad()
 
         # forward: Track history only if training
         with torch.set_grad_enabled(self.phase == 'train'):
-            
-            logits, loss = self._model_trainer(images, labels, self.phase)
+
+            # forward
+            logits, loss = self._model_trainer(batch, self.phase)
 
             # backward + optimize only if in training phase
             if self.phase == 'train':
@@ -46,10 +47,10 @@ class Trainer:
                 
             else:
                 # Validation
-                temp_acc, temp_iou = self._model_trainer.metrics(logits, labels)
+                metrics = self._model_trainer.metrics(logits, batch)
 
-                self.acc += temp_acc / len(self.dataloaders["val"])
-                self.iou += temp_iou / len(self.dataloaders["val"])
+                self.acc += metrics['acc'] / len(self.dataloaders["val"])
+                self.iou += metrics['iou'] / len(self.dataloaders["val"])
 
         self.running_loss += loss.item()
 
@@ -60,10 +61,7 @@ class Trainer:
 
         # Iterate over data
         for batch in tqdm(self.dataloaders[self.phase], disable=(self.gpu_id != 0)):
-            images = batch['image'].float().to(self.gpu_id)
-            labels = batch['label'].long().to(self.gpu_id)
-
-            self._run_batch(images, labels)
+            self._run_batch(batch)
 
         self.running_loss = self.running_loss / len(self.dataloaders[self.phase])
 

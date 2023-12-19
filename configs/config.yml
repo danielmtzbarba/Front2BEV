@@ -38,6 +38,14 @@ map_config: none
 csv_path: none
 
 dataset_root: none
+dataroot: none
+nuscenes_version: none
+hold_out_calibration: False
+label_root: none
+ved: 
+  bottleneck_dim: 0
+vpn:
+  output_size : [0, 0]
 
 #******************  Model options ******************
 # Architecture to train [pyramid | ved | vpn ]

@@ -46,7 +46,7 @@ def get_configuration():
     config.merge_from_file(f'configs/pc/{args.pc}.yml')
 
     # Load dataset options
-    config.merge_from_file(f'configs/datasets/{args.dataset}.yml')
+    config.merge_from_file(f'configs/datasets/{config.train_dataset}.yml')
 
     # Load model options
     config.merge_from_file(f'configs/models/{config.model}.yml')
@@ -55,7 +55,8 @@ def get_configuration():
     if args.resume is not None:
         config.merge_from_file(os.path.join(args.resume, 'config.yml'))
 
-    config.class_weights = get_dataset_weights(config)
+    if config.train_dataset == "front2bev":
+        config.class_weights = get_dataset_weights(config)
 
     # Finalise config
     config.freeze()

@@ -94,16 +94,16 @@ class Builder(object):
     def attach2trainer(self):
         if self._config.model == "ved":
             trainer = trainers.VedTrainer(self.model, self.criterion, 
-                                self._config.num_class, self._gpu_id)
+                                self._config, self._gpu_id)
             
         if self._config.model == "pyramid":
             trainer = trainers.PonTrainer(self.model, self.criterion,
-                                self._config.num_class, self._gpu_id)
+                                self._config, self._gpu_id)
         
         return trainer
         
     def get_train_objs(self):
-        return self.attach2trainer(), self.optimizer, self.lr_scheduler, self.criterion
+        return self.attach2trainer(), self.optimizer, self.lr_scheduler
     
     def get_test_objs(self):
         ckpt_path = os.path.join(self._config.logdir, self._config.name,

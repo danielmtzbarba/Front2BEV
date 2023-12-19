@@ -10,7 +10,7 @@ from src.utils.dataloader import get_f2b_dataloaders
 from dan.utils.torch import set_deterministic
 # -----------------------------------------------------------------------------
 
-from utils.vae_test import test_model
+from src.utils.vae_test import test_model
 
 # -----------------------------------------------------------------------------
 def main(config):

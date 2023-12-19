@@ -49,6 +49,7 @@ class TrainLog(object):
             'epochs': self._epochs
         }  
 
-        log_path = os.path.join(self.config.logdir, f'{self.config.name}.pkl')
+        log_path = os.path.join(self.config.logdir, self.config.name,
+                                 self.config.model,f'{self.config.name}.pkl')
 
         save_pkl_file(log_dict, log_path)

@@ -7,22 +7,28 @@ from src.utils.eval import metric_eval_bev
 
 
 class PonTrainer(nn.Module):
-    def __init__(self, model, criterion, num_class, rank):
+    def __init__(self, model, criterion, config, rank):
         super().__init__()
         self.model = model
         self.criterion = criterion
-        self.num_class = num_class
+        self.config = config       
         self.rank = rank
-    
-    def forward(self, images, labels, phase):
-        logits = self.model(images)
-        loss = self.criterion(logits, labels)
+        
+    def forward(self, batch, phase):
+
+        batch = [t.cuda() for t in batch]
+        image, calib, labels, mask = batch
+
+        # Predict class occupancy scores and compute loss
+        logits = self.model(image, calib)
+        loss = self.criterion(logits, labels, mask)
 
         return logits, loss
         
-    def metrics(self, logits, labels):
-        labels = labels.cpu().numpy().squeeze()
-        predictions = np.reshape(np.argmax(logits.cpu().numpy().transpose(
-            (0, 2, 3, 1)), axis=3), [64, 64])
-    
-        return metric_eval_bev(predictions, labels, self.num_class)
+    def metrics(self, logits, batch):
+        # Update confusion matrix
+        scores = logits.cpu().sigmoid()  
+        scores > self.config.score_thresh
+        acc = 0.0
+        iou = 0.0
+        return {'acc': acc, 'iou': iou}
