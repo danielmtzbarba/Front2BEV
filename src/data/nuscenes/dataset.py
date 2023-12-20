@@ -52,7 +52,6 @@ class NuScenesMapDataset(Dataset):
 
     def __getitem__(self, index):
         token = self.tokens[index]
-
         image = self.load_image(token)
         calib = self.load_calib(token)
         labels, mask = self.load_labels(token)
@@ -94,8 +93,8 @@ class NuScenesMapDataset(Dataset):
 
         # Decode to binary labels
         num_class = len(NUSCENES_CLASS_NAMES)
-        labels = decode_binary_labels(encoded_labels, num_class + 1)
-        labels, mask = labels[:-1], ~labels[-1]
+        encoded_labels = decode_binary_labels(encoded_labels, num_class + 1)
+        labels, mask = encoded_labels[:-1], ~encoded_labels[-1]
 
         return labels, mask
     

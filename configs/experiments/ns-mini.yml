@@ -28,8 +28,8 @@ weight_mode: inverse
 
 
 # Training Options
-num_epochs: 3
-batch_size: 4
+num_epochs: 10
+batch_size: 8
 num_workers: 1
 
 #***********************************************************************

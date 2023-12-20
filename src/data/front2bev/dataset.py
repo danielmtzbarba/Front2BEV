@@ -14,6 +14,10 @@ class Transforms(transforms.Compose):
     def __init__(self, transforms):
         self.transforms = transforms
 
+calib = np.array([[129.4754,   0.0000, 132.6751],
+                 [  0.0000, 460.3568, 274.0784],
+                 [  0.0000,   0.0000,   1.0000]])
+
 class Front2BEVDataset(Dataset):
 
     def __init__(self, df, image_size, num_class):
@@ -32,6 +36,7 @@ class Front2BEVDataset(Dataset):
         label = self.load_sem_mask(idx)
         sample = {'image': image.float(),
                    'label': label.float(),
+                   'calib': torch.from_numpy(calib).float()
                   }
 
         return sample

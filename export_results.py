@@ -4,7 +4,6 @@ warnings.filterwarnings("ignore")
 from dan.utils import load_pkl_file
 from dan.utils.torch import set_deterministic
 
-from src.utils.dataloader import get_f2b_dataloaders
 import scripts.plot_train_res as graph
 
 # -----------------------------------------------------------------------------
@@ -41,10 +40,6 @@ def main():
 
     args = dict2obj(args)
     args.distributed = False
-
-    dataloaders = get_f2b_dataloaders(args)
-
-    args.test_loader = dataloaders['test']
 
     print("\n", args.name)
   

@@ -8,7 +8,7 @@ import torch.multiprocessing as mp
 import torch.distributed as dist 
 
 from src.factory.builder import Builder
-from src.utils.dataloader import get_dataloaders
+from src.data.dataloader import get_dataloaders
 
 import src.utils.trainer as train
 from dan.utils.torch import set_deterministic

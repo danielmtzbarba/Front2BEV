@@ -81,7 +81,7 @@ class Trainer:
 
     def _run_val_iter(self, epoch):
         # Reset variables
-        self.confusion_m = None #BinaryConfusionMatrix(self.config.num_class)
+        self._model_trainer.reset_metrics()
         self.running_loss = 0.0
         self.acc = 0.0
         self.iou = 0.0
@@ -94,9 +94,9 @@ class Trainer:
             # Logging epoch loss
             self.train_log.log_epoch(epoch, self.running_loss, self.phase)
             # Logging metrics
-            self.train_log.log_metrics(self.confusion_m, self.acc, self.iou)
+            self.train_log.log_metrics(self.acc, self.iou)
 
-        return self.iou #self.confusion_m.mean_iou
+        return self.iou
     
     def _save_checkpoint(self, epoch, best_iou):
 

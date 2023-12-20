@@ -36,7 +36,7 @@ class TrainLog(object):
         
         print("Epoch:", epoch, f"{phase} loss (mean):", running_loss)
         
-    def log_metrics(self, cm, acc, iou):
+    def log_metrics(self, acc, iou):
         self._epochs['val_iou'].append(iou)
         print('-' * 50, "\nVal IoU: ", iou)
 
