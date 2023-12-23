@@ -43,4 +43,4 @@ class PonTrainer(nn.Module):
         # Update confusion matrix
         scores = logits.cpu().sigmoid() > self.config.score_thresh
         self.cm.update(scores > self.config.score_thresh, labels, mask)
-        return {'acc': self._acc, 'iou': self.cm.mean_iou}
+        return {'acc': self._acc, 'iou': self.cm.mean_iou, 'cm': self.cm}

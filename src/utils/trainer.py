@@ -39,11 +39,13 @@ class Trainer:
             # backward + optimize only if in training phase
             if self.phase == 'train':
                 loss.backward()
-                self.optimizer.step()
-                
+
                 # Log
                 if self.log:
-                    self.train_log.log_batch(loss.item())
+                    self.train_log.log_batch(loss.item(), self._iteration)
+                
+                self.optimizer.step()
+                self._iteration += 1
                 
             else:
                 # Validation
@@ -51,6 +53,10 @@ class Trainer:
 
                 self.acc += metrics['acc'] / len(self.dataloaders["val"])
                 self.iou += metrics['iou'] / len(self.dataloaders["val"])
+                self.cm = metrics['cm']
+
+                if self.log:
+                    self.train_log.log_visual_res(batch, logits, self._iteration, self.phase)
 
         self.running_loss += loss.item()
 
@@ -85,6 +91,7 @@ class Trainer:
         self.running_loss = 0.0
         self.acc = 0.0
         self.iou = 0.0
+        self.cm = None
     
         # Set model to eval mode
         self._model_trainer.model.eval()  
@@ -94,7 +101,7 @@ class Trainer:
             # Logging epoch loss
             self.train_log.log_epoch(epoch, self.running_loss, self.phase)
             # Logging metrics
-            self.train_log.log_metrics(self.acc, self.iou)
+            self.train_log.log_metrics(self.acc, self.iou, self.cm, epoch)
 
         return self.iou
     
@@ -126,19 +133,20 @@ class Trainer:
 
         epoch = 1
         self.best_iou = 0.0
-        
+
+        self._iteration = (epoch - 1) * len(self.dataloaders["train"])
 
         while epoch <= self.config.num_epochs:
             self.phase = 'train'
             if self.log:
                 self.train_log.log_phase(epoch, self.gpu_id,
                                         len(self.dataloaders[self.phase]), self.phase)
-            self._run_train_iter(epoch)
+            self._run_train_iter(epoch)        
 
             self.phase = 'val'
             if self.log:
                 self.train_log.log_phase(epoch, self.gpu_id,
-                                        len(self.dataloaders[self.phase]), self.phase)
+                                        len(self.dataloaders[self.phase]), self.phase)            
             iou = self._run_val_iter(epoch)
     
             # Epoch end

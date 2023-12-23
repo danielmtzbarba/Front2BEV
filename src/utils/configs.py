@@ -40,7 +40,7 @@ def get_configuration():
     config.merge_from_file(f'configs/experiments/{args.experiment}.yml')
 
     # Override with command line options
-    config.merge_from_list(args.options)
+    #config.merge_from_list(args.options)
 
     # Load pc options
     config.merge_from_file(f'configs/pc/{args.pc}.yml')

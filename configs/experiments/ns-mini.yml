@@ -5,31 +5,54 @@ seed: 1596
 
 # Experiment name
 name: ns-mini
-
 resume: False
 
-# Dataset to train on
+# Dataset options
 train_dataset: nuscenes
-
 map_config: traffic
-model: pyramid
-num_class: 14
-
-# Save model every n epochs
-save_every: 1
-
-# Model options
-
-# Loss function
-loss_fn: bce
-
-# Method of weighting classes in loss function
-weight_mode: inverse
-
 
 # Training Options
-num_epochs: 10
+num_epochs: 2
 batch_size: 8
 num_workers: 1
+
+# Model options
+model: pyramid
+save_every: 1
+
+# Loss options
+weight_mode: inverse
+loss_fn: bce
+
+focal:
+  alpha: 0.25
+  gamma: 2
+
+# optimizer
+optimizer: adam
+learning_rate: 0.0001
+weight_decay: 0.0001
+
+# Scheduler
+lr_scheduler: steplr
+lr_step_size: 1
+lr_gamma: 0.97
+
+# Binary cross entropy loss weight
+xent_weight: 1.0
+
+# Max entropy uncertainty loss weight
+uncert_weight: 0.001
+
+# Top-left and bottom right coordinates of map region, in meters
+map_extents: [-25., 1., 25., 50.]
+
+# Spacing between adjacent grid cells in the map, in meters
+map_resolution: 0.25
+
+# Image size
+img_size: [256, 512]
+
+score_thresh: 0.5
 
 #***********************************************************************

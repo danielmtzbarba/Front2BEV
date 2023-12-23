@@ -108,7 +108,8 @@ class Builder(object):
     def get_test_objs(self):
         ckpt_path = os.path.join(self._config.logdir, self._config.name,
                                   self._config.model, f"{self._config.name}.pth.tar")
-        self._load_checkpoint(ckpt_path)
-        return self.model
+        _  = self._load_checkpoint(ckpt_path)
+
+        return self.attach2trainer()
 
 # ----------------------------------------------------------------------------

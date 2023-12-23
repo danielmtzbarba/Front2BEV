@@ -1,9 +1,12 @@
+#******************  Dataset options ******************
+
 train_dataset: nuscenes
 dataroot: /media/danielmtz/data/datasets/NuScenes/v1.0-mini
 nuscenes_version: v1.0-mini
 label_root: /media/danielmtz/data/datasets/NuScenes/v1.0-mini/map-labels
-img_size: [800, 600]
+
 num_class: 14
+
 class_weights:
   -    1.7    # drivable_area
   -    5.9    # ped_crossing
@@ -37,14 +40,4 @@ prior:
   - 0.00031   # traffic_cone
   - 0.00176   # barrier
 
-ved:
-  bottleneck_dim: 18
-
-vpn:
-  output_size : [29, 50]
-
-# Top-left and bottom right coordinates of map region, in meters
-map_extents: [-25., 1., 25., 50.]
-
-# Spacing between adjacent grid cells in the map, in meters
-map_resolution: 0.25
+#******************  Dataset options ******************
