@@ -3,41 +3,15 @@
 train_dataset: nuscenes
 dataroot: /media/danielmtz/data/datasets/NuScenes/v1.0-mini
 nuscenes_version: v1.0-mini
-label_root: /media/danielmtz/data/datasets/NuScenes/v1.0-mini/map-labels
+label_root: /media/danielmtz/data/datasets/NuScenes/v1.0-mini/map-labels-2
 
-num_class: 14
+num_class: 1
 
 class_weights:
-  -    1.7    # drivable_area
-  -    5.9    # ped_crossing
-  -    3.3    # walkway
-  -    4.6    # carpark
-  -    8.0    # car
-  -   10.3    # truck
-  -   10.6    # bus
-  -    6.9    # trailer
-  -   11.8    # construction_vehicle
-  -   30.1    # pedestrian
-  -   33.6    # motorcycle
-  -   41.2    # bicycle
-  -   44.3    # traffic_cone
-  -   15.9    # barrier
+  -    2.    # drivable_area
 
 # Prior probability of a positive prediction, used to initialise classifier
 prior: 
-  - 0.44679   # drivable_area
-  - 0.02407   # ped_crossing
-  - 0.14491   # walkway
-  - 0.02994   # carpark
-  - 0.02086   # car
-  - 0.00477   # truck
-  - 0.00156   # bus
-  - 0.00189   # trailer
-  - 0.00084   # construction_vehicle
-  - 0.00119   # pedestrian
-  - 0.00019   # motorcycle
-  - 0.00012   # bicycle
-  - 0.00031   # traffic_cone
-  - 0.00176   # barrier
+  - 0.6   # drivable_area
 
 #******************  Dataset options ******************

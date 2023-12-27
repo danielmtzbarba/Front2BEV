@@ -43,6 +43,7 @@ def _make_grid(resolution, extents):
     # Create a grid of cooridinates in the birds-eye-view
     x1, z1, x2, z2 = extents
     zz, xx = torch.meshgrid(
-        torch.arange(z1, z2, resolution), torch.arange(x1, x2, resolution))
-
+        torch.arange(z1, z2, resolution),
+        torch.arange(x1, x2, resolution)
+    )
     return torch.stack([xx, zz], dim=-1)

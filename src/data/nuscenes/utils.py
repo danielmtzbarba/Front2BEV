@@ -13,12 +13,9 @@ CAMERA_NAMES = ['CAM_FRONT', 'CAM_FRONT_LEFT', 'CAM_FRONT_RIGHT',
                 'CAM_BACK_LEFT', 'CAM_BACK_RIGHT', 'CAM_BACK']
 
 NUSCENES_CLASS_NAMES = [
-    'drivable_area', 'ped_crossing', 'walkway', 'carpark', 'car', 'truck', 
-    'bus', 'trailer', 'construction_vehicle', 'pedestrian', 'motorcycle', 
-    'bicycle', 'traffic_cone', 'barrier'
-]
+    'drivable_area']
 
-STATIC_CLASSES = ['drivable_area', 'ped_crossing', 'walkway', 'carpark_area']
+STATIC_CLASSES = ['drivable_area']
 
 LOCATIONS = ['boston-seaport', 'singapore-onenorth', 'singapore-queenstown',
              'singapore-hollandvillage']

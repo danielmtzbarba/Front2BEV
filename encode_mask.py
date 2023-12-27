@@ -12,9 +12,12 @@ from src.utils.visualize import colorise
 
 import torchvision.transforms.functional as F
 
+from src.factory.builder import Builder
+import dan.utils.graph as graph
 # -----------------------------------------------------------------------------
 
-def plot_mask(mask):
+def compare_bev_pred(mask):
+
     plt.imshow(mask)
     plt.show()
 
@@ -25,11 +28,10 @@ def binarize_mask(tensor):
     return (tensor - vmin) / (vmax - vmin)
 
 def decode_class_mask(labels):
-    labels = labels[0]
     for i, ch in enumerate(labels):
-        class_mask = binarize_mask(ch)
-        labels[i, :, :] = class_mask
-    return np.argmax(labels, 0)
+        class_masks = binarize_mask(ch)
+        labels[i, :, :] = class_masks
+    return class_masks, np.argmax(labels, 0)
 
 def mask_img(labels, mask, num_class):
     labels[mask] = num_class
@@ -37,6 +39,13 @@ def mask_img(labels, mask, num_class):
 
 def tensor2image(img):
     return np.array(F.to_pil_image(img))
+
+def plot_class_masks(class_masks):
+    fig, ax = plt.subplots(nrows=4, ncols=4, figsize=(12, 10))
+
+    for i in range(len(class_masks)):
+        msk = np.reshape(class_masks[i, :, :].numpy().astype('int'), (196, 200))
+        ax.ravel()[i].imshow(msk)
 
 def main(rank: int, config: object):
 
@@ -46,11 +55,24 @@ def main(rank: int, config: object):
     for batch in data:
         image, calib, labels, mask = batch
         
-        image = tensor2image(image[0])
+        #image = tensor2image(image[0])
 
-        class_mask = decode_class_mask(labels)
-        bev = mask_img(class_mask, np.reshape(np.invert(mask.numpy()), (196, 200)), 14)
-        plot_mask(bev)
+        class_masks, bev = decode_class_mask(labels)
+
+        plot_class_masks(class_masks)
+
+        #bev = mask_img(class_mask, np.reshape(np.invert(mask[0].numpy()), (196, 200)), 14)
+
+        builder = Builder(config, 0)
+        model_trainer = builder.get_test_objs()
+        logits, loss = model_trainer(batch, "val")
+
+        scores = logits.cpu().sigmoid() > config.score_thresh
+        pred_masks, pred_bev = decode_class_mask(scores)
+        #pred = mask_img(preds, np.reshape(np.invert(mask[0].numpy()), (196, 200)), 14)
+        plot_class_masks(pred_masks)
+
+        plt.show()
         break
     
 

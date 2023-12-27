@@ -76,7 +76,7 @@ def process_sample_data(nuscenes, map_data, sample_data, lidar, config):
     
     # Encode masks as integer bitmask
     labels = encode_binary_labels(masks)
-
+    
     # Save outputs to disk
     output_path = os.path.join(os.path.expandvars(config.label_root),
                                sample_data['token'] + '.png')
@@ -126,7 +126,9 @@ if __name__ == '__main__':
 
     # Load the default configuration
     config = get_default_configuration()
+    config.merge_from_file('configs/experiments/ns-mini.yml')
     config.merge_from_file('configs/datasets/nuscenes.yml')
+
 
     # Load NuScenes dataset
     dataroot = os.path.expandvars(config.dataroot)

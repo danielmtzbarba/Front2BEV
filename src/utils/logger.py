@@ -45,7 +45,7 @@ class TrainLog(object):
 
     def log_epoch(self, epoch, running_loss, phase):
         # Update tensorboard
-        self._summary.add_scalar('{phase}/loss', float(running_loss), epoch)
+        self._summary.add_scalar(f'{phase}/mloss', float(running_loss), epoch)
         
         # Log
         self._epochs[f'mean_{phase}_loss'].append(running_loss)
