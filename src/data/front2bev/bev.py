@@ -9,7 +9,7 @@ def resize_img(img, size):
                        interpolation = cv2.INTER_NEAREST)
 
 def dilated_class(sem_img, bev_img, cmap, size,
-                   k= 3, i=3, morph=False):
+                   k= 3, i=3, morph=True):
     bev_img = bev_img.copy()
     cls_mask = sem_img.copy()
     cls_mask = (sem_img == cmap[0]).astype(np.uint8)
@@ -32,7 +32,6 @@ def remap_seg(bev_img, bev_mapping, n_classes):
 
 def mask_img(img, mask64, n_classes):
     img = img.copy()
-    img[30:33,32] = 1
     out_of_fov = (mask64 == 0)
     img *=  mask64
     img[out_of_fov] = n_classes
@@ -51,16 +50,7 @@ def decode_masks(encoded_bev, n_classes, fov_mask):
     masks[:, :, n_classes] = fov_mask
     return masks
 
-def decode_binary_labels(labels, nclass):
-    bits = torch.pow(2, torch.arange(nclass))
-    return (labels & bits.view(-1, 1, 1)) > 0
-
-def encode_binary_labels(masks):
-    w, h, c = masks.shape
-    bits = np.power(2, np.arange(c, dtype=np.int32))
-    return (np.resize(masks, (c, w, h)).astype(np.int32) * bits.reshape(-1, 1, 1)).sum(0)
-
-def postprocess(sem_img, bev_map, size, fov_mask, n_classes, morph=False):
+def postprocess(sem_img, bev_map, size, fov_mask, n_classes, morph=True):
     remapped = remap_seg(sem_img, bev_map, n_classes)
     bev_img = resize_img(remapped, size)
 

@@ -1,7 +1,16 @@
 from pathlib import Path
+import torch
 import numpy as np
 import cv2
 
+def decode_binary_labels(labels, nclass):
+    bits = torch.pow(2, torch.arange(nclass))
+    return (labels & bits.view(-1, 1, 1)) > 0
+
+def encode_binary_labels(masks):
+    w, h, c = masks.shape
+    bits = np.power(2, np.arange(c, dtype=np.int32))
+    return (np.resize(masks, (c, w, h)).astype(np.int32) * bits.reshape(-1, 1, 1)).sum(0)
 
 def process_path(df, root_path, num_class, map_config):
     for _, row in df.iterrows():

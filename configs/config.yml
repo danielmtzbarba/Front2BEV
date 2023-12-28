@@ -22,6 +22,7 @@ num_class: 0
 
 # Input image size after downsampling
 img_size: [0, 0]
+output_size: [0, 0]
 
 # Top-left and bottom right coordinates of map region, in meters
 map_extents: [0, 0]

@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.cm import get_cmap
 import numpy as np
 import torch
+import math
 
 def colorise(tensor, cmap, vmin=None, vmax=None):
 
@@ -35,20 +36,24 @@ def plot_post_pipeline(imgs,  titles=[],figsize=(12, 8)):
         ax[i].set_title(titles[i], fontdict={"fontsize": 20})
     fig.suptitle("BEV ground-truth generation", fontsize=30)
 
-def plot_class_masks(class_masks,  titles=[],figsize=(12, 8)):
+def plot_class_masks(class_masks, fov_mask, titles=[], figsize=(20, 10)):
+    print(class_masks.shape, fov_mask.shape)
+
     w, h, c = class_masks.shape
-    fig, ax = plt.subplots(nrows=2, ncols=4, figsize=figsize)
+    ncols = 3
+    if c + 1 > ncols:
+        nrows = (c + 1) // ncols + ((c + 1)  % ncols > 0)
+    else:
+        nrows = 1
+  
+    fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
     for i in range(c):
         msk = np.reshape(class_masks[:, :, i].astype('int'), (w, h))
         ax.ravel()[i].imshow(msk)
+    ax.ravel()[i+1].imshow(fov_mask)
+    fig.suptitle("BEV Semantic classes", fontsize=30)
 
-    fig.suptitle("BEV ground-truth generation", fontsize=30)
-
-def decode_binary_labels(labels, nclass):
-    bits = torch.pow(2, torch.arange(nclass))
-    return (labels & bits.view(-1, 1, 1)) > 0
-
-def encode_binary_labels(masks):
-    w, h, c = masks.shape
-    bits = np.power(2, np.arange(c, dtype=np.int32))
-    return (np.resize(masks, (c, h, w)).astype(np.int32) * bits.reshape(-1, 1, 1)).sum(0)
+def plot_encoded_masks(img, title='',figsize=(20, 10)):
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
+    ax.imshow(img)
+    fig.suptitle("Encoded semantic masks", fontsize=30)

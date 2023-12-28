@@ -16,6 +16,9 @@ from src.data.utils import get_visible_mask, get_occlusion_mask, transform, \
     encode_binary_labels
 import src.data.nuscenes.utils as nusc_utils
 
+import matplotlib.pyplot as plt
+from src.utils.visualize import plot_class_masks
+
 
 def process_scene(nuscenes, map_data, scene, config):
 
@@ -27,7 +30,7 @@ def process_scene(nuscenes, map_data, scene, config):
     first_sample_token = scene['first_sample_token']
     for sample in nusc_utils.iterate_samples(nuscenes, first_sample_token):
         process_sample(nuscenes, scene_map_data, sample, config)
-
+        break
 
 def process_sample(nuscenes, map_data, sample, config):
 
@@ -43,6 +46,7 @@ def process_sample(nuscenes, map_data, sample, config):
     for camera in nusc_utils.CAMERA_NAMES:
         sample_data = nuscenes.get('sample_data', sample['data'][camera])
         process_sample_data(nuscenes, map_data, sample_data, lidar_pcl, config)
+        break
 
 
 def process_sample_data(nuscenes, map_data, sample_data, lidar, config):
@@ -76,6 +80,15 @@ def process_sample_data(nuscenes, map_data, sample_data, lidar, config):
     
     # Encode masks as integer bitmask
     labels = encode_binary_labels(masks)
+    plt.imshow(labels)
+
+    print(masks.shape)
+    masksplt = np.transpose(masks, (1, 2, 0))
+    plot_class_masks(masksplt, masks[-1])
+    plt.show()
+
+
+    
     
     # Save outputs to disk
     output_path = os.path.join(os.path.expandvars(config.label_root),
@@ -147,6 +160,7 @@ if __name__ == '__main__':
     print("\nGenerating labels...")
     for scene in tqdm(nuscenes.scene):
         process_scene(nuscenes, map_data, scene, config)
+        break
 
 
 
