@@ -1,5 +1,18 @@
 #******************  Dataset options ******************
-csv_path: src/datasets/F2B-debug
-csv_path: src/datasets/Dan-2023-Front2BEV
+csv_path: datasets/Dan-2023-Front2BEV
+#csv_path: datasets/F2B-debug
+
+# Class-specific weighting factors used to balance the cross entropy loss
+class_weights:
+  -    2.0    # drivable_area
+
+
+
+# Prior probability of a positive prediction, used to initialise classifier
+prior:
+  - 0.5  # drivable_area
+#  - 0.14491   # walkway
+#  - 0.02994   # carpark
+#  - 0.02086   # car
 
 #******************  Dataset options ******************

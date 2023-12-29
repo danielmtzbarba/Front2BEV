@@ -1,0 +1,17 @@
+#******************  Dataset options ******************
+
+train_dataset: nuscenes
+dataroot: /media/danielmtz/data/datasets/NuScenes/v1.0-mini
+nuscenes_version: v1.0-mini
+label_root: /media/danielmtz/data/datasets/NuScenes/v1.0-mini/map-labels-2
+
+num_class: 1
+
+class_weights:
+  -    2.    # drivable_area
+
+# Prior probability of a positive prediction, used to initialise classifier
+prior: 
+  - 0.6   # drivable_area
+
+#******************  Dataset options ******************

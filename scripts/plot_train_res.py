@@ -48,7 +48,7 @@ def plot_train_loss(batch_loss, title=["Title", "", ""], figsize=(25, 10), save_
     ax.text(0.675, 0.93, f'{title[2]}', fontsize=28, transform = ax.transAxes)
 
     if save_path:
-        fig.savefig(save_path.replace(".png", ".eps"))
+     #   fig.savefig(save_path.replace(".png", ".eps"))
         fig.savefig(save_path)
 
     return ax
@@ -77,7 +77,7 @@ def plot_val_metrics(data, title=["Title", "", ""], figsize=(25, 10), save_path=
     ax = style_fig(ax, title[0])
 
     if save_path:
-        fig.savefig(save_path.replace(".png", ".eps"))
+       # fig.savefig(save_path.replace(".png", ".eps"))
         fig.savefig(save_path)
         
     return ax

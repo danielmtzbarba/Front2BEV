@@ -8,7 +8,7 @@ import torch.multiprocessing as mp
 import torch.distributed as dist 
 
 from src.factory.builder import Builder
-from src.utils.dataloader import get_f2b_dataloaders
+from src.data.dataloader import get_dataloaders
 
 import src.utils.trainer as train
 from dan.utils.torch import set_deterministic
@@ -21,13 +21,14 @@ def main(rank: int, config: object):
 
     # Get model, optimzer and lr_scheduler
     builder = Builder(config, rank)
-    model, optimizer, lr_scheduler, criterion = builder.get_train_objs()
 
-    dataloaders = get_f2b_dataloaders(config)
+    model_trainer, optimizer, lr_scheduler = builder.get_train_objs()
+
+    dataloaders = get_dataloaders(config)
 
     trainer = train.Trainer(
         dataloaders=dataloaders,
-        model_trainer=model,
+        model_trainer=model_trainer,
         optimizer=optimizer,
         scheduler=lr_scheduler,
         gpu_id=rank,

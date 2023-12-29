@@ -10,14 +10,14 @@ from src.data.dataloader import get_dataloaders
 from dan.utils.torch import set_deterministic
 # -----------------------------------------------------------------------------
 
-from src.utils.tester import test
+from src.utils.vae_test import test_model
 
 # -----------------------------------------------------------------------------
 def main(config):
     dataloaders = get_dataloaders(config)
     builder = Builder(config, 0)
-    model = builder.get_test_objs()
-    test(model, dataloaders['val'], config)
+    model_trainer = builder.get_test_objs(config)
+ #   test_model(model, dataloaders['test'], config)
     
 # -----------------------------------------------------------------------------
 

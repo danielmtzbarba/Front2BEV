@@ -1,10 +1,10 @@
 #******************  Experiment options ******************
 
 # Random seed
-seed: 0
+seed: 1596
 
 # Experiment name
-name: none
+name: test
 
 resume: False
 
@@ -13,9 +13,7 @@ train_dataset: none
 
 # Directory to save experiment to
 logdir: none
-
-# Save model every n epochs
-save_every: 1
+log_interval: 50
 
 #******************  Dataset options ******************
 
@@ -24,6 +22,7 @@ num_class: 0
 
 # Input image size after downsampling
 img_size: [0, 0]
+output_size: [0, 0]
 
 # Top-left and bottom right coordinates of map region, in meters
 map_extents: [0, 0]
@@ -38,6 +37,14 @@ map_config: none
 csv_path: none
 
 dataset_root: none
+dataroot: none
+nuscenes_version: none
+hold_out_calibration: False
+label_root: none
+ved: 
+  bottleneck_dim: 0
+vpn:
+  output_size : [0, 0]
 
 #******************  Model options ******************
 # Architecture to train [pyramid | ved | vpn ]

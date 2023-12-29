@@ -1,0 +1,58 @@
+#******************  Experiment options ******************
+
+# Random seed
+seed: 1596
+
+# Experiment name
+name: ns-mini
+resume: False
+
+# Dataset options
+train_dataset: nuscenes
+map_config: traffic
+
+# Training Options
+num_epochs: 5
+batch_size: 8
+num_workers: 4
+
+# Model options
+model: pyramid
+log_interval: 50
+
+# Loss options
+weight_mode: inverse
+loss_fn: bce
+
+focal:
+  alpha: 0.25
+  gamma: 2
+
+# optimizer
+optimizer: adam
+learning_rate: 0.0001
+weight_decay: 0.0001
+
+# Scheduler
+lr_scheduler: steplr
+lr_step_size: 1
+lr_gamma: 0.97
+
+# Binary cross entropy loss weight
+xent_weight: 1.0
+
+# Max entropy uncertainty loss weight
+uncert_weight: 0.001
+
+# Top-left and bottom right coordinates of map region, in meters
+map_extents: [-25., 1., 25., 50.]
+
+# Spacing between adjacent grid cells in the map, in meters
+map_resolution: 0.25
+
+# Image size
+img_size: [256, 512]
+
+score_thresh: 0.5
+
+#***********************************************************************

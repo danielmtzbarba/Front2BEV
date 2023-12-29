@@ -25,7 +25,8 @@ class Builder(object):
         self.lr_scheduler = self._build_scheduler()
 
         if config.resume:
-            self.load_checkpoint()
+            self._load_checkpoint(f'{config.logdir}/{config.name}/{config.model}/{config.name}.pth.tar')
+            print(f"{config.model} model loaded! Resuming training...")
         
         self.criterion = self._build_criterion()
     
@@ -94,21 +95,22 @@ class Builder(object):
     def attach2trainer(self):
         if self._config.model == "ved":
             trainer = trainers.VedTrainer(self.model, self.criterion, 
-                                self._config.num_class, self._gpu_id)
+                                self._config, self._gpu_id)
             
         if self._config.model == "pyramid":
             trainer = trainers.PonTrainer(self.model, self.criterion,
-                                self._config.num_class, self._gpu_id)
+                                self._config, self._gpu_id)
         
         return trainer
         
     def get_train_objs(self):
-        return self.attach2trainer(), self.optimizer, self.lr_scheduler, self.criterion
+        return self.attach2trainer(), self.optimizer, self.lr_scheduler
     
     def get_test_objs(self):
         ckpt_path = os.path.join(self._config.logdir, self._config.name,
                                   self._config.model, f"{self._config.name}.pth.tar")
-        self._load_checkpoint(ckpt_path)
-        return self.model
+        _  = self._load_checkpoint(ckpt_path)
+        print("Loaded model at", ckpt_path)
+        return self.attach2trainer()
 
 # ----------------------------------------------------------------------------
