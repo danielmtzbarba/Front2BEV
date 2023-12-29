@@ -25,7 +25,8 @@ class Builder(object):
         self.lr_scheduler = self._build_scheduler()
 
         if config.resume:
-            self.load_checkpoint()
+            self._load_checkpoint(f'{config.logdir}/{config.name}/{config.model}/{config.name}.pth.tar')
+            print(f"{config.model} model loaded! Resuming training...")
         
         self.criterion = self._build_criterion()
     

@@ -113,7 +113,7 @@ class Trainer:
             # Logging epoch loss
             self.train_log.log_epoch(self._epoch, self.running_loss, self._phase)
             # Logging metrics
-            self.train_log.log_metrics(self.acc, self.iou, self.cm, self._iteration)
+            self.train_log.log_metrics(self.acc, self.iou, self.cm, self._epoch)
 
         return self.iou
     

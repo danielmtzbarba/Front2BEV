@@ -51,16 +51,16 @@ def main(rank: int, config: object):
     for batch in data:
         image, calib, labels, mask = batch
         print(image.shape, labels[0].shape, mask[0].shape)
-        plot_class_masks(labels[0].numpy().transpose((2, 1, 0)), mask[0].numpy().transpose())
+        plot_class_masks(labels[0].numpy().transpose((2, 1, 0)), mask[0].numpy())
 
-        #bev = mask_img(class_mask, np.reshape(np.invert(mask[0].numpy()), (196, 200)), 14)
 
-        #builder = Builder(config, 0)
-        #model_trainer = builder.get_test_objs()
-        #logits, loss = model_trainer(batch, "val")
+        builder = Builder(config, 0)
+        model_trainer = builder.get_test_objs()
+        logits, loss = model_trainer(batch, "val")
 
-        #scores = logits.cpu().sigmoid() > config.score_thresh
-        #pred_masks, pred_bev = decode_class_mask(scores)
+        scores = logits.cpu().sigmoid() > config.score_thresh
+     #   plot_class_masks(labels[0].numpy().transpose((2, 1, 0)), mask[0].numpy())
+
         #pred = mask_img(preds, np.reshape(np.invert(mask[0].numpy()), (196, 200)), 14)
         #plot_class_masks(pred_masks)
 

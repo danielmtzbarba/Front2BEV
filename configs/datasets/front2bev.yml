@@ -4,19 +4,15 @@ csv_path: datasets/Dan-2023-Front2BEV
 
 # Class-specific weighting factors used to balance the cross entropy loss
 class_weights:
-  -    1.7    # drivable_area
-  -    5.9    # ped_crossing
-  -    3.3    # walkway
-  -    4.6    # carpark
-  -    8.0    # car
+  -    2.0    # drivable_area
+
 
 
 # Prior probability of a positive prediction, used to initialise classifier
 prior:
-  - 0.44679   # drivable_area
-  - 0.02407   # ped_crossing
-  - 0.14491   # walkway
-  - 0.02994   # carpark
-  - 0.02086   # car
+  - 0.5  # drivable_area
+#  - 0.14491   # walkway
+#  - 0.02994   # carpark
+#  - 0.02086   # car
 
 #******************  Dataset options ******************
