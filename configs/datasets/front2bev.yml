@@ -15,4 +15,6 @@ prior:
 #  - 0.02994   # carpark
 #  - 0.02086   # car
 
+
+class_names: ['drivable_area', 'non-drivable', 'walkway', 'vehicle', 'pedestrian', 'roadlines']
 #******************  Dataset options ******************

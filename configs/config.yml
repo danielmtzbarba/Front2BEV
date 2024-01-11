@@ -46,6 +46,7 @@ ved:
 vpn:
   output_size : [0, 0]
 
+class_names: []
 #******************  Model options ******************
 # Architecture to train [pyramid | ved | vpn ]
 model: none

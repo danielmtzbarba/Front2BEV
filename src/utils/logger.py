@@ -26,6 +26,8 @@ class TrainLog(object):
             'val_iou': [],
             'val_miou': [],
         }
+
+        self._class_names = [config.class_names[cl] for cl in range(config.num_class)]
     
     def log_phase(self, epoch, gpu_id, steps, phase="train"):
         print('-' * 50,'\nEpoch {}/{}'.format(epoch, self.config.num_epochs))
@@ -52,12 +54,11 @@ class TrainLog(object):
         print("Epoch:", epoch, f"{phase} loss (mean):", running_loss)
         
     def log_metrics(self, acc, iou, confusion, epoch):
-        class_names = NUSCENES_CLASS_NAMES 
 
         self._summary.add_scalar(f'val/miou', confusion.mean_iou, epoch)
 
         print('-' * 50, '\nResults:')
-        for name, iou_score in zip(class_names, confusion.iou):
+        for name, iou_score in zip(self._class_names, confusion.iou):
             print('{:20s} {:.3f}'.format(name, iou_score)) 
 
         self._epochs['val_iou'].append(iou)

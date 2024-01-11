@@ -52,6 +52,10 @@ class BinaryConfusionMatrix(object):
         if not valid.any():
             return 0
         return float(self.iou[valid].mean())
+    
+    @property
+    def accuracy(self):
+        return (self.tp + self.tn) / (self.tp + self.tn + self.fp + self.fn)
 
     @property
     def dice(self):
