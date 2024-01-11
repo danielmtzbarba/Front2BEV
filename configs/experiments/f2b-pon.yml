@@ -5,7 +5,7 @@ seed: 1596
 
 # Experiment name
 name: f2b-pon
-resume: False
+resume: None
 
 # Dataset options
 train_dataset: front2bev
@@ -15,7 +15,7 @@ num_class: 2
 bayesian: False
 
 # Training Options
-num_epochs: 20
+num_epochs: 10
 batch_size: 8
 num_workers: 4
 
@@ -32,7 +32,7 @@ focal:
   gamma: 2
 
 # optimizer
-optimizer: sgd
+optimizer: adam
 learning_rate: 0.1
 weight_decay: 0.0001
 

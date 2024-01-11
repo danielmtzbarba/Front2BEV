@@ -13,4 +13,6 @@ topdown:
 # Whether to use Bayesian classifier
 bayesian: False
 
+find_unused_params: False
+
 #******* Roddick et al. PON config *******

@@ -16,10 +16,11 @@ class Builder(object):
 
         self.model = models.build_model(config)
 
-        if config.distributed:
-            self.model = DDP(self.model, device_ids=[gpu_id], find_unused_parameters=True)
-        
         self.model.to(gpu_id)
+        
+        if config.distributed:
+            self.model = DDP(self.model, device_ids=[gpu_id],
+                             find_unused_parameters=config.find_unused_params)
 
         self.optimizer = self._build_optimizer()
         self.lr_scheduler = self._build_scheduler()

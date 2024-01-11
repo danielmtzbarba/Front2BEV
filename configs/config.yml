@@ -71,6 +71,7 @@ distributed: False
 
 # IDs of GPUs to use during training
 num_gpus: 1
+find_unused_params: False
 
 # Number of examples per mini-batch
 batch_size: 1

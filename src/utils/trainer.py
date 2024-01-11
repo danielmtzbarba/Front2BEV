@@ -18,7 +18,7 @@ class Trainer:
         config: object):
         
         self.gpu_id = gpu_id
-        self._model_trainer = model_trainer
+        self._model_trainer = model_trainer.to(gpu_id)
         self.dataloaders = dataloaders
 
         self.optimizer = optimizer

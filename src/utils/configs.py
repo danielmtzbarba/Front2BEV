@@ -15,16 +15,16 @@ def get_default_configuration():
 
 def get_console_args():
     parser = ArgumentParser()
-    parser.add_argument('--dataset', choices=['front2bev'],
+    parser.add_argument('--dataset', choices=['front2bev', 'nuscenes'],
                         default='front2bev', help='dataset to train on')
-    parser.add_argument('--model', choices=['pyramid', 'vpn', 'ved'],
+    parser.add_argument('--model', choices=['ved', 'pyramid'],
                         default='ved', help='model to train')
     parser.add_argument('--experiment', default='test', 
                         help='name of experiment config to load')
     parser.add_argument('--resume', default=None, 
                         help='path to an experiment to resume')
     parser.add_argument('--pc', default='home', 
-                        help='path to an experiment to resume')
+                        help='machine config')
     parser.add_argument('--options', nargs='*', default=[],
                         help='list of addition config options as key-val pairs')
     return parser.parse_args()
@@ -64,7 +64,6 @@ def get_configuration():
     return config
 
 def create_experiment(config, resume):
-
     # Restore an existing experiment if a directory is specified
     if resume is not None:
         print("\n==> Restoring experiment from directory:\n" + resume)
@@ -78,7 +77,6 @@ def create_experiment(config, resume):
         except:
             # Directory exists
             pass
-    
     # Save the current config
     with open(os.path.join(logdir, 'config.yml'), 'w') as f:
         f.write(config.dump())

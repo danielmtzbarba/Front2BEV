@@ -21,4 +21,5 @@ uncert_weight: 0.001
 # KL-Divergence loss weight
 kld_weight: 0.1
 
+find_unused_params: True
 #******* Lu et al. VED config *******
