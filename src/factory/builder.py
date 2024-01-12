@@ -58,17 +58,24 @@ class Builder(object):
         model_name = self._config.model
 
         if model_name == 'ved':
-            criterion = crit.VedCriterion(self._config.num_class, self._config.class_weights, 
-                                          self._gpu_id, self._config.xent_weight, self._config.kld_weight)
-        else:                              
+            criterion = crit.VaeOccupancyCriterion(self._config.prior,
+                                          self._config.xent_weight, 
+                                          self._config.uncert_weight,
+                                          self._config.weight_mode,
+                                          self._config.kld_weight, 
+                                          )
+#           criterion = crit.VedCriterion(self._config.num_class, self._config.class_weights, 
+#                                          self._gpu_id, self._config.xent_weight, self._config.kld_weight)
 
-            if self._config.loss_fn == 'focal':
-                criterion = crit.FocalLossCriterion(self._config.focal.alpha, self._config.focal.gamma)
-            elif self._config.loss_fn == 'prior':
-                criterion = crit.PriorOffsetCriterion(self._config.prior)
-            else:
-                criterion = crit.OccupancyCriterion(self._config.prior, self._config.xent_weight, 
-                                            self._config.uncert_weight, self._config.weight_mode)
+        elif self._config.loss_fn == 'focal':
+            criterion = crit.FocalLossCriterion(self._config.focal.alpha, self._config.focal.gamma)
+
+        elif self._config.loss_fn == 'prior':
+            criterion = crit.PriorOffsetCriterion(self._config.prior)
+        
+        else:
+            criterion = crit.OccupancyCriterion(self._config.prior, self._config.xent_weight, 
+                                                self._config.uncert_weight, self._config.weight_mode)
             
         if self._config.num_gpus > 0:
             criterion.cuda()

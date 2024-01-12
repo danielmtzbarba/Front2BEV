@@ -15,17 +15,19 @@ class VedTrainer(nn.Module):
         self.rank = rank
     
     def forward(self, batch, phase):
-        images = batch['image'].float().to(self.gpu_id)
-        labels = batch['label'].long().to(self.gpu_id)
-            
-        logits, mu, logvar = self.model(images, phase == 'train')
-        loss = self.criterion(logits, labels, mu, logvar)
+        batch = [t.cuda() for t in batch]
+        image, calib, labels, mask = batch
+        
+        logits, mu, logvar = self.model(image, phase == 'train')
+        loss = self.criterion(logits, labels, mask, mu, logvar)
 
         return logits, loss
         
     def metrics(self, logits, batch):
-        labels = batch['label'].long().numpy().squeeze()
-        predictions = np.reshape(np.argmax(logits.cpu().numpy().transpose(
-            (0, 2, 3, 1)), axis=3), [64, 64])
-        acc, iou = metric_eval_bev(predictions, labels, self.config.num_class)
-        return {'acc': acc, 'iou': iou}
+
+        image, calib, labels, mask = batch
+
+        # Update confusion matrix
+        scores = logits.cpu().sigmoid() > self.config.score_thresh
+        self.cm.update(scores > self.config.score_thresh, labels, mask)
+        return {'acc': self.cm.accuracy, 'iou': self.cm.mean_iou, 'cm': self.cm}

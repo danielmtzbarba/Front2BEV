@@ -2,7 +2,7 @@ from operator import mul
 from functools import reduce
 
 from src.models.ved import VED
-
+from src.models.ved_mod import VariationalEncoderDecoder 
 from src.models.vpn import VPNModel
 from src.models.pyramid import PyramidOccupancyNetwork
 
@@ -17,12 +17,20 @@ def build_model(config):
     if model_name == 'pyramid':
         model = build_pyramid_occupancy_network(config)
     elif model_name == 'ved':
-        model = build_variational_encoder_decoder(config)
+       # model = build_variational_encoder_decoder(config)
+        model = build_variational_encoder_decoder_mod(config)
     elif model_name == 'vpn':
         model = build_view_parsing_network(config)
     else:
         raise ValueError("Unknown model name '{}'".format(model_name))
     return model
+
+def build_variational_encoder_decoder_mod(config):
+    
+    return VariationalEncoderDecoder(config.num_class, 
+                                     config.ved.bottleneck_dim,
+                                     config.map_extents,
+                                     config.map_resolution)
 
 def build_pyramid_occupancy_network(config):
 
