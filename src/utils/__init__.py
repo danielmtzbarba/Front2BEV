@@ -3,11 +3,16 @@ import pandas as pd
 import ast,os
 
 def get_test_dirs(dataset_path):
+
     maps = [ Path(f.path) for f in os.scandir(dataset_path) if f.is_dir() ]
-    tests = []
+    map_configs, scenes = [], []
+
     for map in maps:
-        tests.extend([ Path(f.path) for f in os.scandir(map) if f.is_dir() ])
-    return tests
+        scenes.extend([Path(f.path) for f in os.scandir(os.path.join(dataset_path, map))])
+        for scene in scenes:
+            map_configs.extend([ Path(f.path) for f in os.scandir(scene) if f.is_dir() ])
+    print(map_configs)
+    return map_configs 
 
 def replace_abs_path(csv_path, old_path, new_path):
     df = pd.read_csv(csv_path, header=None)
