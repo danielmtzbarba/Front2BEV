@@ -11,17 +11,18 @@ from src.utils import configs
 # -----------------------------------------------------------------------------
 
 def main(rank: int, config: object):
-    log_file = load_pkl_file(config.logdir + f'/{config.name}/{config.model}/{config.name}.pkl')
+    logdir = config.logdir + f'/{config.name}/{config.num_class}k-{config.map_config}/'
+    log_file = load_pkl_file(f'{logdir}/{config.name}.pkl')
 
     
     ax = graph.plot_train_loss(log_file['batches']['loss'],
                                     ['Variational Encoder Decoder', config.map_config, config.num_class],
-                                    save_path=f'{config.logdir}/{config.name}/{config.model}/{config.name}-train.png')
+                                    save_path=f'{logdir}/train.png')
     
 
     ax = graph.plot_val_metrics(log_file['epochs'],
                                 ['Variational Encoder Decoder', config.map_config, config.num_class],
-                                save_path=f'{config.logdir}/{config.name}/{config.model}/{config.name}-val.png')
+                                save_path=f'{logdir}/val.png')
 
 
 
@@ -29,7 +30,6 @@ def main(rank: int, config: object):
 if __name__ == '__main__':
 
     config = configs.get_configuration()
-    logdir = configs.create_experiment(config, None)
     
     set_deterministic(config.seed)
 

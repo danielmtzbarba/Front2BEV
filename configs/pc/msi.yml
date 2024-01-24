@@ -1,0 +1,12 @@
+#******************  Directory options ******************
+
+dataset_root: /media/dan/data/datasets/Dan-2023-Front2BEV/
+
+# Directory to save experiment to
+logdir: /media/dan/data/Results
+
+# GPU Options
+distributed: False
+num_gpus: 1
+
+#******************  Directory options ******************

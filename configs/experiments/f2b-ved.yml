@@ -15,9 +15,6 @@ map_config: traffic
 model: ved
 num_class: 2
 
-# Save model every n epochs
-save_every: 1
-
 # Model options
 
 # Loss function

@@ -70,7 +70,7 @@ def create_experiment(config, resume):
         logdir = resume
     else:
         # Otherwise, generate a run directory based on the current time
-        logdir = os.path.join(os.path.expandvars(config.logdir), config.name, config.model)
+        logdir = os.path.join(os.path.expandvars(config.logdir), config.name, f"{config.num_class}k-{config.map_config}")
         print("\n==> Creating new experiment in directory:\n" + logdir)
         try:
             os.makedirs(logdir)
