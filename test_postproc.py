@@ -33,25 +33,27 @@ def compare_morph(sem_img):
 
 
 # --------------------------------------------------------------
-ROOT_PATH = "/media/danielmtz/data/datasets/Dan-2023-Front2BEV/"
-MAP = 'Town10HD/'
+ROOT_PATH = "/media/dan/data/datasets/Dan-2024-Front2BEV/"
+MAP = 'Town01/'
+SCENE = 'scene-1/'
 LAYERS = 'traffic/'
 
-x_dir = ROOT_PATH + MAP + LAYERS + "rgb"
-y_dir = ROOT_PATH + MAP + LAYERS + "bev/sem"
+x_dir = ROOT_PATH + MAP + SCENE + LAYERS + "rgb"
+y_dir = ROOT_PATH + MAP + SCENE + LAYERS + "bev/sem"
 
-_, bev_img_paths = get_dataset_from_path(x_dir, y_dir, '.jpg', '.jpg')
+#_, bev_img_paths = get_dataset_from_path(x_dir, y_dir, '.jpg', '.jpg')
 
-N_CLASSES = 6
-test_img = '/media/danielmtz/data/datasets/Dan-2023-Front2BEV/Town06/layers_all/bev/$k/0.png'.replace("$", str(N_CLASSES))
+N_CLASSES = 5
+test_img = '/media/dan/data/datasets/Dan-2024-Front2BEV/Town01/scene_1/traffic/bev/$k/63.png'.replace("$", str(N_CLASSES))
+
 
 # --------------------------------------------------------------
     
 
-rand_img_path = random.choice(bev_img_paths)
+#rand_img_path = random.choice(bev_img_paths)
 
 img_path = y_dir + '/201.jpg'
-bev_sem = cv2.imread(rand_img_path, 0)
+bev_sem = cv2.imread(test_img, 0)
 
 size = (196, 200)
 
