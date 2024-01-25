@@ -10,11 +10,11 @@ resume: None
 # Dataset options
 train_dataset: front2bev
 map_config: traffic
-num_class: 2
+num_class: 5 
 bayesian: False
 
 # Training Options
-num_epochs: 10
+num_epochs: 20 
 batch_size: 8
 num_workers: 4
 
@@ -23,8 +23,8 @@ model: pyramid
 log_interval: 50
 
 # Loss options
-weight_mode: inverse
-loss_fn: bce
+weight_mode: equal 
+loss_fn: prior 
 
 focal:
   alpha: 0.25

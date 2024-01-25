@@ -35,8 +35,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.models as models
 
-from ..nn import losses
-
 
 class VariationalEncoderDecoder(nn.Module):
 

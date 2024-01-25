@@ -14,6 +14,7 @@ def calc_weights(priors, weight_mode="inverse"):
         class_weights = torch.ones_like(priors)
     else:
         raise ValueError('Unknown weight mode option: ' + weight_mode)
+    print(class_weights)
     return class_weights
 
 class OccupancyCriterion(nn.Module):
@@ -26,15 +27,7 @@ class OccupancyCriterion(nn.Module):
         self.uncert_weight = uncert_weight
 
         self.priors = torch.tensor(priors)
-
-        if weight_mode == 'inverse':
-            self.class_weights = 1 / self.priors
-        elif weight_mode == 'sqrt_inverse':
-            self.class_weights = torch.sqrt(1 / self.priors)
-        elif weight_mode == 'equal':
-            self.class_weights = torch.ones_like(self.priors)
-        else:
-            raise ValueError('Unknown weight mode option: ' + weight_mode)
+        self.class_weights = calc_weights(self.priors)
     
 
     def forward(self, logits, labels, mask, *args):

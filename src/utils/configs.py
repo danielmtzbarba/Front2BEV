@@ -88,7 +88,6 @@ def create_experiment(config, resume):
 def get_dataset_weights(config):
     df_weights = pd.read_csv(os.path.join(config.csv_path, "weights.csv"))
     weights_dict = df_weights.loc[(df_weights['config']==config.map_config) & (df_weights['n_classes']== config.num_class)].reset_index()
-    print(weights_dict['fov_weights'][0])
     weights_fov_dict = ast.literal_eval(weights_dict['fov_weights'][0])
     
     no_weights=[1 for i in range(config.num_class)]

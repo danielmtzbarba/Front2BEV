@@ -51,6 +51,7 @@ class Dataset(object):
             for config in configs:
                 path_rgb = f'{row.map}/{row.scene}/{config}/rgb/{row.sample}'
                 path_bev = f'{row.map}/{row.scene}/{config}/bev/$k/{row.sample}'
+                path_bev = path_bev.replace(".jpg", ".png")
                 samples.append([path_rgb, path_bev])
 
         df = pd.DataFrame(samples).to_csv(output_path, header=False, index=False)
@@ -65,7 +66,7 @@ class Dataset(object):
 MAPS = ['Town01']
 SCENES = [f'scene_{i}' for i in range(1, 12)]
 DATADIR = '/media/dan/data/datasets/Dan-2024-Front2BEV'
-
+DATADIR = '/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV'
 
 TRAIN = [f'scene_{i}' for i in range(1, 10)] 
 AUG_TRAIN = [f'scene_{i}' for i in range(1, 4)] 

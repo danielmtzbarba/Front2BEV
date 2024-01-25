@@ -45,9 +45,9 @@ def post_proc_bev(test_paths, num_class, size):
         
 
 SIZE = (200, 196)
-DATASET_PATH = Path("/media/dan/data/datasets/Dan-2024-Front2BEV/")
+#DATASET_PATH = Path("/media/dan/data/datasets/Dan-2024-Front2BEV/")
 
-#DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2023-Front2BEV/")
+DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/")
 
 if __name__ == '__main__':
     test_paths = get_test_dirs(DATASET_PATH)
