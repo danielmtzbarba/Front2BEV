@@ -1,7 +1,10 @@
 # --------------------------------------------------------------------------
-import numpy as np
-import torch
 import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+import src.utils.visualize as vis
+
+from src.data.utils import encode_binary_labels, decode_binary_labels
 # --------------------------------------------------------------------------
 
 def resize_img(img, size):
@@ -50,20 +53,31 @@ def decode_masks(encoded_bev, n_classes, fov_mask):
     masks[:, :, n_classes] = fov_mask
     return masks
 
-def postprocess(sem_img, bev_map, size, fov_mask, n_classes, morph=True):
+def postprocess(sem_img, bev_map, size, fov_mask, n_classes, morph=True, display=False):
     remapped = remap_seg(sem_img, bev_map, n_classes)
-    bev_img = resize_img(remapped, size)
+    resized = resize_img(remapped, size)
 
     if morph:
-        eroded_img = apply_morph(bev_img, 2)
+        eroded = apply_morph(resized, 2)
 
         if n_classes > 5:
-            bev_img = dilated_class(sem_img, eroded_img,
-                                     [190, 5], size, k=5, i=3,
-                                     morph=True)
+            bev_img = dilated_class(sem_img, eroded, [190, 5],
+                                    size, k=5, i=3,  morph=True)
         if n_classes > 4:
-            bev_img = dilated_class(sem_img, eroded_img,
-                                     [84, 4], size, k=3, i=3, morph=True)
-    
-    return decode_masks(bev_img, n_classes, fov_mask)
+            bev_img = dilated_class(sem_img, eroded,  [84, 4],
+                                    size, k=3, i=3, morph=True)
+
+        masks =  decode_masks(bev_img, n_classes, fov_mask)
+
+    else:
+
+        masks =  decode_masks(resized, n_classes, fov_mask)
+
+    if display:
+#        vis.plot_post_pipeline([sem_img, remapped, resized, eroded,  bev_img])
+        vis.plot_class_masks(masks, fov_mask) 
+        #vis.plot_encoded_masks(encoed)
+        plt.show()
+         
+    return masks 
 # --------------------------------------------------------------------------

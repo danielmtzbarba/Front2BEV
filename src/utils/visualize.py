@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
+from matplotlib import transforms
 from matplotlib.cm import get_cmap
 import numpy as np
-import torch
-import math
+from scipy import ndimage
 
 def colorise(tensor, cmap, vmin=None, vmax=None):
 
@@ -30,11 +30,11 @@ def bevAsRGB(bev_img, n_classes, cmap):
     return bev_rgb
 
 def plot_post_pipeline(imgs,  titles=[],figsize=(12, 8)):
-    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=figsize)
+    fig, ax = plt.subplots(nrows=1, ncols=5, figsize=figsize)
     for i, im in enumerate(imgs):
         ax[i].imshow(im)
-        ax[i].set_title(titles[i], fontdict={"fontsize": 20})
-    fig.suptitle("BEV ground-truth generation", fontsize=30)
+#        ax[i].set_title(titles[i], fontdict={"fontsize": 20})
+#    fig.suptitle("BEV ground-truth generation", fontsize=30)
 
 def plot_class_masks(class_masks, fov_mask, titles=[], figsize=(20, 10)):
     print(class_masks.shape, fov_mask.shape)
@@ -49,11 +49,18 @@ def plot_class_masks(class_masks, fov_mask, titles=[], figsize=(20, 10)):
     fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
     for i in range(c):
         msk = np.reshape(class_masks[:, :, i].astype('int'), (w, h))
-        ax.ravel()[i].imshow(msk)
-    ax.ravel()[i+1].imshow(fov_mask)
+
+        ax.ravel()[i].imshow(msk, cmap="binary_r") 
+        ax.ravel()[i].axis('off')
+
+    ax.ravel()[i+1].imshow(fov_mask, cmap="binary_r")
+    plt.axis('off')
     fig.suptitle("BEV Semantic classes", fontsize=30)
 
 def plot_encoded_masks(img, title='',figsize=(20, 10)):
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
-    ax.imshow(img)
+    tr = transforms.Affine2D().rotate_deg(270)
+    ax.imshow(img, cmap="bone", transform=tr + ax.transData)
+
+    plt.axis('off')
     fig.suptitle("Encoded semantic masks", fontsize=30)
