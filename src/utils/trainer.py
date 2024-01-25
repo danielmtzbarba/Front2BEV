@@ -24,8 +24,10 @@ class Trainer:
         self.optimizer = optimizer
         self.scheduler = scheduler
         self.config = config
-        self.train_log = TrainLog(self.config)
+
         self.log = True if gpu_id == 0 else False
+        if self.log:
+            self.train_log = TrainLog(self.config)
 
     def _backward_plus_optimize(self, loss):
          # backward + optimize only if in training phase

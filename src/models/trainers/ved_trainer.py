@@ -5,6 +5,7 @@ import numpy as np
 
 from src.utils.eval import metric_eval_bev
 
+from src.utils.confusion import BinaryConfusionMatrix
 
 class VedTrainer(nn.Module):
     def __init__(self, model, criterion, config, rank):
@@ -13,7 +14,15 @@ class VedTrainer(nn.Module):
         self.criterion = criterion
         self.config = config
         self.rank = rank
+
+        self.reset_metrics()
     
+    def reset_metrics(self):
+        # Accuracy
+        self._acc = 0.0
+        # Initialise confusion matrix
+        self.cm = BinaryConfusionMatrix(self.config.num_class)
+
     def forward(self, batch, phase):
         batch = [t.cuda() for t in batch]
         image, calib, labels, mask = batch
@@ -31,3 +40,4 @@ class VedTrainer(nn.Module):
         scores = logits.cpu().sigmoid() > self.config.score_thresh
         self.cm.update(scores > self.config.score_thresh, labels, mask)
         return {'acc': self.cm.accuracy, 'iou': self.cm.mean_iou, 'cm': self.cm}
+    
