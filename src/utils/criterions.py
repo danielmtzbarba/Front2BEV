@@ -34,8 +34,8 @@ class OccupancyCriterion(nn.Module):
 
         # Compute binary cross entropy loss
         self.class_weights = self.class_weights.to(logits)
-        bce_loss = balanced_binary_cross_entropy(
-            logits, labels, mask, self.class_weights)
+        bce_loss = balanced_binary_cross_entropy(logits, labels,
+                                                 mask, self.class_weights)
         
         # Compute uncertainty loss for unknown image regions
         self.priors = self.priors.to(logits)
@@ -44,6 +44,16 @@ class OccupancyCriterion(nn.Module):
         return bce_loss * self.xent_weight + uncert_loss * self.uncert_weight
 
 
+class VaeOccupancyCriterion(OccupancyCriterion):
+
+    def __init__(self, priors, xent_weight=0.9, uncert_weight=0., weight_mode='sqrt_inverse',  kld_weight=0.1):
+        super().__init__(priors, xent_weight, uncert_weight, weight_mode)
+        self.kld_weight = kld_weight
+
+    def forward(self, logits, labels, mask, mu, logvar):
+        kld_loss = kl_divergence_loss(mu, logvar)
+        occ_loss = super().forward(logits, labels, mask)
+        return occ_loss + kld_loss * self.kld_weight
 
 class FocalLossCriterion(nn.Module):
 
@@ -65,18 +75,6 @@ class PriorOffsetCriterion(nn.Module):
     def forward(self, logits, labels, mask, *args):
         return prior_offset_loss(logits, labels, mask, self.priors)
 
-class VaeOccupancyCriterion(OccupancyCriterion):
-
-    def __init__(self, priors, xent_weight=0.9, uncert_weight=0., weight_mode='sqrt_inverse',  kld_weight=0.1):
-        super().__init__(priors, xent_weight, uncert_weight, weight_mode)
-
-        self.kld_weight = kld_weight
-    
-    def forward(self, logits, labels, mask, mu, logvar):
-
-        kld_loss = kl_divergence_loss(mu, logvar)
-        occ_loss = super().forward(logits, labels, mask)
-        return occ_loss + kld_loss * self.kld_weight
 
 class VedCriterion(nn.Module):
     def __init__(self, num_class, class_weights, gpu_id,

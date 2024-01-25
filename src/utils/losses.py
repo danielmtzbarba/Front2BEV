@@ -3,20 +3,6 @@ import torch.nn.functional as F
 
 INV_LOG2 = 0.693147
 
-# ----------------------------------------------------------------------------
-def loss_function_map(pred_map, map, mu, logvar, config, rank):
-    if config.class_weights is not None:
-        class_weights = torch.Tensor(config.class_weights).to(rank)
-
-    if config.ignore_class:
-        CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=class_weights, ignore_index=config.num_class)
-    else:
-        CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=class_weights)
-
-    KLD = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
-    return 0.9*CE + 0.1*KLD, CE, KLD
-# -----------------------------------------------------------------------------
-
 def balanced_binary_cross_entropy(logits, labels, mask, weights):
     weights = (logits.new(weights).view(-1, 1, 1) - 1) * labels.float() + 1.
     weights = weights * mask.unsqueeze(1).float()

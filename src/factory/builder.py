@@ -64,6 +64,7 @@ class Builder(object):
                                           self._config.weight_mode,
                                           self._config.kld_weight, 
                                           )
+
 #           criterion = crit.VedCriterion(self._config.num_class, self._config.class_weights, 
 #                                          self._gpu_id, self._config.xent_weight, self._config.kld_weight)
 

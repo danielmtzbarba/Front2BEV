@@ -55,10 +55,7 @@ def get_configuration():
     if args.resume is not None:
         config.merge_from_file(os.path.join(args.resume, 'config.yml'))
 
-    if config.train_dataset == "front2bev":
-        config.class_weights = get_dataset_weights(config)
-
-    # Finalise config
+    # Finalize config
     config.freeze()
 
     return config
@@ -84,12 +81,3 @@ def create_experiment(config, resume):
     print(config.name, config.map_config, config.num_class)
     
     return logdir
-
-def get_dataset_weights(config):
-    df_weights = pd.read_csv(os.path.join(config.csv_path, "weights.csv"))
-    weights_dict = df_weights.loc[(df_weights['config']==config.map_config) & (df_weights['n_classes']== config.num_class)].reset_index()
-    weights_fov_dict = ast.literal_eval(weights_dict['fov_weights'][0])
-    
-    no_weights=[1 for i in range(config.num_class)]
-    [weights_fov_dict[i] for i in range(config.num_class)]
-    return no_weights 

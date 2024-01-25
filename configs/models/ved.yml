@@ -1,25 +1,17 @@
 #******* Lu et al. VED config *******
+img_size: [256, 512]
+
 ved:
   # Dimensions of bottleneck (depends on the size of input images)
   bottleneck_dim: 8 
 
-img_size: [256, 512]
-
-# optimizer
-optimizer: adam
-learning_rate: 0.0001
-weight_decay: 0.0001
-
-# Scheduler
-lr_scheduler: steplr
-lr_step_size: 1
-lr_gamma: 0.97
+    # ouput_after_vgg must be equal to bottleneck_dim * 128     
 
 # Binary cross entropy loss weight
-xent_weight: 0.9
+xent_weight: 1.0
 
 # Max entropy uncertainty loss weight
-uncert_weight: 0.001
+uncert_weight: 0.0
 
 # KL-Divergence loss weight
 kld_weight: 0.1

@@ -14,7 +14,7 @@ num_class: 5
 bayesian: False
 
 # Training Options
-num_epochs: 20 
+num_epochs: 50 
 batch_size: 8
 num_workers: 4
 
@@ -24,15 +24,15 @@ log_interval: 50
 
 # Loss options
 weight_mode: equal 
-loss_fn: prior 
+loss_fn: bce 
 
 focal:
   alpha: 0.25
   gamma: 2
 
 # optimizer
-optimizer: adam
-learning_rate: 0.0001
+optimizer: sgd 
+learning_rate: 0.1
 weight_decay: 0.0001
 
 # Scheduler
