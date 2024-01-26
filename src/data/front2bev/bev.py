@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import src.utils.visualize as vis
 
-from src.data.utils import encode_binary_labels, decode_binary_labels
+from src.data.utils import encode_binary_labels
 # --------------------------------------------------------------------------
 
 def resize_img(img, size):
@@ -70,14 +70,17 @@ def postprocess(sem_img, bev_map, size, fov_mask, n_classes, morph=True, display
         masks =  decode_masks(bev_img, n_classes, fov_mask)
 
     else:
-
-        masks =  decode_masks(resized, n_classes, fov_mask)
+        bev_img = resized
+        masks =  decode_masks(bev_img, n_classes, fov_mask)
+    
+    encoded_masks = encode_binary_labels(masks)
 
     if display:
 #        vis.plot_post_pipeline([sem_img, remapped, resized, eroded,  bev_img])
-        vis.plot_class_masks(masks, fov_mask) 
-        #vis.plot_encoded_masks(encoed)
+#        vis.plot_class_masks(masks, fov_mask) 
+#        vis.plot_img_list(masks)
+        vis.plot_encoded_masks(encoded_masks)
         plt.show()
          
-    return masks 
+    return bev_img, masks 
 # --------------------------------------------------------------------------

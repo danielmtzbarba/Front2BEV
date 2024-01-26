@@ -33,29 +33,33 @@ def plot_post_pipeline(imgs,  titles=[],figsize=(12, 8)):
     fig, ax = plt.subplots(nrows=1, ncols=5, figsize=figsize)
     for i, im in enumerate(imgs):
         ax[i].imshow(im)
-#        ax[i].set_title(titles[i], fontdict={"fontsize": 20})
-#    fig.suptitle("BEV ground-truth generation", fontsize=30)
 
 def plot_class_masks(class_masks, fov_mask, titles=[], figsize=(20, 10)):
     print(class_masks.shape, fov_mask.shape)
 
     w, h, c = class_masks.shape
-    ncols = 3
-    if c + 1 > ncols:
-        nrows = (c + 1) // ncols + ((c + 1)  % ncols > 0)
-    else:
-        nrows = 1
-  
+    ncols = 3 
+    nrows = 2  
+
     fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
     for i in range(c):
         msk = np.reshape(class_masks[:, :, i].astype('int'), (w, h))
 
-        ax.ravel()[i].imshow(msk, cmap="binary_r") 
+        ax.ravel()[i].imshow(msk*fov_mask, cmap="binary_r") 
         ax.ravel()[i].axis('off')
 
-    ax.ravel()[i+1].imshow(fov_mask, cmap="binary_r")
-    plt.axis('off')
     fig.suptitle("BEV Semantic classes", fontsize=30)
+
+def plot_img_list(imgs, figsize=(20, 10)):
+    class_masks = imgs
+    w, h, c = class_masks.shape
+
+    for i in range(c):
+        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
+        msk = np.reshape(class_masks[:, :, i].astype('int'), (w, h))
+        ax.imshow(msk, cmap="binary_r") 
+        plt.axis('off')
+        plt.show()
 
 def plot_encoded_masks(img, title='',figsize=(20, 10)):
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
