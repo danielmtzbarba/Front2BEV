@@ -29,10 +29,13 @@ def bevAsRGB(bev_img, n_classes, cmap):
     bev_rgb[31, 32, :] = (25, 126, 0)
     return bev_rgb
 
-def plot_post_pipeline(imgs,  titles=[],figsize=(12, 8)):
+def plot_post_pipeline(imgs, mask,  titles=[],figsize=(12, 8)):
     fig, ax = plt.subplots(nrows=1, ncols=5, figsize=figsize)
     for i, im in enumerate(imgs):
-        ax[i].imshow(im)
+        try:
+            ax[i].imshow(im*mask)
+        except:
+            ax[i].imshow(im)
 
 def plot_class_masks(class_masks, fov_mask, titles=[], figsize=(20, 10)):
     print(class_masks.shape, fov_mask.shape)
@@ -63,8 +66,8 @@ def plot_img_list(imgs, figsize=(20, 10)):
 
 def plot_encoded_masks(img, title='',figsize=(20, 10)):
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
-    tr = transforms.Affine2D().rotate_deg(270)
-    ax.imshow(img, cmap="bone", transform=tr + ax.transData)
+#    tr = transforms.Affine2D().rotate_deg(270)
+    ax.imshow(img, cmap="bone")
 
     plt.axis('off')
     fig.suptitle("Encoded semantic masks", fontsize=30)

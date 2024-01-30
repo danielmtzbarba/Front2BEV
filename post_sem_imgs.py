@@ -24,10 +24,10 @@ def proc_dir(path, num_class, size):
     for bev_img_name in tqdm(bev_imgs):
 
         bev_img = cv2.imread(str(bev_raw_path / bev_img_name), cv2.IMREAD_GRAYSCALE)
-        bev_post = bev.postprocess(bev_img, bev_cls[num_class], size, 
+        _, decoded_masks = bev.postprocess(bev_img, bev_cls[num_class], size, 
                     bev.resize_img(mask64, size), num_class, morph=True)
         
-        encoded_masks = encode_binary_labels(bev_post.transpose((2, 1, 0))).transpose()
+        encoded_masks = encode_binary_labels(decoded_masks.transpose((2, 1, 0))).transpose()
         Image.fromarray(encoded_masks.astype(np.int32), mode='I').save(str(save_bev / bev_img_name).replace('.jpg', '.png'))
 
         if False:

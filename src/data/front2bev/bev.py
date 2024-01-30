@@ -73,14 +73,14 @@ def postprocess(sem_img, bev_map, size, fov_mask, n_classes, morph=True, display
         bev_img = resized
         masks =  decode_masks(bev_img, n_classes, fov_mask)
     
-    encoded_masks = encode_binary_labels(masks)
-
+    encoded_masks = encode_binary_labels(masks.transpose((2, 1, 0))).transpose()
     if display:
-#        vis.plot_post_pipeline([sem_img, remapped, resized, eroded,  bev_img])
-#        vis.plot_class_masks(masks, fov_mask) 
-#        vis.plot_img_list(masks)
-        vis.plot_encoded_masks(encoded_masks)
-        plt.show()
+#       vis.plot_post_pipeline([sem_img, remapped, resized, eroded,  bev_img], fov_mask)
+#       vis.plot_class_masks(masks, fov_mask) 
+#       vis.plot_img_list(masks)
+       vis.plot_encoded_masks(encoded_masks)
+       plt.show()
          
     return bev_img, masks 
 # --------------------------------------------------------------------------
+
