@@ -38,8 +38,6 @@ def plot_post_pipeline(imgs, mask,  titles=[],figsize=(12, 8)):
             ax[i].imshow(im)
 
 def plot_class_masks(class_masks, fov_mask, titles=[], figsize=(20, 10)):
-    print(class_masks.shape, fov_mask.shape)
-
     w, h, c = class_masks.shape
     ncols = 3 
     nrows = 2  
@@ -66,8 +64,5 @@ def plot_img_list(imgs, figsize=(20, 10)):
 
 def plot_encoded_masks(img, title='',figsize=(20, 10)):
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
-#    tr = transforms.Affine2D().rotate_deg(270)
     ax.imshow(img, cmap="bone")
-
     plt.axis('off')
-    fig.suptitle("Encoded semantic masks", fontsize=30)

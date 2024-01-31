@@ -15,7 +15,7 @@ from src.data.utils import encode_binary_labels
 from src.utils.visualize import plot_class_masks, plot_encoded_masks
 import matplotlib.pyplot as plt
 
-def proc_dir(path, num_class, size):
+def proc_dir(path, num_class, size, display=False):
     save_bev = make_folder(path, f"{num_class}k")
     print("Saving in: ", save_bev)
     bev_raw_path = path / "sem"
@@ -30,12 +30,10 @@ def proc_dir(path, num_class, size):
         encoded_masks = encode_binary_labels(decoded_masks.transpose((2, 1, 0))).transpose()
         Image.fromarray(encoded_masks.astype(np.int32), mode='I').save(str(save_bev / bev_img_name).replace('.jpg', '.png'))
 
-        if False:
+        if display :
             plot_encoded_masks(encoded_masks)
             plt.show()
             break
-
-        
 
 def post_proc_bev(test_paths, num_class, size):
     # Create BEV gt for each dire
@@ -45,14 +43,13 @@ def post_proc_bev(test_paths, num_class, size):
         
 
 SIZE = (200, 196)
-#DATASET_PATH = Path("/media/dan/data/datasets/Dan-2024-Front2BEV/")
+DATASET_PATH = Path("/media/dan/data/datasets/Dan-2024-Front2BEV/")
 
-DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/")
+#DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/")
 
 if __name__ == '__main__':
     test_paths = get_test_dirs(DATASET_PATH)
-    for n_cls in range(2, 7):
+    for n_cls in range(5, 6):
         print('\n Class:', n_cls)
         post_proc_bev(test_paths, n_cls, SIZE)
-        
         
