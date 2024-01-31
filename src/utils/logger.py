@@ -11,7 +11,7 @@ class TrainLog(object):
 
     def __init__(self, config):
         # Create tensorboard summary 
-        self._summary = SummaryWriter(os.path.join(config.logdir, config.name, config.model))
+        self._summary = SummaryWriter(os.path.join(config.logdir, config.name))
         
         self.config = config
         self._batches = {
@@ -73,9 +73,9 @@ class TrainLog(object):
         scores = logits.cpu().sigmoid() > self.config.score_thresh
 
         self._summary.add_image(phase + '/image', image[0], iteration, dataformats='CHW')
-        self._summary.add_image(phase + '/pred', colorise(scores[0], 'coolwarm', 0, 1),
+        self._summary.add_image(phase + '/pred', colorise(scores[0], 'binary_r', 0, 1),
                         iteration, dataformats='NHWC')
-        self._summary.add_image(phase + '/gt', colorise(labels[0], 'coolwarm', 0, 1),
+        self._summary.add_image(phase + '/gt', colorise(labels[0], 'binary_r', 0, 1),
                         iteration, dataformats='NHWC')
     
  
@@ -86,6 +86,6 @@ class TrainLog(object):
         }  
 
         log_path = os.path.join(self.config.logdir, self.config.name,
-                                 self.config.model,f'{self.config.name}.pkl')
+                                 f'{self.config.name}.pkl')
 
         save_pkl_file(log_dict, log_path)
