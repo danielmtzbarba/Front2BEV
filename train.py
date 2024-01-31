@@ -43,7 +43,6 @@ def main(rank: int, config: object):
 if __name__ == '__main__':
 
     config = configs.get_configuration()
-    logdir = configs.create_experiment(config, None)
     
     set_deterministic(config.seed)
 

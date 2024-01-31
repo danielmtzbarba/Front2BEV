@@ -54,7 +54,8 @@ def get_configuration():
     # Restore config from an existing experiment
     if args.resume is not None:
         config.merge_from_file(os.path.join(args.resume, 'config.yml'))
-
+    
+    config.logdir = create_experiment(config, args.resume)
     # Finalize config
     config.freeze()
 

@@ -126,7 +126,7 @@ class Trainer:
         else:
             model_ckpt = self._model_trainer.model
 
-        logdir = os.path.join(os.path.expandvars(self.config.logdir), self.config.name, self.config.model)
+        logdir = os.path.join(os.path.expandvars(self.config.logdir), self.config.name)
         ckpt_path = os.path.join(logdir, f'{self.config.name}.pth.tar')
 
         ckpt = {
