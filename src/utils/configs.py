@@ -36,12 +36,6 @@ def get_configuration():
     # Load config defaults
     config = get_default_configuration()
 
-    # Load experiment options
-    config.merge_from_file(f'configs/experiments/{args.experiment}.yml')
-
-    # Override with command line options
-    #config.merge_from_list(args.options)
-
     # Load pc options
     config.merge_from_file(f'configs/pc/{args.pc}.yml')
 
@@ -51,11 +45,21 @@ def get_configuration():
     # Load model options
     config.merge_from_file(f'configs/models/{config.model}.yml')
 
+    # Load experiment options
+    config.merge_from_file(f'configs/experiments/{args.experiment}.yml')
+
+    # Override with command line options
+    #config.merge_from_list(args.options)
+
+
     # Restore config from an existing experiment
     if args.resume is not None:
         config.merge_from_file(os.path.join(args.resume, 'config.yml'))
     
-    config.logdir = create_experiment(config, args.resume)
+    config.name = f'{config.name}-{config.map_config}-{config.weight_mode}'
+    config.logdir = os.path.join(config.logdir, config.name)
+    create_experiment(config, args.resume)
+
     # Finalize config
     config.freeze()
 
@@ -68,17 +72,15 @@ def create_experiment(config, resume):
         logdir = resume
     else:
         # Otherwise, generate a run directory based on the current time
-        logdir = os.path.join(os.path.expandvars(config.logdir), config.name, f"{config.num_class}k-{config.map_config}")
         print("\n==> Creating new experiment in directory:\n" + logdir)
         try:
-            os.makedirs(logdir)
+            os.makedirs(config.logdir)
         except:
             # Directory exists
             pass
     # Save the current config
-    with open(os.path.join(logdir, 'config.yml'), 'w') as f:
+    with open(os.path.join(config.logdir, 'config.yml'), 'w') as f:
         f.write(config.dump())
 
-    print(config.name, config.map_config, config.num_class)
-    
+    print(config.name)
     return logdir

@@ -14,16 +14,16 @@ num_class: 5
 bayesian: False
 
 # Training Options
-num_epochs: 50 
+num_epochs: 200 
 batch_size: 8
 num_workers: 4
 
 # Model options
 model: pyramid
-log_interval: 10 
+log_interval: 5 
 
 # Loss options
-weight_mode: equal 
+weight_mode: inverse 
 loss_fn: bce 
 
 focal:

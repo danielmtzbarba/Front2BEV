@@ -1,4 +1,6 @@
 import os
+import numpy as np
+
 from dan.utils import save_pkl_file
 
 from torch.utils.tensorboard import SummaryWriter
@@ -54,16 +56,20 @@ class TrainLog(object):
         print("Epoch:", epoch, f"{phase} loss (mean):", running_loss)
         
     def log_metrics(self, acc, iou, confusion, epoch):
-
+        acc = acc.numpy()
         self._summary.add_scalar(f'val/miou', confusion.mean_iou, epoch)
-
+        self._summary.add_scalar(f'val/macc', np.mean(acc), epoch)
+                
         print('-' * 50, '\nResults:')
-        for name, iou_score in zip(self._class_names, confusion.iou):
-            print('{:20s} {:.3f}'.format(name, iou_score)) 
+        for name, iou_score, ac in zip(self._class_names, confusion.iou, acc):
+            print('{:20s} {:.3f} {:.3f}'.format(name, iou_score, ac)) 
+            self._summary.add_scalar(f'val/iou/{name}', iou_score, epoch)
+            self._summary.add_scalar(f'val/acc/{name}', ac, epoch)
 
         self._epochs['val_iou'].append(iou)
         print("\nVal mIoU: ", confusion.mean_iou)
-
+        
+        acc.mean
         self._epochs['val_acc'].append(acc) 
         print("Val acc: ", acc)
     
@@ -75,7 +81,7 @@ class TrainLog(object):
         preds = scores[0]*mask[0]
         gt = labels[0]*mask[0]
 
-        self._summary.add_image(phase + '/image', image[0], iteration, dataformats='CHW')
+#        self._summary.add_image(phase + '/image', image[0], iteration, dataformats='CHW')
         self._summary.add_image(phase + '/pred', colorise(preds, 'binary_r', 0, 1),
                         iteration, dataformats='NHWC')
         self._summary.add_image(phase + '/gt', colorise(gt, 'binary_r', 0, 1),
@@ -88,7 +94,7 @@ class TrainLog(object):
             'epochs': self._epochs
         }  
 
-        log_path = os.path.join(self.config.logdir, self.config.name,
-                                 f'{self.config.name}.pkl')
+        log_path = os.path.join(self.config.logdir
+                                f'{self.config.name}.pkl')
 
         save_pkl_file(log_dict, log_path)

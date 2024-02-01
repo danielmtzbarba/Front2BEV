@@ -7,12 +7,6 @@ ved:
 
     # ouput_after_vgg must be equal to bottleneck_dim * 128     
 
-# Binary cross entropy loss weight
-xent_weight: 1.0
-
-# Max entropy uncertainty loss weight
-uncert_weight: 0.0
-
 # KL-Divergence loss weight
 kld_weight: 0.1
 

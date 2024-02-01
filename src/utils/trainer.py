@@ -100,7 +100,7 @@ class Trainer:
     def _run_val_iter(self):
         # Reset variables
         self._model_trainer.reset_metrics()
-        self._iteration = 1 
+        self._iteration = (self._epoch - 1) * len(self.dataloaders["val"]) + 1 
         self.running_loss = 0.0
         #
         self.acc = 0.0
@@ -126,8 +126,7 @@ class Trainer:
         else:
             model_ckpt = self._model_trainer.model
 
-        logdir = os.path.join(os.path.expandvars(self.config.logdir), self.config.name)
-        ckpt_path = os.path.join(logdir, f'{self.config.name}.pth.tar')
+        ckpt_path = os.path.join(self.config.logdir, f'{self.config.name}.pth.tar')
 
         ckpt = {
             'model' : model_ckpt.state_dict(),
