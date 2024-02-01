@@ -89,10 +89,6 @@ lr_gamma: 0.0
 prior: 
   - 0.0
 
-# Class-specific weighting factors to balance cross entropy loss
-class_weights: 
-  - 0.0
-
 # Method of weighting classes in loss function
 weight_mode: none
 

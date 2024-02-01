@@ -39,10 +39,17 @@ size = (200, 196)
 
 # --------------------------------------------------------------
 
+pixel_count_total = {key:value for (key,value) in enumerate([0 for i in range(N_CLASSES)])}
+pixel_count_total["N"] = 0
+
 fov_mask = bev.resize_img(mask64, size)
-bev_img, decoded_masks = bev.postprocess(bev_sem, bev_cls[N_CLASSES], size, fov_mask, 
+bev_img, decoded_masks, pixel_count = bev.postprocess(bev_sem, bev_cls[N_CLASSES], size, fov_mask, 
                          N_CLASSES, morph=True, display=False)
 
+for (key,value) in pixel_count.items():
+    pixel_count_total[key] += value
+
+print(pixel_count_total)
 # --------------------------------------------------------------
 # Save encoded labels
 encoded_masks = encode_binary_labels(decoded_masks.transpose((2, 1, 0))).transpose()

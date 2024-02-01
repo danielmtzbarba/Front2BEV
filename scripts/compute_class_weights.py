@@ -4,9 +4,10 @@ import numpy as np
 import pandas as pd
 
 
-import src.utils.bev as bev
+import src.data.front2bev.bev as bev
+from src.data.utils imort mask6
 
-msk = bev.mask64.copy()
+ msk = bev.mask64.copy()
 print("\nMASK64:", np.unique(msk, return_counts=True)[1], '\n')
 
 def get_class_weights(img_dataset, n_classes):

@@ -21,12 +21,19 @@ def proc_dir(path, num_class, size, display=False):
     bev_raw_path = path / "sem"
     bev_imgs = get_filenames_list(bev_raw_path, ".jpg")
 
+    pixel_count_total = {key:value for (key,value) in enumerate([0 for _ in range(num_class)])}
+    pixel_count_total["N"] = 0
+
     for bev_img_name in tqdm(bev_imgs):
 
-        bev_img = cv2.imread(str(bev_raw_path / bev_img_name), cv2.IMREAD_GRAYSCALE)
-        _, decoded_masks = bev.postprocess(bev_img, bev_cls[num_class], size, 
-                    bev.resize_img(mask64, size), num_class, morph=True)
+        bev_sem = cv2.imread(str(bev_raw_path / bev_img_name), cv2.IMREAD_GRAYSCALE)
+
+        _, decoded_masks, pixel_count = bev.postprocess(bev_sem, bev_cls[num_class], size, 
+                                            bev.resize_img(mask64, size), num_class, morph=True)
         
+        for (key,value) in pixel_count.items():
+            pixel_count_total[key] += value
+
         encoded_masks = encode_binary_labels(decoded_masks.transpose((2, 1, 0))).transpose()
         Image.fromarray(encoded_masks.astype(np.int32), mode='I').save(str(save_bev / bev_img_name).replace('.jpg', '.png'))
 
@@ -35,21 +42,32 @@ def proc_dir(path, num_class, size, display=False):
             plt.show()
             break
 
+    return pixel_count_total
+
 def post_proc_bev(test_paths, num_class, size):
     # Create BEV gt for each dire
+
+    pixel_count_total = {key:value for (key,value) in enumerate([0 for _ in range(num_class)])}
+    pixel_count_total["N"] = 0
+
     for test_path in tqdm(test_paths):
         bev_raw_path = test_path / "bev"     
-        proc_dir(bev_raw_path, num_class, size)
-        
+        pixel_count = proc_dir(bev_raw_path, num_class, size)
+                
+        for (key,value) in pixel_count.items():
+            pixel_count_total[key] += value
+    
+    return pixel_count_total 
 
 SIZE = (200, 196)
-#DATASET_PATH = Path("/media/dan/data/datasets/Dan-2024-Front2BEV/")
+DATASET_PATH = Path("/media/dan/data/datasets/Dan-2024-Front2BEV/")
 
-DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/")
+#DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/")
 
 if __name__ == '__main__':
     test_paths = get_test_dirs(DATASET_PATH)
-    for n_cls in range(2, 7):
+    for n_cls in range(5, 6):
         print('\n Class:', n_cls)
-        post_proc_bev(test_paths, n_cls, SIZE)
-        
+
+        print('\n Class:', n_cls)
+        print(pixel_count_total)

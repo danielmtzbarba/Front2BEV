@@ -1,20 +1,15 @@
 #******************  Dataset options ******************
 csv_path: datasets/Dan-2024-Front2BEV
 
-class_weights:
-  -    1.7    # non_drivable_area
-  -    1.7    # drivable_area
-  -    3.3    # walkway
-  -    8.0    # car
-  -   30.1    # pedestrian
+  #{0: 48981349, 1: 49777705, 2: 30185973, 3: 345667, 4: 69306, 'N': 129360000}
 
 # Prior probability of a positive prediction, used to initialise classifier
 prior:
-  - 0.44679   # non_drivable_area
-  - 0.44679   # drivable_area
-  - 0.14491   # walkway
-  - 0.02086   # car
-  - 0.00119   # pedestrian
+  - 0.37864   # non_drivable_area
+  - 0.38479   # drivable_area
+  - 0.23334   # walkway
+  - 0.00267   # car
+  - 0.00056   # pedestrian
 
 class_names: ['non-drivable', 'drivable', 'walkway', 'vehicle', 'pedestrian', 'roadlines']
 #******************  Dataset options ******************

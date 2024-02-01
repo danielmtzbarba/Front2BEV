@@ -47,11 +47,14 @@ def apply_morph(img, kernel_size = 2):
 
 def decode_masks(encoded_bev, n_classes, fov_mask):
     w, h = encoded_bev.shape
+    pixel_count = {'N': w*h}
     masks = np.zeros((w, h, n_classes + 1))
     for k in range(n_classes):
-        masks[:,:, k] = encoded_bev == k
+        k_mask = encoded_bev == k
+        masks[:,:, k] = k_mask 
+        pixel_count[k] = np.count_nonzero(k_mask) 
     masks[:, :, n_classes] = fov_mask
-    return masks
+    return masks, pixel_count
 
 def postprocess(sem_img, bev_map, size, fov_mask, n_classes, morph=True, display=False):
     remapped = remap_seg(sem_img, bev_map, n_classes)
@@ -69,11 +72,11 @@ def postprocess(sem_img, bev_map, size, fov_mask, n_classes, morph=True, display
         else:
             bev_img = eroded
 
-        masks =  decode_masks(bev_img, n_classes, fov_mask)
+        masks, pixel_count  =  decode_masks(bev_img, n_classes, fov_mask)
 
     else:
         bev_img = resized
-        masks =  decode_masks(bev_img, n_classes, fov_mask)
+        masks, pixel_count =  decode_masks(bev_img, n_classes, fov_mask)
     
     if display:
        encoded_masks = encode_binary_labels(masks.transpose((2, 1, 0))).transpose()
@@ -83,6 +86,6 @@ def postprocess(sem_img, bev_map, size, fov_mask, n_classes, morph=True, display
        vis.plot_encoded_masks(encoded_masks)
        plt.show()
          
-    return bev_img, masks 
+    return bev_img, masks, pixel_count 
 # --------------------------------------------------------------------------
 
