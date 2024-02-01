@@ -66,6 +66,8 @@ def postprocess(sem_img, bev_map, size, fov_mask, n_classes, morph=True, display
         if n_classes > 4:
             bev_img = dilated_class(sem_img, eroded,  [84, 4],
                                     size, k=3, i=3, morph=True)
+        else:
+            bev_img = eroded
 
         masks =  decode_masks(bev_img, n_classes, fov_mask)
 

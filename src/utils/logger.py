@@ -71,11 +71,14 @@ class TrainLog(object):
 
         image, calib, labels, mask = batch
         scores = logits.cpu().sigmoid() > self.config.score_thresh
+        
+        preds = scores[0]*mask[0]
+        gt = labels[0]*mask[0]
 
         self._summary.add_image(phase + '/image', image[0], iteration, dataformats='CHW')
-        self._summary.add_image(phase + '/pred', colorise(scores[0], 'binary_r', 0, 1),
+        self._summary.add_image(phase + '/pred', colorise(preds, 'binary_r', 0, 1),
                         iteration, dataformats='NHWC')
-        self._summary.add_image(phase + '/gt', colorise(labels[0], 'binary_r', 0, 1),
+        self._summary.add_image(phase + '/gt', colorise(gt, 'binary_r', 0, 1),
                         iteration, dataformats='NHWC')
     
  

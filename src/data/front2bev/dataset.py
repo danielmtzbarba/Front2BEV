@@ -8,6 +8,9 @@ from torchvision.transforms.functional import to_tensor
 
 from torch.utils.data import Dataset
 
+import src.data.front2bev.bev as bev
+from src.data.front2bev.utils import mask64
+
 from src.utils.transforms import Rescale, Normalize
 from src.data.utils import decode_binary_labels
 # ------------------------------------------------------------------------------------------------------
@@ -57,6 +60,6 @@ class Front2BEVDataset(Dataset):
         encoded = to_tensor(Image.open(self.samples.iloc[idx, 1])).long()  
         # Decode into mask classes
         decoded = decode_binary_labels(encoded, self.num_class + 1)
-        labels, mask = decoded[:-1], ~decoded[-1]
+        labels, mask = decoded[:-1], bev.resize_img(mask64, self.output_size)
         return labels, mask
 # ------------------------------------------------------------------------------------------------------

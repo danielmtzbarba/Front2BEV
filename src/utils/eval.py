@@ -1,6 +1,6 @@
 import src.utils.metrics as metrics
 
-import src.utils.bev as bev
+import src.data.front2bev.bev as bev
 
 def metric_eval_bev(bev_nn, bev_gt, n_classes):
 

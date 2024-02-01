@@ -20,7 +20,7 @@ num_workers: 4
 
 # Model options
 model: pyramid
-log_interval: 50
+log_interval: 10 
 
 # Loss options
 weight_mode: equal 
@@ -54,7 +54,7 @@ map_resolution: 0.25
 
 # Image size
 img_size: [256, 512]
-output_size: (196, 200)
+output_size: (200, 196)
 score_thresh: 0.5
 
 #***********************************************************************
