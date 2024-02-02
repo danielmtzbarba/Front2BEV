@@ -41,9 +41,8 @@ class Front2BEVDataset(Dataset):
         return len(self.samples)
 
     def __getitem__(self, idx):
-        image = self.load_image(idx)
+        image = self.load_image(idx).float()
         labels, mask = self.load_class_masks(idx)
-        image = image.float()
         calib = torch.from_numpy(self.calib).float()
     
         return image, calib, labels, mask
@@ -60,6 +59,6 @@ class Front2BEVDataset(Dataset):
         encoded = to_tensor(Image.open(self.samples.iloc[idx, 1])).long()  
         # Decode into mask classes
         decoded = decode_binary_labels(encoded, self.num_class + 1)
-        labels, mask = decoded[:-1], bev.resize_img(mask64, self.output_size)
+        labels, mask = decoded[:-1], torch.from_numpy(bev.resize_img(mask64, self.output_size))
         return labels, mask
 # ------------------------------------------------------------------------------------------------------

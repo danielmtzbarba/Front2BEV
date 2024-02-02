@@ -1,5 +1,6 @@
 # --------------------------------------------------------------------------
 import cv2
+import torch
 import numpy as np
 import matplotlib.pyplot as plt
 import src.utils.visualize as vis
@@ -33,10 +34,10 @@ def remap_seg(bev_img, bev_mapping, n_classes):
     bev_img[bev_img > n_classes] = 0
     return bev_img
 
-def mask_img(img, mask64, n_classes):
+def mask_img(img, mask, n_classes):
     img = img.copy()
-    out_of_fov = (mask64 == 0)
-    img *=  mask64
+    out_of_fov = (mask == 0)
+    img *=  mask
     img[out_of_fov] = n_classes
     return img
 
@@ -56,6 +57,17 @@ def decode_masks(encoded_bev, n_classes, fov_mask):
     masks[:, :, n_classes] = fov_mask
     return masks, pixel_count
 
+def masks2bev(batch, fov_mask):
+    b, c, h, w = batch.shape
+    bevs = torch.empty(b, h, w) 
+    for n, im in enumerate(batch): 
+        bev = torch.empty(1, h, w) 
+        for i in range(c):
+            bev[0, im[i, :, :]] = i 
+        bev[fov_mask == 0] = c
+        bevs[n] = bev
+    return bevs 
+        
 def postprocess(sem_img, bev_map, size, fov_mask, n_classes, morph=True, display=False):
     remapped = remap_seg(sem_img, bev_map, n_classes)
     resized = resize_img(remapped, size)

@@ -62,16 +62,17 @@ print(encoded.shape, decoded.shape)
 
 # --------------------------------------------------------------
 # Plot labels
-labels, mask = decoded[:-1], ~decoded[-1]
-print(labels.shape, mask.shape)
+labels = decoded[:-1]
+print(labels.shape, fov_mask.shape)
 
+encodedplt = encoded.numpy().transpose(1, 2, 0)
 labelsplt = labels.numpy().transpose(1, 2, 0)
-maskplt = mask.numpy().transpose()
-print(labelsplt.shape, maskplt.shape)
 
-encoded = encoded.numpy().transpose(1, 2, 0 )
-plot_encoded_masks(encoded)
-plot_class_masks(labelsplt, fov_mask)
+#plot_encoded_masks(encodedplt)
+#plot_class_masks(labelsplt, fov_mask)
+
+masked = bev.masks2bev(labels.unsqueeze(0), torch.from_numpy(fov_mask).unsqueeze(0)) 
+plt.imshow(masked.numpy().transpose(1, 2, 0))
 plt.show()
 
 # --------------------------------------------------------------
