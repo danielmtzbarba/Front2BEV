@@ -27,7 +27,7 @@ class OccupancyCriterion(nn.Module):
         self.uncert_weight = uncert_weight
 
         self.priors = torch.tensor(priors)
-        self.class_weights = calc_weights(self.priors)
+        self.class_weights = calc_weights(self.priors, weight_mode)
     
 
     def forward(self, logits, labels, mask, *args):

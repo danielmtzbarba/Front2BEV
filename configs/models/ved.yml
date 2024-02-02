@@ -1,6 +1,4 @@
 #******* Lu et al. VED config *******
-img_size: [256, 512]
-
 ved:
   # Dimensions of bottleneck (depends on the size of input images)
   bottleneck_dim: 8 

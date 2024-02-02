@@ -39,11 +39,11 @@ def get_configuration():
     # Load pc options
     config.merge_from_file(f'configs/pc/{args.pc}.yml')
 
-    # Load dataset options
-    config.merge_from_file(f'configs/datasets/{config.train_dataset}.yml')
-
     # Load model options
-    config.merge_from_file(f'configs/models/{config.model}.yml')
+    config.merge_from_file(f'configs/models/{args.model}.yml')
+
+    # Load dataset options
+    config.merge_from_file(f'configs/datasets/{args.dataset}.yml')
 
     # Load experiment options
     config.merge_from_file(f'configs/experiments/{args.experiment}.yml')
@@ -72,7 +72,7 @@ def create_experiment(config, resume):
         logdir = resume
     else:
         # Otherwise, generate a run directory based on the current time
-        print("\n==> Creating new experiment in directory:\n" + logdir)
+        print("\n==> Creating new experiment in directory:\n" + config.logdir)
         try:
             os.makedirs(config.logdir)
         except:
@@ -83,4 +83,4 @@ def create_experiment(config, resume):
         f.write(config.dump())
 
     print(config.name)
-    return logdir
+    return config.logdir

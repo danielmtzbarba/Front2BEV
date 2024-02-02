@@ -23,7 +23,7 @@ model: pyramid
 log_interval: 5 
 
 # Loss options
-weight_mode: inverse 
+weight_mode: sqrt_inverse 
 loss_fn: bce 
 
 focal:

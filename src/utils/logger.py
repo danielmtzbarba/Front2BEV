@@ -13,7 +13,7 @@ class TrainLog(object):
 
     def __init__(self, config):
         # Create tensorboard summary 
-        self._summary = SummaryWriter(os.path.join(config.logdir, config.name))
+        self._summary = SummaryWriter(os.path.join(config.logdir))
         
         self.config = config
         self._batches = {
@@ -94,7 +94,7 @@ class TrainLog(object):
             'epochs': self._epochs
         }  
 
-        log_path = os.path.join(self.config.logdir
+        log_path = os.path.join(self.config.logdir,
                                 f'{self.config.name}.pkl')
 
         save_pkl_file(log_dict, log_path)
