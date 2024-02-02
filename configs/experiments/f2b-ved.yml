@@ -17,7 +17,7 @@ model: ved
 num_class: 5 
 
 # Loss options
-weight_mode: equal 
+weight_mode: inverse 
 loss_fn: bce 
 
 # Model options
