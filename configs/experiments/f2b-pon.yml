@@ -4,11 +4,11 @@
 seed: 1596
 
 # Experiment name
-name: f2b-pon
+name: f2b-aug-pon
 resume: None
 
 # Dataset options
-train_dataset: front2bev
+train_dataset: front2bev-aug
 map_config: traffic
 num_class: 5 
 bayesian: False

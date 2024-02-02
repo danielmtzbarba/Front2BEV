@@ -15,7 +15,7 @@ def get_default_configuration():
 
 def get_console_args():
     parser = ArgumentParser()
-    parser.add_argument('--dataset', choices=['front2bev', 'nuscenes'],
+    parser.add_argument('--dataset', choices=['front2bev', 'front2bev-aug'],
                         default='front2bev', help='dataset to train on')
     parser.add_argument('--model', choices=['ved', 'pyramid'],
                         default='ved', help='model to train')
