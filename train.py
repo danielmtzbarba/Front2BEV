@@ -1,5 +1,12 @@
+# -----------------------------------------------------------------------------
+
 import warnings
 warnings.filterwarnings("ignore")
+
+import logging
+
+logging.basicConfig(filename="output.log", level=logging.DEBUG )
+logger= logging.getLogger( __name__ )
 
 # -----------------------------------------------------------------------------
 from src.utils import configs
@@ -46,7 +53,15 @@ if __name__ == '__main__':
     
     set_deterministic(config.seed)
 
-    if config.distributed:
-        mp.spawn(main, args=([config]), nprocs=config.num_gpus)
-    else:
-        main(0, config)
+    try:
+
+        if config.distributed:
+            mp.spawn(main, args=([config]), nprocs=config.num_gpus)
+        else:
+            main(0, config)
+
+    except Exception as e:
+
+       logger.exception( e )
+
+    logging.shutdown()

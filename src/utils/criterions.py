@@ -3,7 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from .losses import balanced_binary_cross_entropy, kl_divergence_loss, \
-     focal_loss, prior_offset_loss, prior_uncertainty_loss
+                 focal_loss, prior_offset_loss, prior_uncertainty_loss, \
+                 recall_cross_entropy
 
 def calc_weights(priors, weight_mode="inverse"):
     if weight_mode == 'inverse':
@@ -49,7 +50,7 @@ class OccupancyCriterion(nn.Module):
 class RecallCriterion(nn.Module):
 
     def __init__(self, priors, xent_weight=1., uncert_weight=0.,
-                 num_class):
+                 num_class=5):
         super().__init__()
 
         self.xent_weight = xent_weight
@@ -59,12 +60,12 @@ class RecallCriterion(nn.Module):
 
     def forward(self, logits, labels, mask, *args):
 
-        bce_loss = recall_cross_entropy(logits, labels, mask,
-                                        self.num_class, self.num_class)
-
         # Compute uncertainty loss for unknown image regions
         self.priors = self.priors.to(logits)
         uncert_loss = prior_uncertainty_loss(logits, mask, self.priors)
+
+        bce_loss = recall_cross_entropy(logits, labels, mask,
+                                        self.num_class, self.num_class)
 
         return bce_loss * self.xent_weight + uncert_loss * self.uncert_weight
 
@@ -110,5 +111,3 @@ class PriorOffsetCriterion(nn.Module):
     def forward(self, logits, labels, mask, *args):
         return prior_offset_loss(logits, labels, mask, self.priors)
 
-
-class RecallCriterion()

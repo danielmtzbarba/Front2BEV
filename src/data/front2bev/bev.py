@@ -64,7 +64,7 @@ def masks2bev(batch, fov_mask):
         bev = torch.empty(1, h, w) 
         for i in range(c):
             bev[0, im[i, :, :]] = i 
-        bev[fov_mask == 0] = c
+        bev[0, fov_mask[n] == 0] = c
         bevs[n] = bev
     return bevs 
         
