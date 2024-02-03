@@ -37,6 +37,7 @@ def proc_dir(path, num_class, size, display=False):
         encoded_masks = encode_binary_labels(decoded_masks.transpose((2, 1, 0))).transpose()
         Image.fromarray(encoded_masks.astype(np.int32), mode='I').save(str(save_bev / bev_img_name).replace('.jpg', '.png'))
 
+
         if display :
             plot_encoded_masks(encoded_masks)
             plt.show()
@@ -60,7 +61,7 @@ def post_proc_bev(test_paths, num_class, size):
     return pixel_count_total 
 
 SIZE = (200, 196)
-DATASET_PATH = Path("/media/dan/data/datasets/Dan-2024-Front2BEV/")
+DATASET_PATH = Path("/media/danielmtz/data/datasets/Dan-2024-Front2BEV/")
 
 #DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/")
 
@@ -68,6 +69,6 @@ if __name__ == '__main__':
     test_paths = get_test_dirs(DATASET_PATH)
     for n_cls in range(5, 6):
         print('\n Class:', n_cls)
-
+        pixel_count_total = post_proc_bev(test_paths, n_cls, SIZE)
         print('\n Class:', n_cls)
         print(pixel_count_total)

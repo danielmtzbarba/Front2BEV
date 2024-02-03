@@ -5,7 +5,7 @@ warnings.filterwarnings("ignore")
 
 import logging
 
-logging.basicConfig(filename="output.log", level=logging.DEBUG )
+logging.basicConfig(filename="output.log", level=logging.ERROR)
 logger= logging.getLogger( __name__ )
 
 # -----------------------------------------------------------------------------

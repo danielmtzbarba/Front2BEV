@@ -58,7 +58,6 @@ import src.data.front2bev.bev as bev
 def recall_cross_entropy(input, target, fov_mask, n_classes, ignore_index):
     # input (batch,n_classes,H,W)
     # target (batch,H,W)
-    
     target = bev.masks2bev(target, fov_mask).long().cuda()
     pred = input.sigmoid().argmax(1)
     idex = (pred != target).view(-1) 
@@ -66,9 +65,11 @@ def recall_cross_entropy(input, target, fov_mask, n_classes, ignore_index):
     #calculate ground truth counts
     gt_counter = torch.ones((n_classes,)).cuda() 
     gt_idx, gt_count = torch.unique(target,return_counts=True)
+
     # map ignored label to an exisiting one
-    gt_count[gt_idx==ignore_index] = gt_count[1].clone()
-    gt_idx[gt_idx==ignore_index] = 1 
+    aux = gt_count[0].clone()
+    gt_count[gt_idx==ignore_index] = aux 
+    gt_idx[gt_idx==ignore_index] = 0 
     gt_counter[gt_idx] = gt_count.float()
     
     #calculate false negative counts
@@ -77,13 +78,14 @@ def recall_cross_entropy(input, target, fov_mask, n_classes, ignore_index):
     fn_idx, fn_count = torch.unique(fn,return_counts=True)
     
     # map ignored label to an exisiting one
-    fn_count[fn_idx==ignore_index] = fn_count[1].clone()
-    fn_idx[fn_idx==ignore_index] = 1 
+    aux = fn_count[0].clone()
+    fn_count[fn_idx==ignore_index] = aux
+    fn_idx[fn_idx==ignore_index] = 0 
     fn_counter[fn_idx] = fn_count.float()
     
     weight = fn_counter / gt_counter
+     
+    loss = F.cross_entropy(input, target, weight,  reduction='none',ignore_index=ignore_index)
     
-    CE = F.cross_entropy(input, target, reduction='none',ignore_index=ignore_index)
-    loss =  weight[target] * CE
     return loss.mean()
 

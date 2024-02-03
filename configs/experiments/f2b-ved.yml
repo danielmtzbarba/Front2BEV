@@ -4,13 +4,13 @@
 seed: 1596
 
 # Experiment name
-name: f2b-aug-ved
+name: test-ved
 log_interval: 5 
 
 resume: None
 
 # Dataset to train on
-train_dataset: front2bev-aug
+train_dataset: front2bev
 
 map_config: traffic
 model: ved
@@ -18,7 +18,7 @@ num_class: 5
 
 # Loss options
 weight_mode: equal 
-loss_fn: bce 
+loss_fn: recall 
 
 # Model options
 # optimizer
@@ -33,7 +33,7 @@ lr_gamma: 0.97
 
 
 # Training Options
-num_epochs: 200 
+num_epochs: 10 
 batch_size: 8 
 num_workers: 4 
 

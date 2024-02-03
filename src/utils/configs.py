@@ -76,8 +76,9 @@ def create_experiment(config, resume):
         try:
             os.makedirs(config.logdir)
         except:
-            # Directory exists
-            pass
+            if "test" not in config.name:
+                exit()
+            
     # Save the current config
     with open(os.path.join(config.logdir, 'config.yml'), 'w') as f:
         f.write(config.dump())
