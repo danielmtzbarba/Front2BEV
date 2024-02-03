@@ -11,9 +11,13 @@ resume: None
 train_dataset: front2bev-aug
 map_config: traffic
 num_class: 5 
-bayesian: False
 
-# Training Options
+  # optimizer
+optimizer: sgd 
+learning_rate: 0.1
+weight_decay: 0.0001
+
+  # Training Options
 num_epochs: 200 
 batch_size: 8
 num_workers: 4
@@ -23,17 +27,14 @@ model: pyramid
 log_interval: 5 
 
 # Loss options
-weight_mode: recall 
-loss_fn: recall 
+weight_mode: sqrt_inverse 
+loss_fn: bce 
 
+bayesian: False
 focal:
   alpha: 0.25
   gamma: 2
 
-# optimizer
-optimizer: sgd 
-learning_rate: 0.1
-weight_decay: 0.0001
 
 # Scheduler
 lr_scheduler: steplr

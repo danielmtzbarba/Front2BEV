@@ -10,7 +10,7 @@ from src.data.front2bev.utils import process_path
 def get_f2b_dataloader(root_path, csv_path, num_class, map_config, 
                        img_size, output_size, batch_size,
                          n_workers = 8, distributed=False):
-
+    
     # Change dataset relative paths to absolute paths
     df = pd.read_csv(csv_path, header=None)
     df = process_path(df, root_path, num_class, map_config)
@@ -20,7 +20,7 @@ def get_f2b_dataloader(root_path, csv_path, num_class, map_config,
                                  num_workers=0, sampler = DistributedSampler(dataset))
     else:
         dataloader = DataLoader(dataset, batch_size = batch_size, shuffle = False, num_workers=n_workers)
-
+    
     return dataloader
 
 def get_f2b_dataloaders(config):
