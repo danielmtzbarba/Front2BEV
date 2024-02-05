@@ -61,7 +61,7 @@ class TrainLog(object):
         self._summary.add_scalar(f'val/miou', confusion.mean_iou, epoch)
         self._summary.add_scalar(f'val/macc', np.mean(acc), epoch)
                 
-        print('-' * 50, '\nResults:')
+        print('-' * 50, f'\nResults {self.config.name}:')
         for name, iou_score, ac in zip(self._class_names, confusion.iou, acc):
             print('{:20s} {:.3f} {:.3f}'.format(name, iou_score, ac)) 
             self._summary.add_scalar(f'val/iou/{name}', iou_score, epoch)

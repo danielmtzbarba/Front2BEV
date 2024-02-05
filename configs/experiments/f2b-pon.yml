@@ -13,8 +13,8 @@ map_config: traffic
 num_class: 5 
 
   # optimizer
-optimizer: sgd 
-learning_rate: 0.1
+optimizer: adam 
+learning_rate: 0.0001 
 weight_decay: 0.0001
 
   # Training Options
