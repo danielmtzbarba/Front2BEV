@@ -1,34 +1,37 @@
 #******************  Experiment options ******************
 
-# Random seed
-seed: 1596
-
 # Experiment name
-name: test
-
-resume: False
-
-# Dataset to train on
-train_dataset: front2bev
-
-map_config: layers_none
-model: pyramid
-num_class: 2
-
-# Save model every n epochs
-save_every: 1
-
-# Model options
-
-# Loss function
-loss_fn: bce
-
-# Method of weighting classes in loss function
-weight_mode: inverse
+seed: 1596
+name: test 
+log_interval: 5 
+resume: None
 
 # Training Options
-num_epochs: 10
-batch_size: 16
-num_workers: 4
+num_class: 5 
+num_epochs: 100 
+batch_size: 8 
+num_workers: 4 
+
+# Image size
+img_size: [256, 512]
+output_size: (200, 196)
+score_thresh: 0.5
+
+#***********************************************************************
+
+# Loss options
+loss_fn: bce 
+
+# Binary cross entropy loss weight
+xent_weight: 1.0
+
+  # Max entropy uncertainty loss weight
+uncert_weight: 0.001
+
+# Top-left and bottom right coordinates of map region, in meters
+map_extents: [-25., 1., 25., 50.]
+
+# Spacing between adjacent grid cells in the map, in meters
+map_resolution: 0.25
 
 #***********************************************************************

@@ -38,7 +38,7 @@ class Builder(object):
 
         elif self._config.optimizer == "sgd":
             optimizer = optim.SGD(self.model.parameters(), self._config.learning_rate, 
-                        weight_decay=self._config.weight_decay)
+                                    weight_decay=self._config.weight_decay)
         return optimizer
 
     def _build_scheduler(self):
@@ -58,7 +58,7 @@ class Builder(object):
         model_name = self._config.model
 
         if model_name == 'ved':
-            if self._config.loss_fn == 'recall':
+            if self._config.weight_mode == 'recall':
                 criterion = crit.VaeRecallCriterion(self._config.prior,
                                                     self._config.xent_weight, 
                                                     self._config.uncert_weight,
@@ -80,7 +80,7 @@ class Builder(object):
             elif self._config.loss_fn == 'prior':
                 criterion = crit.PriorOffsetCriterion(self._config.prior)
            
-            elif self._config.loss_fn == 'recall':
+            elif self._config.weight_mode == 'recall':
                 criterion = crit.RecallCriterion(self._config.prior,  self._config.xent_weight, 
                                                     self._config.uncert_weight, self._config.num_class) 
             else:
@@ -115,7 +115,7 @@ class Builder(object):
             trainer = trainers.VedTrainer(self.model, self.criterion, 
                                 self._config, self._gpu_id)
             
-        if self._config.model == "pyramid":
+        if self._config.model == "pon":
             trainer = trainers.PonTrainer(self.model, self.criterion,
                                 self._config, self._gpu_id)
         

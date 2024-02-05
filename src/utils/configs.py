@@ -48,27 +48,22 @@ def get_configuration(train=True):
     # Load model options
     config.merge_from_file(f'configs/models/{args.model}.yml')
 
+    # Load optimizer options
+    config.merge_from_file(f'configs/optimizers/{args.optimizer}.yml')
+
     # Load dataset options
     config.merge_from_file(f'configs/datasets/{args.dataset}.yml')
 
     # Load experiment options
     config.merge_from_file(f'configs/experiments/{args.experiment}.yml')
 
-    # Override with command line options
-    #config.merge_from_list(args.options)
-
-
     # Restore config from an existing experiment
     if args.resume is not None:
         config.merge_from_file(os.path.join(args.resume, 'config.yml'))
     
     config.map_config = args.map_config
-    config.optimizer = args.optimizer
     config.weight_mode = args.weight_mode
     
-    if args.weight_mode == "recall":
-        config.loss_fn = "recall"
-
     config.name = f'{config.name}-{config.map_config}-{config.model}-{config.optimizer}-{config.weight_mode}'
     config.logdir = os.path.join(config.logdir, config.name)
 

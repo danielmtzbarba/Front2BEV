@@ -74,7 +74,7 @@ class TrainLog(object):
         self._epochs['val_miou'].append(confusion.mean_iou)
         print("\nVal mIoU: ", confusion.mean_iou)
         
-        self._epochs['val_macc'].append(acc) 
+        self._epochs['val_macc'].append(np.mean(acc)) 
         print("Val acc: ", np.mean(acc))
     
     def log_visual_res(self, batch, logits, iteration, phase):

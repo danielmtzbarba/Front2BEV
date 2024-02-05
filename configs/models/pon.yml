@@ -1,4 +1,5 @@
 #******* Roddick et al. PON config *******
+model: pon
 
 tfm_channels: 64
 ymin: -2

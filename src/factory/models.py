@@ -14,7 +14,7 @@ from src.models.nn.classifier import LinearClassifier, BayesianClassifier
 
 def build_model(config):
     model_name = config.model
-    if model_name == 'pyramid':
+    if model_name == 'pon':
         model = build_pyramid_occupancy_network(config)
     elif model_name == 'ved':
        # model = build_variational_encoder_decoder(config)
@@ -67,9 +67,6 @@ def build_variational_encoder_decoder(config):
                 config.map_extents,
                 config.map_resolution)
     '''
-
-    
-    
     return VED(config.num_class)
 
 
