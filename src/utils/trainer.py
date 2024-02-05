@@ -1,3 +1,4 @@
+from time import process_time
 from tqdm import tqdm
 import numpy as np
 import os
@@ -84,6 +85,7 @@ class Trainer:
 
     def _run_train_iter(self):
         # Reset variables
+        t_start_epoch = process_time()
         self.running_loss = 0.0
         self.scheduler.step()
         #
@@ -92,10 +94,10 @@ class Trainer:
         # Set model to training mode
         self._model_trainer.model.train()  
         self._run_epoch()
-
+        elapsed_time = process_time() - t_start_epoch
         # Logging epoch loss
         if self.log:
-            self.train_log.log_epoch(self._epoch, self.running_loss, self._phase)
+            self.train_log.log_epoch(self._epoch, self.running_loss, self._phase, elapsed_time)
 
     def _run_val_iter(self):
         # Reset variables
@@ -159,6 +161,7 @@ class Trainer:
             if self.log:
                 self.train_log.log_phase(self._epoch, self.gpu_id,
                                         len(self.dataloaders[self._phase]), self._phase)
+
             self._run_train_iter()        
 
             self._phase = 'val'

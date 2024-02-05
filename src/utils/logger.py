@@ -28,6 +28,7 @@ class TrainLog(object):
             'val_macc': [],
             'val_iou': [],
             'val_miou': [],
+            'train_time': [],
         }
 
         self._class_names = [config.class_names[cl] for cl in range(config.num_class)]
@@ -48,7 +49,11 @@ class TrainLog(object):
         # Log
         self._batches['loss'].append(loss)
 
-    def log_epoch(self, epoch, running_loss, phase):
+    def log_epoch(self, epoch, running_loss, phase, time=None):
+
+        if phase == "train":
+            self._epochs['train_time'].append(time)
+
         # Update tensorboard
         self._summary.add_scalar(f'{phase}/mloss', float(running_loss), epoch)
         
@@ -56,7 +61,7 @@ class TrainLog(object):
         self._epochs[f'mean_{phase}_loss'].append(running_loss)
         print("Epoch:", epoch, f"{phase} loss (mean):", running_loss)
         
-    def log_metrics(self, acc, iou, confusion, epoch):
+    def log_metrics(self, acc, confusion, epoch):
         acc = acc.numpy()
         self._summary.add_scalar(f'val/miou', confusion.mean_iou, epoch)
         self._summary.add_scalar(f'val/macc', np.mean(acc), epoch)
@@ -66,7 +71,6 @@ class TrainLog(object):
             print('{:20s} {:.3f} {:.3f}'.format(name, iou_score, ac)) 
             self._summary.add_scalar(f'val/iou/{name}', iou_score, epoch)
             self._summary.add_scalar(f'val/acc/{name}', ac, epoch)
-
         
         self._epochs['val_iou'].append(confusion.iou)
         self._epochs['val_acc'].append(acc)
@@ -76,6 +80,7 @@ class TrainLog(object):
         
         self._epochs['val_macc'].append(np.mean(acc)) 
         print("Val acc: ", np.mean(acc))
+        
     
     def log_visual_res(self, batch, logits, iteration, phase):
 
