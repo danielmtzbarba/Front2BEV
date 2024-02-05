@@ -68,7 +68,7 @@ def recall_cross_entropy(input, target, fov_mask, n_classes, ignore_index):
 
     # map ignored label to an exisiting one
     aux = gt_count[0].clone()
-    gt_count[gt_idx==ignore_index] = aux 
+    gt_count[gt_idx==ignore_index] += aux 
     gt_idx[gt_idx==ignore_index] = 0 
     gt_counter[gt_idx] = gt_count.float()
     
@@ -79,7 +79,7 @@ def recall_cross_entropy(input, target, fov_mask, n_classes, ignore_index):
     
     # map ignored label to an exisiting one
     aux = fn_count[0].clone()
-    fn_count[fn_idx==ignore_index] = aux
+    fn_count[fn_idx==ignore_index] =+ aux
     fn_idx[fn_idx==ignore_index] = 0 
     fn_counter[fn_idx] = fn_count.float()
     

@@ -25,6 +25,7 @@ class TrainLog(object):
             'mean_train_loss': [],
             'mean_val_loss': [],
             'val_acc': [],
+            'val_macc': [],
             'val_iou': [],
             'val_miou': [],
         }
@@ -66,12 +67,15 @@ class TrainLog(object):
             self._summary.add_scalar(f'val/iou/{name}', iou_score, epoch)
             self._summary.add_scalar(f'val/acc/{name}', ac, epoch)
 
-        self._epochs['val_iou'].append(iou)
+        
+        self._epochs['val_iou'].append(confusion.iou)
+        self._epochs['val_acc'].append(acc)
+
+        self._epochs['val_miou'].append(confusion.mean_iou)
         print("\nVal mIoU: ", confusion.mean_iou)
         
-        acc.mean
-        self._epochs['val_acc'].append(acc) 
-        print("Val acc: ", acc)
+        self._epochs['val_macc'].append(acc) 
+        print("Val acc: ", np.mean(acc))
     
     def log_visual_res(self, batch, logits, iteration, phase):
 

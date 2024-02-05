@@ -15,16 +15,22 @@ def get_default_configuration():
 
 def get_console_args():
     parser = ArgumentParser()
-    parser.add_argument('--dataset', choices=['front2bev', 'front2bev-aug'],
-                        default='front2bev', help='dataset to train on')
-    parser.add_argument('--model', choices=['ved', 'pyramid'],
-                        default='ved', help='model to train')
     parser.add_argument('--experiment', default='test', 
                         help='name of experiment config to load')
-    parser.add_argument('--resume', default=None, 
-                        help='path to an experiment to resume')
+    parser.add_argument('--dataset', choices=['front2bev', 'front2bev-aug'],
+                        default='front2bev', help='dataset to train on')
+    parser.add_argument('--map_config', choices=['traffic', 'aug'], 
+                        default='traffic', help='dataset map config')
+    parser.add_argument('--model', choices=['ved', 'pyramid'],
+                        default='ved', help='model to train')
+    parser.add_argument('--optimizer', choices=['sgd', 'adam'],
+                        default='adam', help='optimizer')
+    parser.add_argument('--weight_mode', choices=['equal', 'inverse', 'sqrt_inverse', 'recall'],
+                        default='sqrt_inverse', help='weight_mode for cross entropy loss')
     parser.add_argument('--pc', default='home', 
                         help='machine config')
+    parser.add_argument('--resume', default=None, 
+                        help='path to an experiment to resume')
     parser.add_argument('--options', nargs='*', default=[],
                         help='list of addition config options as key-val pairs')
     return parser.parse_args()
@@ -56,7 +62,14 @@ def get_configuration(train=True):
     if args.resume is not None:
         config.merge_from_file(os.path.join(args.resume, 'config.yml'))
     
-    config.name = f'{config.name}-{config.map_config}-{config.weight_mode}'
+    config.map_config = args.map_config
+    config.optimizer = args.optimizer
+    config.weight_mode = args.weight_mode
+    
+    if args.weight_mode == "recall":
+        config.loss_fn = "recall"
+
+    config.name = f'{config.name}-{config.map_config}-{config.model}-{config.optimizer}-{config.weight_mode}'
     config.logdir = os.path.join(config.logdir, config.name)
 
     if train:

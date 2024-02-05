@@ -146,6 +146,7 @@ class Trainer:
     def train(self):
 
         self._best_iou = 0.0
+        self._best_epoch = 1 
 
         self._epoch = 1
         self._iteration = 1
@@ -173,14 +174,17 @@ class Trainer:
                 if iou > self._best_iou:
                     self._save_checkpoint()
                     self._best_iou = iou
+                    self._best_epoch = self._epoch 
 
             self._epoch += 1
 
         # ------------------------------
         # Training end
         # ------------------------------
-        print('-' * 50, f"\nTraining ended successfully")
-        print('-' * 50)
+        if self.log:
+            print('-' * 50, f"\nTraining ended successfully")
+            print('-' * 50)
+            print('\n==>', self.config.name, self._best_epoch, self._best_iou)
         # ------------------------------
 
 # -----------------------------------------------------------------------------
