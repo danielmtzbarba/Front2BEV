@@ -29,7 +29,7 @@ def get_console_args():
                         help='list of addition config options as key-val pairs')
     return parser.parse_args()
 
-def get_configuration():
+def get_configuration(train=True):
 
     args = get_console_args()
 
@@ -58,7 +58,9 @@ def get_configuration():
     
     config.name = f'{config.name}-{config.map_config}-{config.weight_mode}'
     config.logdir = os.path.join(config.logdir, config.name)
-    create_experiment(config, args.resume)
+
+    if train:
+        create_experiment(config, args.resume)
 
     # Finalize config
     config.freeze()
@@ -77,6 +79,7 @@ def create_experiment(config, resume):
             os.makedirs(config.logdir)
         except:
             if "test" not in config.name:
+                print("\n==> Directory already exists, exiting ...")
                 exit()
             
     # Save the current config
