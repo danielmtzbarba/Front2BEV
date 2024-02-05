@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, RandomSampler
 from torch.utils.data.distributed import DistributedSampler
 
 from src.data.front2bev.dataset import Front2BEVDataset
@@ -15,11 +15,14 @@ def get_f2b_dataloader(root_path, csv_path, num_class, map_config,
     df = pd.read_csv(csv_path, header=None)
     df = process_path(df, root_path, num_class, map_config)
     dataset = Front2BEVDataset(df, img_size, output_size, num_class)
+
     if distributed:
-        dataloader = DataLoader(dataset, batch_size = batch_size, pin_memory = False, shuffle = False,
-                                 num_workers=0, sampler = DistributedSampler(dataset))
+        dataloader = DataLoader(dataset, batch_size=batch_size, pin_memory=False, shuffle=False,
+                                 num_workers=0, sampler=DistributedSampler(dataset, shuffle=True))
     else:
-        dataloader = DataLoader(dataset, batch_size = batch_size, shuffle = False, num_workers=n_workers)
+        sampler = RandomSampler(dataset, True, len(dataset))
+        dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False,
+                                sampler=sampler, num_workers=n_workers)
     
     return dataloader
 

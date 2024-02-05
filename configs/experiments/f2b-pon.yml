@@ -4,11 +4,11 @@
 seed: 1596
 
 # Experiment name
-name: f2b-aug-pon
+name: f2b
 resume: None
 
 # Dataset options
-train_dataset: front2bev-aug
+train_dataset: front2bev
 map_config: traffic
 num_class: 5 
 
@@ -18,7 +18,7 @@ learning_rate: 0.1
 weight_decay: 0.0001
 
   # Training Options
-num_epochs: 200 
+num_epochs: 100 
 batch_size: 8
 num_workers: 4
 
@@ -27,8 +27,8 @@ model: pyramid
 log_interval: 5 
 
 # Loss options
-weight_mode: sqrt_inverse 
-loss_fn: bce 
+weight_mode: recall 
+loss_fn: recall 
 
 bayesian: False
 focal:
