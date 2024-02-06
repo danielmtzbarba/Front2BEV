@@ -8,12 +8,12 @@ resume: None
 
 # Training Options
 num_class: 5 
-num_epochs: 100 
+num_epochs: 50 
 batch_size: 8 
 num_workers: 4 
 
 # Image size
-img_size: [256, 512]
+img_size: [800, 600]
 output_size: (200, 196)
 score_thresh: 0.5
 

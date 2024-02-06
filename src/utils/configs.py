@@ -21,7 +21,7 @@ def get_console_args():
                         default='front2bev', help='dataset to train on')
     parser.add_argument('--map_config', choices=['traffic', 'aug'], 
                         default='traffic', help='dataset map config')
-    parser.add_argument('--model', choices=['ved', 'pyramid'],
+    parser.add_argument('--model', choices=['ved', 'pon'],
                         default='ved', help='model to train')
     parser.add_argument('--optimizer', choices=['sgd', 'adam'],
                         default='adam', help='optimizer')
@@ -61,6 +61,7 @@ def get_configuration(train=True):
     if args.resume is not None:
         config.merge_from_file(os.path.join(args.resume, 'config.yml'))
     
+    config.train_dataset = args.dataset
     config.map_config = args.map_config
     config.weight_mode = args.weight_mode
     
