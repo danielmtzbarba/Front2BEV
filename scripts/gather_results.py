@@ -7,7 +7,7 @@ import pandas as pd
 from dan.utils import load_pkl_file
 # -----------------------------------------------------------------------------
 
-cols=['experiment','config' , 'model', 'opt', 'weight_mode', 'miou', 'macc', 'highest_epoch']
+cols=['experiment','config' , 'model', 'opt', 'weight_mode', 'miou', 'macc', 'highest_epoch', 'train_time']
 
 
 def get_log_data(exp, logdir):
@@ -27,7 +27,7 @@ def get_log_data(exp, logdir):
     macc = [np.mean(acc) for acc in log_file['epochs']['val_acc']] 
     
     idx = np.argmax(miou)
-    data = [exp, config, model, opt, weight, miou[idx], macc[np.argmax(macc)], idx]
+    data = [exp, config, model, opt, weight, miou[idx], macc[np.argmax(macc)], idx, np.mean(log_file['epochs']['train_time'])]
     return data
 
 def get_experiments(logdir):
@@ -44,10 +44,12 @@ def get_experiments(logdir):
     df = pd.DataFrame(data, columns=cols) 
     return df
 
-logdir = '/media/danielmtz/data/logs' 
+logdir = '/media/danielmtz/data/logs/run2' 
 def main():
   df =  get_experiments(logdir)
-  print(df.sort_values(by=['miou'], ascending=False))
+  df.drop(['experiment'], axis=1, inplace=True)
+
+  print(df[df['opt']=='adam'].sort_values(by=['miou'], ascending=False))
 
 if __name__ == '__main__':
     main()
