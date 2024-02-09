@@ -1,0 +1,9 @@
+,config,model,opt,weight_mode,non-drivable,drivable,walkway,vehicle,pedestrian,miou,macc,highest_epoch,train_time
+0,aug,pon,adam,equal,tensor(0.3146),tensor(0.5655),tensor(0.6680),tensor(0.4735),tensor(0.),0.40431681275367737,0.8916076,68,500.2581368687599
+1,aug,pon,adam,inverse,tensor(0.3463),tensor(0.4617),tensor(0.5642),tensor(0.5816),tensor(0.0570),0.4021632671356201,0.86488134,85,500.28772310683985
+2,aug,pon,adam,recall,tensor(0.1818),tensor(0.4549),tensor(0.4961),tensor(0.6503),tensor(0.),0.3566203713417053,0.87056077,17,567.2183160622003
+3,aug,pon,adam,sqrt_inverse,tensor(0.2732),tensor(0.5615),tensor(0.5760),tensor(0.4872),tensor(0.0616),0.3918652832508087,0.8847984,68,506.2885276457401
+4,aug,ved,adam,equal,tensor(0.2250),tensor(0.3679),tensor(0.6829),tensor(0.4800),tensor(0.),0.35116928815841675,0.8699647,69,480.6770283293398
+5,aug,ved,adam,inverse,tensor(0.1482),tensor(0.6684),tensor(0.7930),tensor(0.3088),tensor(0.0554),0.39474934339523315,0.8958868,67,481.87732303357996
+6,aug,ved,adam,recall,tensor(0.2287),tensor(0.2748),tensor(0.5538),tensor(0.4209),tensor(0.),0.29564663767814636,0.8369769,85,522.5121747535007
+7,aug,ved,adam,sqrt_inverse,tensor(0.2343),tensor(0.4282),tensor(0.6392),tensor(0.4247),tensor(0.),0.3452908396720886,0.879607,99,485.85983563224016

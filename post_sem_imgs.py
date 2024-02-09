@@ -61,9 +61,8 @@ def post_proc_bev(test_paths, num_class, size):
     return pixel_count_total 
 
 SIZE = (200, 196)
-DATASET_PATH = Path("/media/danielmtz/data/datasets/Dan-2024-Front2BEV/")
-
-#DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/")
+#DATASET_PATH = Path("/media/danielmtz/data/datasets/Dan-2024-Front2BEV/")
+DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/")
 
 if __name__ == '__main__':
     test_paths = get_test_dirs(DATASET_PATH)
