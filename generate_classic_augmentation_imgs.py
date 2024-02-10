@@ -92,7 +92,8 @@ def augment(dataset, method):
  
 
 csv_dataset_path = 'datasets/Dan-2024-Front2BEV/front2bev-train.csv'
-dataset_path = '/media/dan/dan/datasets/Dan-2024-Front2BEV/'
+#dataset_path = '/media/dan/dan/datasets/Dan-2024-Front2BEV/'
+dataset_path = '/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/'
 
 def main():
     # Change dataset relative paths to absolute paths
@@ -105,7 +106,7 @@ def main():
     aug_dataset =  augment(df, 'blur')
     dfout = pd.concat([df_aug, aug_dataset], ignore_index=True)
 
-    dfout.to_csv('test.csv', header=False, index=False)
+#    dfout.to_csv('test.csv', header=False, index=False)
     return 
 
 if __name__ == '__main__':

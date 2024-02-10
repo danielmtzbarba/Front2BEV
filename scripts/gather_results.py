@@ -57,7 +57,7 @@ def get_experiments(logdir):
     return df
 
 logdir = '/media/danielmtz/data/logs/run2' 
-logdir = "/home/aircv1/Data/Luis/aisyslab/Daniel/results/run2"
+logdir = "/home/aircv1/Data/Luis/aisyslab/Daniel/results/run4"
 
 def main():
     df =  get_experiments(logdir)
@@ -69,7 +69,7 @@ def main():
         pass
     df.to_csv('run2.csv')
     print(df)
-    get_ind_metrics(df, 'sqrt_inverse', 'aug','pon')
+    get_ind_metrics(df, 'sqrt_inverse', 'aug','ved')
 
 
 if __name__ == '__main__':
