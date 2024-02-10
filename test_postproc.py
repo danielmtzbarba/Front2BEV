@@ -31,6 +31,7 @@ print(img_path)
 
 bev_sem = cv2.imread(img_path, 0)
 encoded_img = 'test.png' 
+encoded_img = '/media/dan/dan/datasets/Dan-2024-Front2BEV/Town01/scene_1/flip/bev/5k/27.png'
 N_CLASSES = 5
 size = (200, 196)
 
@@ -53,6 +54,8 @@ print(pixel_count_total)
 # --------------------------------------------------------------
 # Save encoded labels
 encoded_masks = encode_binary_labels(decoded_masks.transpose((2, 1, 0))).transpose()
+plt.imshow(encoded_masks)
+plt.show()
 Image.fromarray(encoded_masks.astype(np.int32), mode='I').save('test.png')
 
 # Load and decode labels
@@ -68,11 +71,13 @@ print(labels.shape, fov_mask.shape)
 encodedplt = encoded.numpy().transpose(1, 2, 0)
 labelsplt = labels.numpy().transpose(1, 2, 0)
 
-#plot_encoded_masks(encodedplt)
-#plot_class_masks(labelsplt, fov_mask)
-
-masked = bev.masks2bev(labels.unsqueeze(0), torch.from_numpy(fov_mask).unsqueeze(0)) 
-plt.imshow(masked.numpy().transpose(1, 2, 0))
+plt.imshow(encodedplt)
 plt.show()
+#plot_encoded_masks(encodedplt)
+plot_class_masks(labelsplt, fov_mask)
+plt.show()
+masked = bev.masks2bev(labels.unsqueeze(0), torch.from_numpy(fov_mask).unsqueeze(0)) 
+#plt.imshow(masked.numpy().transpose(1, 2, 0))
+#plt.show()
 
 # --------------------------------------------------------------
