@@ -12,11 +12,11 @@ def replace_paths(csv_file, old_substring, new_substring):
     return df 
 
 # Ejemplo de uso:
-csv_file = 'test.csv'
-old_substring = '/media/dan/dan/datasets/Dan-2024-Front2BEV/'
-new_substring = ''
+csv_file = 'datasets/Dan-2024-Front2BEV-ClassicAug/front2bev-test.csv'
+old_substring = 'Town01/scene_11/'
+new_substring = 'Town02/scene_1/'
 updated_paths = replace_paths(csv_file, old_substring, new_substring)
 
-updated_paths.to_csv('front2bev-train.csv', header=False, index=False)
+updated_paths.to_csv(csv_file, header=False, index=False)
 print(updated_paths.head())
 

@@ -11,7 +11,7 @@ from src.utils import configs
 # -----------------------------------------------------------------------------
 
 def main(rank: int, config: object):
-    logdir = config.logdir 
+    logdir = config.logdir.replace("logs/", "logs/run4/") 
     print("\n==> Experiment:",  logdir)
     log_file = load_pkl_file(f'{logdir}/{config.name}.pkl')
 
@@ -24,7 +24,6 @@ def main(rank: int, config: object):
     ax = graph.plot_val_metrics(log_file['epochs'],
                                 [config.model ,config.map_config, config.num_class],
                                 save_path=f'{logdir}/val.png')
-
 
 
 

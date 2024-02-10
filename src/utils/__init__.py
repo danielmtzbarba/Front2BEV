@@ -22,7 +22,13 @@ def replace_abs_path(csv_path, old_path, new_path):
     new_df.to_csv(csv_path, header=False, index=False)
     return new_df
 
-def get_dataset_weights(console_args):
-    df_weights = pd.read_csv(f'_datasets/Dan-2023-Front2bev/{console_args.mapconfig}/{console_args.kclasses}k/weights_{console_args.kclasses}k.csv')
-    weights_fov_dict = ast.literal_eval(df_weights['fov_weights'][0])
-    return [weights_fov_dict[i] for i in range(int(console_args.kclasses))]
+def replace_paths(csv_file, old_substring, new_substring):
+    """Lee un archivo CSV con rutas de archivos y reemplaza una parte de esas rutas."""
+    # Lee el archivo CSV en un DataFrame de Pandas
+    df = pd.read_csv(csv_file, header=None)
+
+    # Aplica el reemplazo a la primera columna del DataFrame
+    df[0] = df[0].str.replace(old_substring, new_substring)
+    df[1] = df[1].str.replace(old_substring, new_substring)
+    # Devuelve la lista de rutas actualizadas
+    return df 

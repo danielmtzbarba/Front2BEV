@@ -65,9 +65,9 @@ def plot_val_metrics(data, title=["Title", "", ""], figsize=(25, 10), save_path=
 
     plt.xlabel('Epoch', fontsize=40, fontweight='bold')
     plt.ylabel('Score', fontsize=40, fontweight='bold')
-    mean_acc = [np.mean(acc) for acc in data['val_acc']] 
-    ax.plot(mean_acc, '--ko', markersize=8, label='acc')
-    ax.plot(data['val_iou'], '--bo', markersize=8, label='iou')
+#    mean_acc = [np.mean(acc) for acc in data['val_acc']] 
+#    ax.plot(mean_acc, '--ko', markersize=8, label='acc')
+    ax.plot(data['val_miou'], '--bo', markersize=8, label='iou')
 
 
     ax.legend(fontsize=28, loc='upper right', bbox_to_anchor=(0.13, 0.99))
@@ -83,5 +83,5 @@ def plot_val_metrics(data, title=["Title", "", ""], figsize=(25, 10), save_path=
     if save_path:
        # fig.savefig(save_path.replace(".png", ".eps"))
         fig.savefig(save_path)
-        
+    plt.show()       
     return ax

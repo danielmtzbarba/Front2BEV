@@ -44,29 +44,36 @@ def plot_results(logits, batch, thresh):
 
     plot([labels, decoded_preds])
 
-def test(model, dataloader, config):
+def log_metrics(config, confusion):
+    print('-' * 50, f'\nResults {config.name}:')
+    acc = confusion.accuracy.numpy()
+            
+    for name, iou_score, ac in zip(config.class_names, confusion.iou, acc):
+        print('{:20s} {:.3f} {:.3f}'.format(name, iou_score, ac)) 
+    
+    print("\nTest IoU: ", confusion.mean_iou)
+    print("Test acc: ", np.mean(acc))
+
+def test(tester, dataloader, config):
 
     # Set model to evaluate mode
-    model.model.eval()  
-
-    acc = 0.0
-    iou = 0.0
-
+    tester.model.eval()  
+    cm = None
     # Iterate over data.
     for batch in tqdm(dataloader):
          
         with torch.set_grad_enabled(False):
             # forward
-            logits, loss = model(batch, "val")
+            logits, loss = tester(batch, "val")
 
             # metrics
-            metrics = model.metrics(logits, batch)
-            acc += metrics['acc']
-            iou += metrics['iou']
-
-            plot_results(logits, batch, 0.5)
+            metrics = tester.metrics(logits, batch)
+            #
+            cm += metrics['cm']
+    
+           # plot_results(logits, batch, 0.5)
             break
+
+    log_metrics(config,  cm)
         
-    print("\nTest acc: ", acc / len(dataloader))
-    print("\nTest mIoU: ", iou / len(dataloader))
     

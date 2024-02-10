@@ -39,7 +39,7 @@ def get_log_data(exp, logdir):
     macc = [np.mean(acc) for acc in log_file['epochs']['val_acc']] 
     
     idx = np.argmax(miou)
-    data = [exp, config, model, opt, weight, [iou.numpy() for iou in ious[idx]], accs[idx], miou[idx], macc[np.argmax(macc)], idx, np.mean(log_file['epochs']['train_time'])]
+    data = [exp, config, model, opt, weight, [iou.item() for iou in ious[idx]], accs[idx], miou[idx], macc[np.argmax(macc)], idx, np.mean(log_file['epochs']['train_time'])]
     return data
 
 def get_experiments(logdir):
@@ -56,20 +56,15 @@ def get_experiments(logdir):
     df = pd.DataFrame(data, columns=cols) 
     return df
 
-logdir = '/media/danielmtz/data/logs/run2' 
-logdir = "/home/aircv1/Data/Luis/aisyslab/Daniel/results/run4"
+logdir = '/media/danielmtz/data/logs/run4' 
+#logdir = "/home/aircv1/Data/Luis/aisyslab/Daniel/results/run4"
 
 def main():
     df =  get_experiments(logdir)
     df.drop(['experiment'], axis=1, inplace=True)
     df = df[df['opt']=='adam'].sort_values(by=['miou'], ascending=False)
-    try:
-        df = df['ious'] = df['ious'].numpy()
-    except: 
-        pass
-    df.to_csv('run2.csv')
     print(df)
-    get_ind_metrics(df, 'sqrt_inverse', 'aug','ved')
+    get_ind_metrics(df, 'sqrt_inverse', 'aug','pon')
 
 
 if __name__ == '__main__':
