@@ -19,9 +19,6 @@ class PonTrainer(nn.Module):
         self.reset_metrics()
     
     def reset_metrics(self):
-        # Accuracy
-        self._acc = 0.0
-
         # Initialise confusion matrix
         self.cm = BinaryConfusionMatrix(self.config.num_class)
     

@@ -4,6 +4,7 @@ dataset_root: /home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV
 
 # Directory to save experiment to
 logdir: /home/aircv1/Data/Luis/aisyslab/Daniel/results
+logdir: /home/aircv1/Data/Luis/aisyslab/Daniel/results/run4
 
 # GPU Options
 distributed: True

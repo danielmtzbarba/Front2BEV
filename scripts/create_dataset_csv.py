@@ -22,22 +22,14 @@ class Dataset(object):
 
         self._df = pd.concat([self._base_df, pd.DataFrame(self._samples, columns=self._columns)], ignore_index=True, axis=0)
 
-    def split(self, train=[], val=[], test=[]):
+    def split(self, scenes=[]):
 
-        traindf = self._base_df.copy(deep=True)
-        valdf = self._base_df.copy(deep=True)
-        testdf = self._base_df.copy(deep=True)
+        df = self._base_df.copy(deep=True)
         
-        for scene in train:
-            traindf = pd.concat([traindf, self._df[self._df["scene"] == scene]], ignore_index=True)
+        for scene in scenes:
+            df = pd.concat([df, self._df[self._df["scene"] == scene]], ignore_index=True)
 
-        for scene in val:
-            valdf = pd.concat([valdf, self._df[self._df["scene"] == scene]], ignore_index=True)
-
-        for scene in test:
-            testdf = pd.concat([testdf, self._df[self._df["scene"] == scene]], ignore_index=True)
-
-        return traindf, valdf, testdf
+        return df
 
     def to_csv(self, data, output_path,  augmented=False):
 
@@ -69,15 +61,11 @@ class Dataset(object):
         return len(self._df)
 
 # -----------------------------------------------------------------------------------
-def save_dataset(dataset, split_scenes,  dataset_path, augmented=False):
-    trainsc, valsc, testsc = split_scenes
-    train, val, test = dataset.split(trainsc, valsc, testsc)
+def save_dataset(dataset, split_scenes,  dataset_path,
+                 phase='train', augmented=False):
 
-    dataset.to_csv(train, os.path.join(dataset_path, 'front2bev-train.csv'),  augmented=augmented)
-    dataset.to_csv(val, os.path.join(dataset_path, 'front2bev-val.csv'), augmented=False)
-    dataset.to_csv(test, os.path.join(dataset_path, 'front2bev-test.csv'), augmented=False)
-    print(len(train), len(val), len(test))
-
+    split = dataset.split(split_scenes)
+    dataset.to_csv(split, os.path.join(dataset_path, f'front2bev-{phase}.csv'),  augmented=augmented)
 
 # -----------------------------------------------------------------------------------
 #DATADIR = '/media/dan/data/datasets/Dan-2024-Front2BEV'
@@ -101,7 +89,7 @@ def main():
     save_dataset(dataset,  (TRAIN, VAL, TEST), traffic_dataset_path, augmented=False)
 
 
-# AUGMENTED, 3 MAPS -  3 DIFFERENT SCENES,
+# AUGMENTED, 1  MAP -  9  DIFFERENT SCENES, T
 # SEQ10 VAL, SEQ11 TEST
     MAPS = ['Town01']
     SCENES = [f'scene_{i}' for i in range(1, 12)]
@@ -124,5 +112,15 @@ def main():
 #    save_dataset(dataset,  (AUG_TRAIN, VAL, TEST), augmented_dataset_path, augmented=True)
 
 if __name__ == '__main__':
-    main()
+   # TEST 
+    MAPS = [ 'Town02']
+    SCENES = [f'scene_{i}' for i in range(1, 4)]
+
+    TEST = [f'scene_{i}' for i in range(1, 4)] 
+    dataset = Dataset(maps=MAPS, scenes=SCENES)
+    dataset.get_dataset(DATADIR)
+    save_dataset(dataset, TEST, 'datasets/Dan-2024-Front2BEV-Augmented/',
+                 phase='test', augmented=False)
+
+#    main()
      

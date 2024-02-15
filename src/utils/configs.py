@@ -70,6 +70,8 @@ def get_configuration(train=True):
 
     if train:
         create_experiment(config, args.resume)
+    else:
+        config.distributed = False
 
     # Finalize config
     config.freeze()

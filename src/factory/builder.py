@@ -125,8 +125,7 @@ class Builder(object):
         return self.attach2trainer(), self.optimizer, self.lr_scheduler
     
     def get_test_objs(self):
-        ckpt_path = os.path.join(self._config.logdir, self._config.name,
-                                  self._config.model, f"{self._config.name}.pth.tar")
+        ckpt_path = os.path.join(self._config.logdir, f"{self._config.name}.pth.tar")
         _  = self._load_checkpoint(ckpt_path)
         print("Loaded model at", ckpt_path)
         return self.attach2trainer()

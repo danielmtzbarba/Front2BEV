@@ -19,23 +19,12 @@ def main(config):
     dataloaders = get_dataloaders(config)
     builder = Builder(config, 0)
     model = builder.get_test_objs()
-    test(model, dataloaders['val'], config)
-    
-    trainer = train.Trainer(
-            dataloaders=dataloaders,
-            model_trainer=model_trainer,
-            optimizer=optimizer,
-            scheduler=lr_scheduler,
-            gpu_id=rank,
-            config=config
-            )
-
-    trainer.train()
+    test(model, dataloaders['test'], config)
 
 # -----------------------------------------------------------------------------
 
 if __name__ == '__main__':
-    config = configs.get_configuration()
+    config = configs.get_configuration(False)
     set_deterministic(config.seed)
 
     try:

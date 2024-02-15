@@ -1,12 +1,13 @@
-from tqdm import tqdm
-import numpy as np
-import torch
 import os
+import torch
+import numpy as np
+from tqdm import tqdm
 import matplotlib.pyplot as plt
+from time import process_time
 
 
-from src.utils.eval import metric_eval_bev
-import src.utils.bev as bev
+from src.utils.confusion import BinaryConfusionMatrix
+import src.data.front2bev.bev as bev
 
 def plot(imgs):
     fig, ax = plt.subplots(1, 2)
@@ -49,31 +50,27 @@ def log_metrics(config, confusion):
     acc = confusion.accuracy.numpy()
             
     for name, iou_score, ac in zip(config.class_names, confusion.iou, acc):
-        print('{:20s} {:.3f} {:.3f}'.format(name, iou_score, ac)) 
+        print('{:20s} {:.4f} {:.4f}'.format(name, iou_score, ac)) 
     
     print("\nTest IoU: ", confusion.mean_iou)
     print("Test acc: ", np.mean(acc))
 
 def test(tester, dataloader, config):
-
+    inference_time = 0
     # Set model to evaluate mode
     tester.model.eval()  
-    cm = None
-    # Iterate over data.
     for batch in tqdm(dataloader):
          
         with torch.set_grad_enabled(False):
+            start_time = process_time()
             # forward
-            logits, loss = tester(batch, "val")
-
+            logits, loss = tester(batch, "test")
+            inference_time += process_time() - start_time 
             # metrics
             metrics = tester.metrics(logits, batch)
-            #
-            cm += metrics['cm']
-    
-           # plot_results(logits, batch, 0.5)
-            break
 
-    log_metrics(config,  cm)
-        
+           # plot_results(logits, batch, 0.5)
+
+    log_metrics(config,  tester.cm)
+    print("Mean inference time: ", inference_time/len(dataloader))        
     
