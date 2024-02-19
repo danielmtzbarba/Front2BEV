@@ -4,6 +4,7 @@ dataset_root: /media/danielmtz/data/datasets/Dan-2024-Front2BEV/
 
 # Directory to save experiment to
 logdir: /media/danielmtz/data/logs
+logdir: /media/danielmtz/data/ckpts
 
 # GPU Options
 distributed: False

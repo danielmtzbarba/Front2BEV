@@ -36,7 +36,6 @@ class PonTrainer(nn.Module):
     def metrics(self, logits, batch):
 
         image, calib, labels, mask = batch
-
         # Update confusion matrix
         scores = logits.cpu().sigmoid() > self.config.score_thresh
         self.cm.update(scores > self.config.score_thresh, labels, mask)
