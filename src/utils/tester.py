@@ -4,10 +4,11 @@ import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 from time import process_time
+from PIL import Image  
 
-
-from src.utils.confusion import BinaryConfusionMatrix
 import src.data.front2bev.bev as bev
+from src.data.front2bev.bev_classes import bev_class2color 
+from src.utils.visualize import bevAsRGB
 
 def plot(imgs):
     fig, ax = plt.subplots(1, 2)
@@ -31,19 +32,24 @@ def mask_img(labels, mask, num_class):
     labels[mask] = num_class
     return labels 
 
-def plot_results(logits, batch, thresh):
+def plot_results(i, logits, batch, thresh):
     # plot
     image, calib, labels, mask = batch
 
     scores = logits.cpu().sigmoid() > thresh
 
     decoded_labels = decode_class_mask(labels)
-    labels = mask_img(decoded_labels, np.reshape(np.invert(mask.numpy()), (196, 200)), 14)
+    labels = mask_img(decoded_labels, np.invert(mask.bool().numpy()), 5)
 
     decoded_preds = decode_class_mask(scores)
-    #preds = mask_img(decoded_preds, np.reshape(np.invert(mask.numpy()), (196, 200)), 14)
+    preds = mask_img(decoded_preds, np.invert(mask.bool().numpy()), 5)
 
-    plot([labels, decoded_preds])
+    cmap = bev_class2color
+    labels =  bevAsRGB(labels.numpy(), 5, cmap)
+    preds = bevAsRGB(preds.numpy(), 5, cmap)
+    Image.fromarray(labels.astype(np.uint8)).save(f"{i}-gt.jpg")
+    Image.fromarray(preds.astype(np.uint8)).save(f"{i}-pred.jpg")
+    plot([labels, preds])
 
 def log_metrics(config, confusion):
     print('-' * 50, f'\nResults {config.name}:')
@@ -59,6 +65,7 @@ def test(tester, dataloader, config):
     inference_time = 0
     # Set model to evaluate mode
     tester.model.eval()  
+    i = 0
     for batch in tqdm(dataloader):
          
         with torch.set_grad_enabled(False):
@@ -69,8 +76,8 @@ def test(tester, dataloader, config):
             # metrics
             metrics = tester.metrics(logits, batch)
 
-           # plot_results(logits, batch, 0.5)
-
+            plot_results(i, logits, batch, 0.5)
+        
     log_metrics(config,  tester.cm)
     print("Mean inference time: ", inference_time/len(dataloader))        
     

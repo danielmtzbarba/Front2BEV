@@ -92,7 +92,7 @@ class Builder(object):
         
         return criterion
 
-    def _load_checkpoint(self, path):
+    def load_checkpoint(self, path):
         ckpt = torch.load(path)
 
         # Load model weights
@@ -106,7 +106,7 @@ class Builder(object):
         # Load scheduler state
         self.lr_scheduler.load_state_dict(ckpt['scheduler'])
 
-        return ckpt
+        return self.model 
     
 # ----------------------------------------------------------------------------
 
@@ -126,7 +126,7 @@ class Builder(object):
     
     def get_test_objs(self):
         ckpt_path = os.path.join(self._config.logdir, f"{self._config.name}.pth.tar")
-        _  = self._load_checkpoint(ckpt_path)
+        _  = self.load_checkpoint(ckpt_path)
         print("Loaded model at", ckpt_path)
         return self.attach2trainer()
 

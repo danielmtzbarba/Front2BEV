@@ -26,7 +26,7 @@ def bevAsRGB(bev_img, n_classes, cmap):
         except:
             continue
     bev_rgb[bev_img == n_classes, :] = (0, 0, 0)
-    bev_rgb[31, 32, :] = (25, 126, 0)
+#    bev_rgb[31, 32, :] = (25, 126, 0)
     return bev_rgb
 
 def plot_post_pipeline(imgs, mask,  titles=[],figsize=(12, 8)):

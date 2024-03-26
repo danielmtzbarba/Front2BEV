@@ -18,7 +18,7 @@ from dan.utils.data import get_dataset_from_path
 from src.utils.visualize import plot_class_masks, plot_encoded_masks
 from src.data.utils import encode_binary_labels, decode_binary_labels
 # --------------------------------------------------------------
-ROOT_PATH = "/media/dan/data/datasets/Dan-2024-Front2BEV/"
+ROOT_PATH = "/media/danielmtz/data/datasets/Dan-2024-Front2BEV/"
 MAP = 'Town01/'
 SCENE = 'scene_7/'
 LAYERS = 'traffic/'
@@ -31,7 +31,6 @@ print(img_path)
 
 bev_sem = cv2.imread(img_path, 0)
 encoded_img = 'test.png' 
-encoded_img = '/media/dan/dan/datasets/Dan-2024-Front2BEV/Town01/scene_1/flip/bev/5k/27.png'
 N_CLASSES = 5
 size = (200, 196)
 
@@ -45,7 +44,7 @@ pixel_count_total["N"] = 0
 
 fov_mask = bev.resize_img(mask64, size)
 bev_img, decoded_masks, pixel_count = bev.postprocess(bev_sem, bev_cls[N_CLASSES], size, fov_mask, 
-                         N_CLASSES, morph=True, display=False)
+                                             N_CLASSES, morph=True, display=False)
 
 for (key,value) in pixel_count.items():
     pixel_count_total[key] += value

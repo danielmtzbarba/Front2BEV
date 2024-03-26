@@ -49,6 +49,7 @@ class Front2BEVDataset(Dataset):
     
     def load_image(self, idx):
         # Load image
+        print(self.samples.iloc[idx, 0])
         img = Image.open(self.samples.iloc[idx, 0])
         img = self.transform(np.array(img))
         # Convert to a torch tensor
