@@ -19,7 +19,7 @@ def main(config):
     dataloaders = get_dataloaders(config)
     builder = Builder(config, 0)
     model = builder.get_test_objs()
-    test(model, dataloaders['val'], config)
+    test(model, dataloaders['test'], config)
 
 # -----------------------------------------------------------------------------
 

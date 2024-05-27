@@ -13,7 +13,10 @@ from src.utils.visualize import bevAsRGB
 def plot(imgs):
     fig, ax = plt.subplots(1, 2)
     ax[0].imshow(imgs[0])
+    ax[0].axis("off")
+
     ax[1].imshow(imgs[1])
+    ax[1].axis("off")
     plt.show()  
 
 def binarize_mask(tensor):

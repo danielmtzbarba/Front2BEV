@@ -1,0 +1,14 @@
+
+#******************  Dataset options ******************
+csv_path: datasets/Dan-2024-F2B-Autominy
+
+  #{0: 48981349, 1: 49777705, 2: 30185973, 3: 345667, 4: 69306, 'N': 129360000}
+
+# Prior probability of a positive prediction, used to initialise classifier
+prior:
+  - 0.70349 # non_drivable_area
+  - 0.23823   # drivable_area
+  - 0.05827   # roadline 
+
+class_names: ['non-drivable', 'drivable', 'roadlines']
+#******************  Dataset options ******************

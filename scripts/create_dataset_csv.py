@@ -9,13 +9,13 @@ class Dataset(object):
         self._columns = ["map", "scene", "map_config", "sample"]
         self._base_df = pd.DataFrame([], columns=self._columns)
 
-    def get_dataset(self, datadir):
+    def get_dataset(self, datadir, configs=["layers_none", "layers_all", "traffic"]):
         
         for map in self._maps:
             mapdir = os.path.join(datadir, map)
             for scene in self._scenes:
-                for config in ["layers_none", "layers_all", "traffic"]:
-                    sampledir = os.path.join(mapdir, scene, config, "rgb")
+                for config in configs:
+                    sampledir = os.path.join(mapdir, scene, config, "front")
                     for s in os.listdir(sampledir):
                         sample = [map, scene, config, s]
                         self._samples.append(sample) 
@@ -45,7 +45,7 @@ class Dataset(object):
             filtered = pd.concat([filtered, data[data["map_config"] == config]], ignore_index=True)
 
         for row in filtered.itertuples(index=False):
-            path_rgb = f'{row.map}/{row.scene}/{row.map_config}/rgb/{row.sample}'
+            path_rgb = f'{row.map}/{row.scene}/{row.map_config}/front/{row.sample}'
             path_bev = f'{row.map}/{row.scene}/{row.map_config}/bev/$k/{row.sample}'
             path_bev = path_bev.replace(".jpg", ".png")
             samples.append([path_rgb, path_bev])
@@ -85,7 +85,7 @@ def main():
     VAL = [f'scene_{i}' for i in range(10, 11)] 
     TEST = [f'scene_{i}' for i in range(11, 12)] 
     dataset = Dataset(maps=MAPS, scenes=SCENES)
-    dataset.get_dataset(DATADIR)
+    dataset.get_dataset(DATADIR) 
     save_dataset(dataset,  (TRAIN, VAL, TEST), traffic_dataset_path, augmented=False)
 
 
@@ -111,7 +111,6 @@ def main():
     dataset.get_dataset(DATADIR)
 #    save_dataset(dataset,  (AUG_TRAIN, VAL, TEST), augmented_dataset_path, augmented=True)
 
-if __name__ == '__main__':
    # TEST 
     MAPS = [ 'Town02']
     SCENES = [f'scene_{i}' for i in range(1, 4)]
@@ -121,6 +120,19 @@ if __name__ == '__main__':
     dataset.get_dataset(DATADIR)
     save_dataset(dataset, TEST, 'datasets/Dan-2024-Front2BEV-Augmented/',
                  phase='test', augmented=False)
+
+if __name__ == '__main__':
+   # TEST 
+
+    DATADIR = "/media/dan/data/datasets/Dan-2024-F2B-Autominy/"
+    MAPS = [ 'Track01']
+    SCENES = [f'scene-{i}' for i in range(1, 3)]
+
+    TRAIN = [f'scene-{i}' for i in range(1, 10)] 
+    dataset = Dataset(maps=MAPS, scenes=SCENES)
+    dataset.get_dataset(DATADIR, ['traffic'])
+    save_dataset(dataset, TRAIN, 'datasets/Dan-2024-F2B-Autominy/',
+                 phase='train', augmented=False)
 
 #    main()
      

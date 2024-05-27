@@ -9,7 +9,7 @@ from dan.utils.data import get_filenames_list
 
 from src.utils import get_test_dirs
 import src.data.front2bev.bev as bev
-from src.data.front2bev.bev_classes import bev_cls
+from src.data.front2bev.bev_classes import bev_cls, bev_cls_real
 from src.data.front2bev.utils import mask64
 from src.data.utils import encode_binary_labels
 from src.utils.visualize import plot_class_masks, plot_encoded_masks
@@ -19,7 +19,7 @@ def proc_dir(path, num_class, size, display=False):
     save_bev = make_folder(path, f"{num_class}k")
     print("Saving in: ", save_bev)
     bev_raw_path = path / "sem"
-    bev_imgs = get_filenames_list(bev_raw_path, ".jpg")
+    bev_imgs = get_filenames_list(bev_raw_path, ".png")
 
     pixel_count_total = {key:value for (key,value) in enumerate([0 for _ in range(num_class)])}
     pixel_count_total["N"] = 0
@@ -28,8 +28,8 @@ def proc_dir(path, num_class, size, display=False):
 
         bev_sem = cv2.imread(str(bev_raw_path / bev_img_name), cv2.IMREAD_GRAYSCALE)
 
-        _, decoded_masks, pixel_count = bev.postprocess(bev_sem, bev_cls[num_class], size, 
-                                            bev.resize_img(mask64, size), num_class, morph=True)
+        _, decoded_masks, pixel_count = bev.postprocess(bev_sem, bev_cls_real[num_class], size, 
+                                            np.ones_like(bev.resize_img(mask64, size)), num_class, morph=False)
         
         for (key,value) in pixel_count.items():
             pixel_count_total[key] += value
@@ -62,12 +62,20 @@ def post_proc_bev(test_paths, num_class, size):
 
 SIZE = (200, 196)
 #DATASET_PATH = Path("/media/danielmtz/data/datasets/Dan-2024-Front2BEV/")
-DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/")
+#DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/") 
+
+DATASET_PATH = "/media/dan/data/datasets/Dan-2024-F2B-Autominy/"
+
+paths = [
+        Path('/media/dan/data/datasets/Dan-2024-F2B-Autominy/Track01/scene-1/traffic/'),
+        Path('/media/dan/data/datasets/Dan-2024-F2B-Autominy/Track01/scene-2/traffic/')
+         ] 
 
 if __name__ == '__main__':
     test_paths = get_test_dirs(DATASET_PATH)
-    for n_cls in range(5, 6):
-        print('\n Class:', n_cls)
-        pixel_count_total = post_proc_bev(test_paths, n_cls, SIZE)
-        print('\n Class:', n_cls)
-        print(pixel_count_total)
+    #for n_cls in range(5, 6):
+    n_cls = 3 
+    print('\n Class:', n_cls)
+    pixel_count_total = post_proc_bev(paths, n_cls, SIZE)
+    print('\n Class:', n_cls)
+    print(pixel_count_total)
