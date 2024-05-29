@@ -17,9 +17,7 @@ def get_console_args():
     parser = ArgumentParser()
     parser.add_argument('--experiment', default='test', 
                         help='name of experiment config to load')
-    parser.add_argument('--dataset', choices=['front2bev', 'front2bev-aug',
-                                              'front2bev-aug-cl', 'f2b-autominy'],
-                        default='front2bev', help='dataset to train on')
+    parser.add_argument('--dataset', default='front2bev', help='dataset to train on')
     parser.add_argument('--map_config', choices=['traffic', 'aug', 'aug_cl'], 
                         default='traffic', help='dataset map config')
     parser.add_argument('--model', choices=['ved', 'pon'],

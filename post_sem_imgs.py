@@ -19,7 +19,7 @@ def proc_dir(path, num_class, size, display=False):
     save_bev = make_folder(path, f"{num_class}k")
     print("Saving in: ", save_bev)
     bev_raw_path = path / "sem"
-    bev_imgs = get_filenames_list(bev_raw_path, ".png")
+    bev_imgs = get_filenames_list(bev_raw_path, ".jpg")
 
     pixel_count_total = {key:value for (key,value) in enumerate([0 for _ in range(num_class)])}
     pixel_count_total["N"] = 0
@@ -28,7 +28,7 @@ def proc_dir(path, num_class, size, display=False):
 
         bev_sem = cv2.imread(str(bev_raw_path / bev_img_name), cv2.IMREAD_GRAYSCALE)
 
-        _, decoded_masks, pixel_count = bev.postprocess(bev_sem, bev_cls_real[num_class], size, 
+        _, decoded_masks, pixel_count = bev.postprocess(bev_sem, bev_cls[num_class], size, 
                                             np.ones_like(bev.resize_img(mask64, size)), num_class, morph=False)
         
         for (key,value) in pixel_count.items():
@@ -64,8 +64,7 @@ SIZE = (200, 196)
 #DATASET_PATH = Path("/media/danielmtz/data/datasets/Dan-2024-Front2BEV/")
 #DATASET_PATH = Path("/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/") 
 
-DATASET_PATH = "/media/dan/data/datasets/Dan-2024-F2B-Autominy/"
-
+DATASET_PATH = "/media/aisyslab/CHINA/Front2BEV-RGBD"
 paths = [
         Path('/media/dan/data/datasets/Dan-2024-F2B-Autominy/Track01/scene-1/traffic/'),
         Path('/media/dan/data/datasets/Dan-2024-F2B-Autominy/Track01/scene-2/traffic/')
@@ -73,9 +72,8 @@ paths = [
 
 if __name__ == '__main__':
     test_paths = get_test_dirs(DATASET_PATH)
-    #for n_cls in range(5, 6):
-    n_cls = 3 
+    n_cls = 5 
     print('\n Class:', n_cls)
-    pixel_count_total = post_proc_bev(paths, n_cls, SIZE)
+    pixel_count_total = post_proc_bev(test_paths, n_cls, SIZE)
     print('\n Class:', n_cls)
     print(pixel_count_total)

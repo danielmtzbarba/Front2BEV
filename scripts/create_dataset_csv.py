@@ -15,7 +15,7 @@ class Dataset(object):
             mapdir = os.path.join(datadir, map)
             for scene in self._scenes:
                 for config in configs:
-                    sampledir = os.path.join(mapdir, scene, config, "front")
+                    sampledir = os.path.join(mapdir, scene, config, "rgb")
                     for s in os.listdir(sampledir):
                         sample = [map, scene, config, s]
                         self._samples.append(sample) 
@@ -45,10 +45,11 @@ class Dataset(object):
             filtered = pd.concat([filtered, data[data["map_config"] == config]], ignore_index=True)
 
         for row in filtered.itertuples(index=False):
-            path_rgb = f'{row.map}/{row.scene}/{row.map_config}/front/{row.sample}'
+            path_rgb = f'{row.map}/{row.scene}/{row.map_config}/rgb/{row.sample}'
             path_bev = f'{row.map}/{row.scene}/{row.map_config}/bev/$k/{row.sample}'
             path_bev = path_bev.replace(".jpg", ".png")
-            samples.append([path_rgb, path_bev])
+            path_rgbd = f'{row.map}/{row.scene}/{row.map_config}/rgbd/{row.sample}'
+            samples.append([path_rgb, path_bev, path_rgbd])
         
         print(configs, len(samples))
         pd.DataFrame(samples).to_csv(output_path, header=False, index=False)
@@ -68,10 +69,10 @@ def save_dataset(dataset, split_scenes,  dataset_path,
     dataset.to_csv(split, os.path.join(dataset_path, f'front2bev-{phase}.csv'),  augmented=augmented)
 
 # -----------------------------------------------------------------------------------
-#DATADIR = '/media/dan/data/datasets/Dan-2024-Front2BEV'
+DATADIR = '/media/aisyslab/CHINA/Front2BEV-RGBD'
 
-DATADIR = '/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV'
-traffic_dataset_path = 'datasets/Dan-2024-Front2BEV/'
+#DATADIR = '/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV'
+traffic_dataset_path = 'datasets/Front2BEV-RGBD/'
 augmented_dataset_path= 'datasets/Dan-2024-Front2BEV-Augmented/'
 
 # -----------------------------------------------------------------------------------
@@ -86,53 +87,55 @@ def main():
     TEST = [f'scene_{i}' for i in range(11, 12)] 
     dataset = Dataset(maps=MAPS, scenes=SCENES)
     dataset.get_dataset(DATADIR) 
-    save_dataset(dataset,  (TRAIN, VAL, TEST), traffic_dataset_path, augmented=False)
+    save_dataset(dataset,  TRAIN, traffic_dataset_path, phase="train", augmented=False)
+    save_dataset(dataset,  VAL, traffic_dataset_path, phase="val", augmented=False)
+    save_dataset(dataset,  TEST, traffic_dataset_path, phase="test", augmented=False)
 
 
 # AUGMENTED, 1  MAP -  9  DIFFERENT SCENES, T
 # SEQ10 VAL, SEQ11 TEST
-    MAPS = ['Town01']
-    SCENES = [f'scene_{i}' for i in range(1, 12)]
+#    MAPS = ['Town01']
+#    SCENES = [f'scene_{i}' for i in range(1, 12)]
 
-    TRAIN = [f'scene_{i}' for i in range(1, 10)] 
-    VAL = [f'scene_{i}' for i in range(10, 11)] 
-    TEST = [f'scene_{i}' for i in range(11, 12)] 
-    dataset = Dataset(maps=MAPS, scenes=SCENES)
-    dataset.get_dataset(DATADIR)
-    save_dataset(dataset,  (TRAIN, VAL, TEST), augmented_dataset_path, augmented=True)
+#    TRAIN = [f'scene_{i}' for i in range(1, 10)] 
+#    VAL = [f'scene_{i}' for i in range(10, 11)] 
+#    TEST = [f'scene_{i}' for i in range(11, 12)] 
+#    dataset = Dataset(maps=MAPS, scenes=SCENES)
+#    dataset.get_dataset(DATADIR)
+#    save_dataset(dataset,  (TRAIN, VAL, TEST), augmented_dataset_path, augmented=True)
 
 # AUGMENTED, 3 MAPS -  3 DIFFERENT SCENES,
 # SEQ10 VAL, SEQ11 TEST
-    MAPS = ['Town01', 'Town02', 'Town03']
-    SCENES = [f'scene_{i}' for i in range(1, 4)]
+#    MAPS = ['Town01', 'Town02', 'Town03']
+#    SCENES = [f'scene_{i}' for i in range(1, 4)]
 
-    AUG_TRAIN = [f'scene_{i}' for i in range(1, 2)] 
-    dataset = Dataset(maps=MAPS, scenes=SCENES)
-    dataset.get_dataset(DATADIR)
+#    AUG_TRAIN = [f'scene_{i}' for i in range(1, 2)] 
+#    dataset = Dataset(maps=MAPS, scenes=SCENES)
+#    dataset.get_dataset(DATADIR)
 #    save_dataset(dataset,  (AUG_TRAIN, VAL, TEST), augmented_dataset_path, augmented=True)
 
-   # TEST 
+   # TEST  
     MAPS = [ 'Town02']
     SCENES = [f'scene_{i}' for i in range(1, 4)]
 
     TEST = [f'scene_{i}' for i in range(1, 4)] 
     dataset = Dataset(maps=MAPS, scenes=SCENES)
     dataset.get_dataset(DATADIR)
-    save_dataset(dataset, TEST, 'datasets/Dan-2024-Front2BEV-Augmented/',
+    save_dataset(dataset, TEST, 'datasets/Front2BEV-RGBD-test/',
                  phase='test', augmented=False)
 
 if __name__ == '__main__':
    # TEST 
 
-    DATADIR = "/media/dan/data/datasets/Dan-2024-F2B-Autominy/"
-    MAPS = [ 'Track01']
-    SCENES = [f'scene-{i}' for i in range(1, 3)]
+#    DATADIR = "/media/dan/data/datasets/Dan-2024-F2B-Autominy/"
+#    MAPS = [ 'Track01']
+#    SCENES = [f'scene-{i}' for i in range(1, 3)]
 
-    TRAIN = [f'scene-{i}' for i in range(1, 10)] 
-    dataset = Dataset(maps=MAPS, scenes=SCENES)
-    dataset.get_dataset(DATADIR, ['traffic'])
-    save_dataset(dataset, TRAIN, 'datasets/Dan-2024-F2B-Autominy/',
-                 phase='train', augmented=False)
+#    TRAIN = [f'scene-{i}' for i in range(1, 10)] 
+#    dataset = Dataset(maps=MAPS, scenes=SCENES)
+#    dataset.get_dataset(DATADIR, ['traffic'])
+#    save_dataset(dataset, TRAIN, 'datasets/Dan-2024-F2B-Autominy/',
+#                 phase='train', augmented=False)
 
-#    main()
+    main()
      

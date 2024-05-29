@@ -1,11 +1,10 @@
 
 #******************  Directory options ******************
 
-dataset_root: /media/aisyslab/dan/datasets/Dan-2024-Front2BEV/
+dataset_root: /media/aisyslab/CHINA/Front2BEV-RGBD/
 
 # Directory to save experiment to
-logdir: /media/danielmtz/data/logs
-logdir: /home/aisyslab/DanielM/models
+logdir: /media/aisyslab/CHINA/results/
 
 # GPU Options
 distributed: False

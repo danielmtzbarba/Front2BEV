@@ -7,6 +7,7 @@ seed: 1596
 name: test
 
 resume: False
+rgbd: False
 
 # Dataset to train on
 train_dataset: none
