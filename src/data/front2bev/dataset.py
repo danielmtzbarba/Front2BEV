@@ -41,19 +41,20 @@ class Front2BEVDataset(Dataset):
         return len(self.samples)
 
     def __getitem__(self, idx):
-        image = self.load_image(idx, 0).float()
-        if self._get_rgbd:
-            rgbd = self.load_image(idx, 1).float()
-            image = np.stack([image, rgbd], axis=2)
+        image = self.load_image(idx).float()
         labels, mask = self.load_class_masks(idx)
         calib = torch.from_numpy(self.calib).float()
-    
         return image, calib, labels, mask
     
-    def load_image(self, idx, sensor_type):
+    def load_image(self, idx):
         # Load image
-        img = Image.open(self.samples.iloc[idx, sensor_type])
-        img = self.transform(np.array(img))
+        img = Image.open(self.samples.iloc[idx, 0])
+        img = np.array(img)
+        if self._get_rgbd:
+            rgbd = np.array(Image.open(self.samples.iloc[idx, 2]).convert('L'))
+            rgbd = np.expand_dims(rgbd, axis=2)
+            img = np.concatenate([img, rgbd], axis=2)
+            img = self.transform(img)
         # Convert to a torch tensor
         return img
     
