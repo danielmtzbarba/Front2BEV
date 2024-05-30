@@ -20,7 +20,7 @@ def get_console_args():
     parser.add_argument('--dataset', default='front2bev', help='dataset to train on')
     parser.add_argument('--map_config', choices=['traffic', 'aug', 'aug_cl'], 
                         default='traffic', help='dataset map config')
-    parser.add_argument('--model', choices=['ved', 'pon'],
+    parser.add_argument('--model', choices=['ved', 'pon', 'rgved', 'rgved_2h'],
                         default='ved', help='model to train')
     parser.add_argument('--optimizer', choices=['sgd', 'adam'],
                         default='adam', help='optimizer')

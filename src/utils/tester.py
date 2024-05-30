@@ -79,7 +79,7 @@ def test(tester, dataloader, config):
             # metrics
             metrics = tester.metrics(logits, batch)
 
-            plot_results(i, logits, batch, 0.5)
+#            plot_results(i, logits, batch, 0.5)
         
     log_metrics(config,  tester.cm)
     print("Mean inference time: ", inference_time/len(dataloader))        

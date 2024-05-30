@@ -1,10 +1,10 @@
 from operator import mul
 from functools import reduce
 
-#from src.models.ved import VED
-from src.models.ved_mod import VariationalEncoderDecoder 
-from src.models.ved_rgbd import RGVED
-from src.models.vpn import VPNModel
+from src.models.ved import VariationalEncoderDecoder 
+from src.models.rgved import RGVED
+from src.models.rgved_2h import RGVED_2H
+
 from src.models.pyramid import PyramidOccupancyNetwork
 
 from src.models.nn.fpn import FPN50
@@ -15,21 +15,21 @@ from src.models.nn.classifier import LinearClassifier, BayesianClassifier
 
 def build_model(config):
     model_name = config.model
+
     if model_name == 'pon':
         model = build_pyramid_occupancy_network(config)
     elif model_name == 'ved':
-       if config.rgbd:
-           model = build_rgved(config)
-       else:
-            model = build_variational_encoder_decoder_mod(config)
-    elif model_name == 'vpn':
-        model = build_view_parsing_network(config)
+        model = build_variational_encoder_decoder(config)
+    elif model_name == 'rgved':
+        model = build_rgved(config)
+    elif model_name == 'rgved_2h':
+        model = build_rgved_2h(config)
+
     else:
         raise ValueError("Unknown model name '{}'".format(model_name))
     return model
 
-def build_variational_encoder_decoder_mod(config):
-    
+def build_variational_encoder_decoder(config):
     return VariationalEncoderDecoder(config.num_class, 
                                      config.ved.bottleneck_dim,
                                      config.map_extents,
@@ -37,6 +37,12 @@ def build_variational_encoder_decoder_mod(config):
 
 def build_rgved(config):
     return RGVED(config.num_class, 
+                 config.ved.bottleneck_dim,
+                 config.map_extents,
+                 config.map_resolution)
+
+def build_rgved_2h(config):
+    return RGVED_2H(config.num_class, 
                  config.ved.bottleneck_dim,
                  config.map_extents,
                  config.map_resolution)
@@ -67,21 +73,3 @@ def build_pyramid_occupancy_network(config):
     
     # Assemble Pyramid Occupancy Network
     return PyramidOccupancyNetwork(frontend, transformer, topdown, classifier)
-
-
-
-def build_variational_encoder_decoder(config):
-    '''
-    VED(config.num_class, 
-                config.ved.bottleneck_dim,
-                config.map_extents,
-                config.map_resolution)
-    '''
-    return VED(config.num_class)
-
-
-def build_view_parsing_network(config):
-
-    return VPNModel(1, config.num_class, config.vpn.output_size, 
-                    config.vpn.fc_dim, config.map_extents, 
-                    config.map_resolution)

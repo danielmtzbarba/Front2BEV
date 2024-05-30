@@ -54,9 +54,8 @@ class Front2BEVDataset(Dataset):
             rgbd = np.array(Image.open(self.samples.iloc[idx, 2]).convert('L'))
             rgbd = np.expand_dims(rgbd, axis=2)
             img = np.concatenate([img, rgbd], axis=2)
-            img = self.transform(img)
         # Convert to a torch tensor
-        return img
+        return self.transform(img)
     
     def load_class_masks(self, idx):
         # Load image

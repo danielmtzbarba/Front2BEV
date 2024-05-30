@@ -36,12 +36,12 @@ import torch.nn.functional as F
 import torchvision.models as models
 
 
-class VariationalEncoderDecoder(nn.Module):
+class RGVED(nn.Module):
 
     def __init__(self, num_class, bottleneck_dim, map_extents, map_resolution):
         
         super().__init__()
-        self.model = VaeMapping(num_class, bottleneck_dim)
+        self.model = RGVEDMapping(num_class, bottleneck_dim)
         self.output_size = (
             int((map_extents[3] - map_extents[1]) / map_resolution),
             int((map_extents[2] - map_extents[0]) / map_resolution),
@@ -59,9 +59,6 @@ class VariationalEncoderDecoder(nn.Module):
 
         return logits, mu, logvar
     
-
-
-
 
 
 
@@ -208,14 +205,17 @@ class decoder_conv(nn.Module):
 
         return x
 
-
-class VaeMapping(nn.Module):
+# ------------------------------------------------------------------------------------
+class RGVEDMapping(nn.Module):
 
     def __init__(self, num_class, bottleneck_dim=32):
-        super(VaeMapping, self).__init__()
+        super(RGVEDMapping, self).__init__()
 
         self.vgg16 = models.vgg16_bn(pretrained=True)
-        self.vgg16_feature = nn.Sequential(*list(self.vgg16.features.children())[:])
+        vgg_layers = list(self.vgg16.features.children())[:]
+        vgg_layers[0] = nn.Conv2d(4, 64, (3, 3), (1 ,1), (1,1))
+
+        self.vgg16_feature = nn.Sequential(*vgg_layers)
         self.encoder_afterv_vgg = encoder_after_vgg(bottleneck_dim)
         self.decoder = decoder_conv(num_class, if_deconv=True)
 
@@ -237,14 +237,4 @@ class VaeMapping(nn.Module):
         pred_map = self.decoder(z, output_size)
 
         return pred_map, mu, logvar
-
-
-def loss_function_map(pred_map, map, mu, logvar):
-
-    # MODIFIED: move weights to same GPU as inputs
-    CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=
-        torch.Tensor([0.6225708,  2.53963754, 15.46416047, 0.52885405]).to(map), ignore_index=4)
-    KLD = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
-
-    return 0.9*CE + 0.1*KLD, CE, KLD
-
+# ------------------------------------------------------------------------------------

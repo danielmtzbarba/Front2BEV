@@ -1,3 +1,4 @@
+
 """
 This implementation of the model from the paper "Monocular Semantic Occupancy 
 Grid Mapping with Convolutional Variational Encoder-Decoder Networks" is 
@@ -36,12 +37,12 @@ import torch.nn.functional as F
 import torchvision.models as models
 
 
-class RGVED(nn.Module):
+class RGVED_2H(nn.Module):
 
     def __init__(self, num_class, bottleneck_dim, map_extents, map_resolution):
         
         super().__init__()
-        self.model = RGVEDMapping(num_class, bottleneck_dim)
+        self.model = RGVED_2H_Mapping(num_class, bottleneck_dim)
         self.output_size = (
             int((map_extents[3] - map_extents[1]) / map_resolution),
             int((map_extents[2] - map_extents[0]) / map_resolution),
@@ -205,15 +206,22 @@ class decoder_conv(nn.Module):
 
         return x
 
-
-class VaeMapping(nn.Module):
+# ------------------------------------------------------------------------------------
+class RGVED_2H_Mapping(nn.Module):
 
     def __init__(self, num_class, bottleneck_dim=32):
-        super(VaeMapping, self).__init__()
+        super(RGVED_2H_Mapping, self).__init__()
 
         self.vgg16 = models.vgg16_bn(pretrained=True)
-        self.vgg16_feature = nn.Sequential(*list(self.vgg16.features.children())[:])
-        self.encoder_afterv_vgg = encoder_after_vgg(bottleneck_dim)
+        vgg_layers_rgb = list(self.vgg16.features.children())[:]
+        vgg_layers_depth = list(self.vgg16.features.children())[:]
+        vgg_layers_depth[0] = nn.Conv2d(1, 64, (3, 3), (1 ,1), (1,1))
+
+        self.vgg16_rgb = nn.Sequential(*vgg_layers_rgb)
+        self.vgg16_depth = nn.Sequential(*vgg_layers_depth)
+
+        self.encoder_after_vgg_rgb = encoder_after_vgg(bottleneck_dim)
+        self.encoder_after_vgg_depth = encoder_after_vgg(bottleneck_dim)
         self.decoder = decoder_conv(num_class, if_deconv=True)
 
     def reparameterize(self, is_training, mu, logvar):
@@ -225,51 +233,20 @@ class VaeMapping(nn.Module):
             return mu
 
     def forward(self, x, output_size, is_training=False, defined_mu=None):
+        x_rgb, x_depth = x[:, 0:3, :, :], x[:, 3, :, :].unsqueeze(1)
+        x_rgb = self.vgg16_rgb(x_rgb)
+        x_depth = self.vgg16_depth(x_depth)
 
-        x = self.vgg16_feature(x)
-        mu, logvar = self.encoder_afterv_vgg(x)
-        z = self.reparameterize(is_training, mu, logvar)
-        if defined_mu is not None:
-            z = defined_mu
-        pred_map = self.decoder(z, output_size)
+        mu_rgb, logvar_rgb = self.encoder_after_vgg_rgb(x_rgb)
+        mu_depth , logvar_depth = self.encoder_after_vgg_depth(x_depth)
+        mu = mu_rgb + mu_depth
+        logvar = logvar_rgb + logvar_depth 
 
-        return pred_map, mu, logvar
+        z_rgb = self.reparameterize(is_training, mu_rgb, logvar_rgb)
+        z_depth = self.reparameterize(is_training, mu_depth, logvar_depth)
+        
+        z = z_rgb + z_depth
 
-def loss_function_map(pred_map, map, mu, logvar):
-
-    # MODIFIED: move weights to same GPU as inputs
-    CE = F.cross_entropy(pred_map, map.view(-1, 64, 64), weight=
-        torch.Tensor([0.6225708,  2.53963754, 15.46416047, 0.52885405]).to(map), ignore_index=4)
-    KLD = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
-
-    return 0.9*CE + 0.1*KLD, CE, KLD
-
-class RGVEDMapping(nn.Module):
-
-    def __init__(self, num_class, bottleneck_dim=32):
-        super(RGVEDMapping, self).__init__()
-
-        self.vgg16 = models.vgg16_bn(pretrained=True)
-        vgg_layers = list(self.vgg16.features.children())[:]
-        vgg_layers[0] = nn.Conv2d(4, 64, (3, 3), (1 ,1), (1,1))
-
-        self.vgg16_feature = nn.Sequential(*vgg_layers)
-        self.encoder_afterv_vgg = encoder_after_vgg(bottleneck_dim)
-        self.decoder = decoder_conv(num_class, if_deconv=True)
-
-    def reparameterize(self, is_training, mu, logvar):
-        if is_training:
-            std = torch.exp(0.5*logvar)
-            eps = torch.randn_like(std)
-            return eps.mul(std).add_(mu)
-        else:
-            return mu
-
-    def forward(self, x, output_size, is_training=False, defined_mu=None):
-
-        x = self.vgg16_feature(x)
-        mu, logvar = self.encoder_afterv_vgg(x)
-        z = self.reparameterize(is_training, mu, logvar)
         if defined_mu is not None:
             z = defined_mu
         pred_map = self.decoder(z, output_size)
