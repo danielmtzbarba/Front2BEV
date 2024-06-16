@@ -12,9 +12,9 @@ def get_f2b_dataloader(root_path, csv_path, num_class, map_config,
                          n_workers = 8, distributed=False):
     
     # Change dataset relative paths to absolute paths
+    
     df = pd.read_csv(csv_path, header=None)
     df = process_path(df, root_path, num_class, map_config)
-
     dataset = Front2BEVDataset(df, img_size, output_size, num_class, rgbd)
 
     if distributed:
@@ -34,7 +34,6 @@ def get_f2b_dataloaders(config):
     val_csv_path = csv_path.replace('.csv', '-val.csv')
     test_csv_path = csv_path.replace('.csv', '-test.csv')
 
-
     train_loader = get_f2b_dataloader(config.dataset_root, train_csv_path, config.num_class, config.map_config,
                                       config.img_size, config.output_size, config.batch_size, rgbd=config.rgbd,
                                         n_workers=config.num_workers, distributed = config.distributed)
@@ -46,5 +45,4 @@ def get_f2b_dataloaders(config):
     test_loader = get_f2b_dataloader(config.dataset_root, test_csv_path, config.num_class, config.map_config,
                                      config.img_size, config.output_size, batch_size = 1, rgbd=config.rgbd,
                                     n_workers = 1, distributed = config.distributed)
-    
     return {"train": train_loader, "val": val_loader, "test": test_loader}

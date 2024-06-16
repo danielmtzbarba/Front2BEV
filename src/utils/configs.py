@@ -66,12 +66,11 @@ def get_configuration(train=True):
     
     config.name = f'{config.name}-{config.map_config}-{config.model}-{config.optimizer}-{config.weight_mode}'
     config.logdir = os.path.join(config.logdir, config.name)
-
+    
     if train:
         create_experiment(config, args.resume)
     else:
         config.distributed = False
-
     # Finalize config
     config.freeze()
 
