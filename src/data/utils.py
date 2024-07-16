@@ -1,12 +1,10 @@
 import cv2
 import numpy as np
 import torch
-#from shapely import affinity
 
 def decode_binary_labels(labels, nclass):
     bits = torch.pow(2, torch.arange(nclass))
     return (labels & bits.view(-1, 1, 1)) > 0
-
 
 def encode_binary_labels(masks):
     bits = np.power(2, np.arange(len(masks), dtype=np.int32))
