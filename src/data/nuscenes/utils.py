@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from shapely import geometry, affinity
+#from shapely import geometry, affinity
 from pyquaternion import Quaternion
 
 from nuscenes.eval.detection.utils import category_to_detection_name

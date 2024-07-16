@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import torch
-from shapely import affinity
+#from shapely import affinity
 
 def decode_binary_labels(labels, nclass):
     bits = torch.pow(2, torch.arange(nclass))

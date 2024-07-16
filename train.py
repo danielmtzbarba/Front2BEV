@@ -17,8 +17,7 @@ import torch.distributed as dist
 from src.factory.builder import Builder
 from src.data.dataloader import get_dataloaders
 
-import src.utils.trainer as train
-from dan.utils.torch import set_deterministic
+import deeplab.utils.trainer as train
 # -----------------------------------------------------------------------------
 
 def main(rank: int, config: object):
@@ -51,7 +50,6 @@ if __name__ == '__main__':
 
     config = configs.get_configuration()
     
-    set_deterministic(config.seed)
 
     try:
 
