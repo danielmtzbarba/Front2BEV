@@ -1,7 +1,7 @@
 import os
 import numpy as np
 
-from dan.utils import save_pkl_file
+from deeplab.models import save_pkl_file
 
 from torch.utils.tensorboard import SummaryWriter
 
