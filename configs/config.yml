@@ -2,35 +2,17 @@
 
 # Random seed
 seed: 1596
-
-# Experiment name
-name: test
-
 resume: False
 
-# Dataset to train on
-train_dataset: none
+# Config Files
+experiment: none
+pc: none
+model: none
+optimizer: none
+dataset: none
 
 # Directory to save experiment to
 logdir: none
 log_interval: 50
-
-#******************  Training options ******************
-
-# Number of epochs to train for
-num_epochs: 0
-
-# Multi GPU Training
-distributed: False
-
-# IDs of GPUs to use during training
-num_gpus: 1
-find_unused_params: False
-
-# Number of examples per mini-batch
-batch_size: 1
-
-# Number of dataloader threads
-num_workers: 1
 
 #***********************************************************************

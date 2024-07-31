@@ -1,5 +1,6 @@
 #******************  Directory options ******************
 
+dataset_root: /home/dan/Data/datasets/
 # Directory to save experiment to
 logdir: /home/dan/Data/results/deeplab/
 

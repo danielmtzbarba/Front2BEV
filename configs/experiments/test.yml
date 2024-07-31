@@ -3,19 +3,23 @@
 # Experiment name
 seed: 1596
 name: test 
+rgbd: True
+distributed: false
 log_interval: 5 
+map_config: traffic
+weight_mode: sqrt_inverse 
 resume: None
 
 # Training Options
 num_class: 5 
-num_epochs: 50 
+num_epochs: 100 
 batch_size: 8 
 num_workers: 4 
 
 # Image size
-img_size: [800, 600]
+img_size: [256, 512]
 output_size: (200, 196)
-score_thresh: 0.5
+score_thresh: 0.7
 
 #***********************************************************************
 
