@@ -7,7 +7,6 @@ seed: 1596
 name: test
 
 resume: False
-rgbd: False
 
 # Dataset to train on
 train_dataset: none
@@ -15,53 +14,6 @@ train_dataset: none
 # Directory to save experiment to
 logdir: none
 log_interval: 50
-
-#******************  Dataset options ******************
-
-# Number of output classes to predict
-num_class: 0
-
-# Input image size after downsampling
-img_size: [0, 0]
-output_size: [0, 0]
-
-# Top-left and bottom right coordinates of map region, in meters
-map_extents: [0, 0]
-
-# Spacing between adjacent grid cells in the map, in meters
-map_resolution: 0.0
-
-# BEV map configuration
-map_config: none
-
-# Path of CSV files of dataset splits
-csv_path: none
-
-dataset_root: none
-dataroot: none
-nuscenes_version: none
-hold_out_calibration: False
-label_root: none
-ved: 
-  bottleneck_dim: 0
-vpn:
-  output_size : [0, 0]
-
-class_names: []
-#******************  Model options ******************
-# Architecture to train [pyramid | ved | vpn ]
-model: none
-optimizer: none
-learning_rate: 0.0
-weight_decay: 0.0
-# Scheduler
-lr_scheduler: none
-lr_step_size: 0
-
-#******************  Loss options ******************
-
-# Loss function
-loss_fn: none
 
 #******************  Training options ******************
 
@@ -81,45 +33,4 @@ batch_size: 1
 # Number of dataloader threads
 num_workers: 1
 
-# Decay learning rate by a factor 10 after the following number of epochs
-lr_milestones: [0, 0]
-lr_gamma: 0.0
-
-
-# Prior probability of a positive prediction, used to initialise classifier
-prior: 
-  - 0.0
-
-# Method of weighting classes in loss function
-weight_mode: none
-
-# Binary cross entropy loss weight
-xent_weight: 0.0
-
-# Max entropy uncertainty loss weight
-uncert_weight: 0.0
-
-# Focal loss parameters
-focal: 
-  alpha: 0.0
-  gamma: 0
-
-# KL-Divergence loss weight (used by VED network)
-kld_weight: 0.0
-
-# Threshold to treat prediction as positive
-score_thresh: 0.0
-
-tfm_channels: 0
-ymin: 0
-ymax: 0
-focal_length: 0.0
-topdown:
-  channels: 0
-  layers: [0, 0]
-  strides: [0, 0]
-  blocktype: none
-
-# Whether to use Bayesian classifier
-bayesian: False
 #***********************************************************************

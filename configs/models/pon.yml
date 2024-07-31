@@ -1,5 +1,7 @@
 #******* Roddick et al. PON config *******
-model: pon
+name: pon
+
+num_class: 5
 
 tfm_channels: 64
 ymin: -2
@@ -17,3 +19,6 @@ bayesian: False
 find_unused_params: False
 
 #******* Roddick et al. PON config *******
+
+map_extents: [-25., 1., 25., 50.]
+map_resolution: 0.25

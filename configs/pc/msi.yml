@@ -1,9 +1,7 @@
 #******************  Directory options ******************
 
-dataset_root: /media/dan/data/datasets/Dan-2024-F2B-Autominy/
-
 # Directory to save experiment to
-logdir: /media/dan/data/results
+logdir: /home/dan/Data/results/deeplab/
 
 # GPU Options
 distributed: False

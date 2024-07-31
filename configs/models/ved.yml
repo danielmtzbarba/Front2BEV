@@ -1,6 +1,8 @@
 #******* Lu et al. VED config *******
 
-model: ved
+name: ved
+
+num_class: 5
 
 ved:
   # Dimensions of bottleneck (depends on the size of input images)
@@ -13,3 +15,6 @@ kld_weight: 0.1
 
 find_unused_params: True
 #******* Lu et al. VED config *******
+
+map_extents: [-25., 1., 25., 50.]
+map_resolution: 0.25

@@ -12,5 +12,6 @@ prior:
   - 0.00267   # car
   - 0.00056   # pedestrian
 
+num_class: 5
 class_names: ['non-drivable', 'drivable', 'walkway', 'vehicle', 'pedestrian', 'roadlines']
 #******************  Dataset options ******************

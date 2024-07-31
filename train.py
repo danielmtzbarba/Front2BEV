@@ -1,8 +1,6 @@
-from deeplab.train import train 
+from deeplab.train import train
+from deeplab.utils.configs import get_configuration
 
-class Config(object):
-    distributed = False
-
-if __name__ == '__main__':
-    config = Config()
+if __name__ == "__main__":
+    config = get_configuration(train=True)
     train(config)
