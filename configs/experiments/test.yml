@@ -4,7 +4,6 @@
 seed: 1596
 name: test 
 rgbd: True
-distributed: false
 log_interval: 5 
 map_config: traffic
 weight_mode: sqrt_inverse 

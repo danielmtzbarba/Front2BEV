@@ -1,6 +1,8 @@
 
 #******************  Dataset options ******************
 name: front2bev-rgbd
+
+datadir: Front2BEV-RGBD/ 
 csv_path: datasets/Front2BEV-RGBD
 
   #{0: 48981349, 1: 49777705, 2: 30185973, 3: 345667, 4: 69306, 'N': 129360000}
