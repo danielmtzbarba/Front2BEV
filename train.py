@@ -1,3 +1,4 @@
+import deeplab
 from deeplab.train import train
 from deeplab.utils.configs import get_configuration
 
