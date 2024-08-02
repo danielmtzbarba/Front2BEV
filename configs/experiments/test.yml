@@ -11,8 +11,8 @@ resume: None
 
 # Training Options
 num_class: 5 
-num_epochs: 1 
-batch_size: 4 
+num_epochs: 10 
+batch_size: 8 
 num_workers: 4 
 
 # Image size

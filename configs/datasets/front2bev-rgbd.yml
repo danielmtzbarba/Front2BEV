@@ -1,5 +1,6 @@
 
 #******************  Dataset options ******************
+ 
 name: front2bev-rgbd
 
 datadir: Front2BEV-RGBD/ 
@@ -17,4 +18,5 @@ prior:
 
 num_class: 5
 class_names: ['non-drivable', 'drivable', 'walkway', 'vehicle', 'pedestrian', 'roadlines']
+
 #******************  Dataset options ******************
