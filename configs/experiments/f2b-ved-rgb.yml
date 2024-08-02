@@ -5,7 +5,7 @@ seed: 1596
 name: f2b-rgb 
 map_config: traffic
 augmented: False
-rgbd: True
+rgbd: False 
   
 log_interval: 5 
 resume: None
