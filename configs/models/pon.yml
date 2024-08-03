@@ -20,5 +20,11 @@ find_unused_params: False
 
 #******* Roddick et al. PON config *******
 
+# Binary cross entropy loss weight
+xent_weight: 1.0
+
+# Max entropy uncertainty loss weight
+uncert_weight: 0.001
+
 map_extents: [-25., 1., 25., 50.]
 map_resolution: 0.25
