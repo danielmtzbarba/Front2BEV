@@ -5,7 +5,7 @@ dataset_root: /home/dan/Data/datasets/
 logdir: /home/dan/Data/results/deeplab/
 
 # GPU Options
-distributed: True 
+distributed: False 
 num_gpus: 1
 
 #******************  Directory options ******************

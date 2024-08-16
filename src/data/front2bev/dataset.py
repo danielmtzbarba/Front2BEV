@@ -66,7 +66,6 @@ class Front2BEVDataset(Dataset):
         encoded = to_tensor(Image.open(self.samples.iloc[idx, 1])).long()
         # Decode into mask classes
         decoded = decode_binary_labels(encoded, self.num_class + 1)
-
         labels, mask = (
             decoded[:-1],
             torch.from_numpy(np.ones_like(bev.resize_img(mask64, self.output_size))),
