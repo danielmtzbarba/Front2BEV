@@ -7,7 +7,9 @@ name: f2b-rgbd
 log_interval: 5 
 resume: None
 rgbd: True
-  
+map_config: traffic  
+weight_mode: sqrt_inverse
+
 # Training Options
 num_class: 5 
 num_epochs: 100 
