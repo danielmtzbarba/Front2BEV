@@ -2,7 +2,7 @@
 
 dataset_root: /home/dan/Data/datasets/
 # Directory to save experiment to
-logdir: /home/dan/Data/results/deeplab/
+logdir: /home/dan/Data/results/f2b-rgbd/
 
 # GPU Options
 distributed: False 
