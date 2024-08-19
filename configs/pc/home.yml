@@ -5,7 +5,7 @@ dataset_root: /home/danielmtz/Data/datasets/
 logdir: /home/danielmtz/Data/results/f2b-rgbd/
 
 # GPU Options
-distributed: False 
+distributed: True 
 num_gpus: 1
 
 #******************  Directory options ******************
