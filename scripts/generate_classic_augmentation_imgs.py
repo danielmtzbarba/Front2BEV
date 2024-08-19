@@ -99,9 +99,8 @@ def augment(dataset, method):
     return df
 
 
-csv_dataset_path = "datasets/Dan-2024-Front2BEV/front2bev-train.csv"
-dataset_path = "/run/dan/dan/datasets/Dan-2024-Front2BEV/"
-# dataset_path = '/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/'
+csv_dataset_path = "datasets/Front2BEV-RGBD/front2bev-train.csv"
+dataset_path = "/run/media/dan/dan/datasets/Front2BEV-RGBD/"
 
 
 def main():
