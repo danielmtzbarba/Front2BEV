@@ -109,7 +109,8 @@ def augment(dataset, method):
 
 csv_dataset_path = "datasets/f2b-rgbd/front2bev-train.csv"
 # dataset_path = "/run/media/dan/dan/datasets/Front2BEV-RGBD/"
-dataset_path = "/home/dan/Data/datasets/Front2BEV-RGBD/"
+#dataset_path = "/home/dan/Data/datasets/Front2BEV-RGBD/"
+dataset_path = "/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Front2BEV-RGBD/"
 
 
 def main():
