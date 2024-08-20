@@ -9,15 +9,20 @@ class Dataset(object):
         self._columns = ["map", "scene", "map_config", "sample"]
         self._base_df = pd.DataFrame([], columns=self._columns)
 
-    def get_dataset(self, datadir, configs=["layers_none", "layers_all", "traffic"]):
+    def get_dataset(
+        self, datadir, configs=["layers_none", "layers_all", "traffic", "flip", "blur"]
+    ):
         for map in self._maps.keys():
             mapdir = os.path.join(datadir, map)
             for scene in self._maps[map]:
                 for config in configs:
                     sampledir = os.path.join(mapdir, scene, config, "rgb")
-                    for s in os.listdir(sampledir):
-                        sample = [map, scene, config, s]
-                        self._samples.append(sample)
+                    try:
+                        for s in os.listdir(sampledir):
+                            sample = [map, scene, config, s]
+                            self._samples.append(sample)
+                    except:
+                        pass
 
         self._df = pd.concat(
             [self._base_df, pd.DataFrame(self._samples, columns=self._columns)],
@@ -41,14 +46,18 @@ class Dataset(object):
         samples = []
         filtered = self._base_df.copy(deep=True)
 
-        if augmented:
+        if augmented == "cl":
+            configs = ["flip", "blur", "traffic"]
+        elif augmented == "lbda":
             configs = ["layers_none", "layers_all", "traffic"]
         else:
             configs = ["traffic"]
 
         for config in configs:
+            filtered_scenes = data[data["map_config"] == config]
             filtered = pd.concat(
-                [filtered, data[data["map_config"] == config]], ignore_index=True
+                [filtered, filtered_scenes],
+                ignore_index=True,
             )
 
         for row in filtered.itertuples(index=False):
@@ -78,11 +87,14 @@ def save_dataset(dataset, split_scenes, dataset_path, phase="train", augmented=F
 
 
 # -----------------------------------------------------------------------------------
-DATADIR = "/run/media/dan/dan/datasets/Front2BEV-RGBD"
+
+# DATADIR = "/run/media/dan/dan/datasets/Front2BEV-RGBD"
+DATADIR = "/home/dan/Data/datasets/Front2BEV-RGBD"
 
 # DATADIR = '/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV'
 traffic_dataset_path = "datasets/f2b-rgbd/"
-augmented_dataset_path = "datasets/Dan-2024-Front2BEV-Augmented/"
+cl_augmented_dataset_path = "datasets/f2b-rgbd-aug_cl/"
+lbda_augmented_dataset_path = "datasets/f2b-rgbd-lbda/"
 
 
 # -----------------------------------------------------------------------------------
@@ -111,6 +123,16 @@ def create_rgbd_dataset():
 
     save_dataset(dataset, TRAIN, traffic_dataset_path, phase="train", augmented=False)
     save_dataset(dataset, VAL, traffic_dataset_path, phase="val", augmented=False)
+
+    save_dataset(
+        dataset, TRAIN, cl_augmented_dataset_path, phase="train", augmented="cl"
+    )
+    save_dataset(dataset, VAL, cl_augmented_dataset_path, phase="val", augmented=None)
+
+    save_dataset(
+        dataset, TRAIN, lbda_augmented_dataset_path, phase="train", augmented="lbda"
+    )
+    save_dataset(dataset, VAL, lbda_augmented_dataset_path, phase="val", augmented=None)
 
 
 # save_dataset(dataset, TEST, traffic_dataset_path, phase="test", augmented=False)
