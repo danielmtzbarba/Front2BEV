@@ -1,0 +1,21 @@
+#******************  Dataset options ******************
+ 
+name: front2bev-rgbd-lbda
+
+datadir: Front2BEV-RGBD/ 
+csv_path: datasets/f2b-rgbd-lbda
+
+# {0: 549407372, 1: 742737730, 2: 465443757, 3: 5633660, 4: 777481, 'N': 1764000000}
+
+# Prior probability of a positive prediction, used to initialise classifier
+prior:
+  - 0.31145   # non_drivable_area
+  - 0.42105   # drivable_area
+  - 0.26385   # walkway
+  - 0.00319   # car
+  - 0.00044   # pedestrian
+
+num_class: 5
+class_names: ['non-drivable', 'drivable', 'walkway', 'vehicle', 'pedestrian', 'roadlines']
+
+#******************  Dataset options ******************
