@@ -77,8 +77,8 @@ def post_proc_bev(test_paths, num_class, size):
 
 SIZE = (200, 196)
 
-DATASET_PATH = "/run/media/dan/dan/datasets/Front2BEV-RGBD"
-
+#DATASET_PATH = "/run/media/dan/dan/datasets/Front2BEV-RGBD"
+DATASET_PATH = "/media/aisyslab/dan/datasets/TEST-F2B-RGBD/"
 if __name__ == "__main__":
     test_paths = get_test_dirs(DATASET_PATH)
     n_cls = 5
