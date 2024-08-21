@@ -159,12 +159,13 @@ def create_f2b_mini():
     MAPS["Town04"] = [f"scene_{i}" for i in range(1, 21)]
 
     TRAIN = {}
-    TRAIN["Town01"] = [f"scene_{i}" for i in range(1, 15)]
+    TRAIN["Town01"] = [f"scene_{i}" for i in range(1, 10)]
 
     VAL = {}
-    VAL["Town01"] = ["scene_15"]
+    VAL["Town01"] = ["scene_10"]
 
     TEST = {}
+    TEST["Town01"] = ["scene_10"]
     TEST["Town02"] = ["scene_10"]
     TEST["Town03"] = ["scene_20"]
     TEST["Town04"] = ["scene_20"]
