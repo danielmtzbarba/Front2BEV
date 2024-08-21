@@ -89,10 +89,10 @@ def save_dataset(dataset, split_scenes, dataset_path, phase="train", augmented=F
 # -----------------------------------------------------------------------------------
 
  #DATADIR = "/run/media/dan/dan/datasets/Front2BEV-RGBD"
-DATADIR = "/media/aisyslab/dan/datasets/Front2BEV-RGBD"
+#DATADIR = "/media/aisyslab/dan/datasets/Front2BEV-RGBD"
 #DATADIR = "/home/dan/Data/datasets/Front2BEV-RGBD"
 
-# DATADIR = '/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV'
+DATADIR = '/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV'
 traffic_dataset_path = "datasets/f2b-rgbd/"
 cl_augmented_dataset_path = "datasets/f2b-rgbd-aug_cl/"
 lbda_augmented_dataset_path = "datasets/f2b-rgbd-lbda/"
@@ -151,9 +151,50 @@ def create_test_set():
     save_dataset(dataset, TEST, cl_augmented_dataset_path, phase="test", augmented=False)
     save_dataset(dataset, TEST, lbda_augmented_dataset_path, phase="test", augmented=False)
 
-# save_dataset(dataset, TEST, traffic_dataset_path, phase="test", augmented=False)
+def create_f2b_mini():
+    MAPS = {}
+    MAPS["Town01"] = [f"scene_{i}" for i in range(1, 16)]
+    MAPS["Town02"] = [f"scene_{i}" for i in range(1, 11)]
+    MAPS["Town03"] = [f"scene_{i}" for i in range(1, 21)]
+    MAPS["Town04"] = [f"scene_{i}" for i in range(1, 21)]
 
+    TRAIN = {}
+    TRAIN["Town01"] = [f"scene_{i}" for i in range(1, 15)]
+
+    VAL = {}
+    VAL["Town01"] = ["scene_15"]
+
+    TEST = {}
+    TEST["Town02"] = ["scene_10"]
+    TEST["Town03"] = ["scene_20"]
+    TEST["Town04"] = ["scene_20"]
+
+    dataset = Dataset(maps=MAPS)
+    dataset.get_dataset(DATADIR)
+    print("F2B-RGBD-MINI:", len(dataset))
+
+    traffic_dataset_path = "datasets/f2b-mini-rgbd/"
+    cl_augmented_dataset_path = "datasets/f2b-mini-rgbd-aug_cl/"
+    lbda_augmented_dataset_path = "datasets/f2b-mini-rgbd-lbda/"
+
+    save_dataset(dataset, TRAIN, traffic_dataset_path, phase="train", augmented=False)
+    save_dataset(dataset, VAL, traffic_dataset_path, phase="val", augmented=False)
+
+    save_dataset(
+        dataset, TRAIN, cl_augmented_dataset_path, phase="train", augmented="cl"
+    )
+    save_dataset(dataset, VAL, cl_augmented_dataset_path, phase="val", augmented=None)
+
+    save_dataset(
+        dataset, TRAIN, lbda_augmented_dataset_path, phase="train", augmented="lbda"
+    )
+    save_dataset(dataset, VAL, lbda_augmented_dataset_path, phase="val", augmented=None)
+
+    save_dataset(dataset, TEST, traffic_dataset_path, phase="test", augmented=False)
+    save_dataset(dataset, TEST, cl_augmented_dataset_path, phase="test", augmented=False)
+    save_dataset(dataset, TEST, lbda_augmented_dataset_path, phase="test", augmented=False)
+
+DATADIR = '/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Front2BEV-RGBD'
 
 if __name__ == "__main__":
-    #create_rgbd_dataset()
-    create_test_set()
+    create_f2b_mini()
