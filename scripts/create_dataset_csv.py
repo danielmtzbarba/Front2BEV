@@ -88,8 +88,9 @@ def save_dataset(dataset, split_scenes, dataset_path, phase="train", augmented=F
 
 # -----------------------------------------------------------------------------------
 
-# DATADIR = "/run/media/dan/dan/datasets/Front2BEV-RGBD"
-DATADIR = "/home/dan/Data/datasets/Front2BEV-RGBD"
+ #DATADIR = "/run/media/dan/dan/datasets/Front2BEV-RGBD"
+DATADIR = "/media/aisyslab/dan/datasets/Front2BEV-RGBD"
+#DATADIR = "/home/dan/Data/datasets/Front2BEV-RGBD"
 
 # DATADIR = '/home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV'
 traffic_dataset_path = "datasets/f2b-rgbd/"
@@ -134,9 +135,25 @@ def create_rgbd_dataset():
     )
     save_dataset(dataset, VAL, lbda_augmented_dataset_path, phase="val", augmented=None)
 
+def create_test_set():
+    MAPS = {}
+    MAPS["Town10HD"] = [f"scene_{i}" for i in range(1, 6)]
+
+    TEST = {}
+    TEST["Town10HD"] = [f"scene_{i}" for i in range(1, 6)]
+
+
+    dataset = Dataset(maps=MAPS)
+    dataset.get_dataset(DATADIR)
+    print("F2B-RGBD:", len(dataset))
+
+    save_dataset(dataset, TEST, traffic_dataset_path, phase="test", augmented=False)
+    save_dataset(dataset, TEST, cl_augmented_dataset_path, phase="test", augmented=False)
+    save_dataset(dataset, TEST, lbda_augmented_dataset_path, phase="test", augmented=False)
 
 # save_dataset(dataset, TEST, traffic_dataset_path, phase="test", augmented=False)
 
 
 if __name__ == "__main__":
-    create_rgbd_dataset()
+    #create_rgbd_dataset()
+    create_test_set()
