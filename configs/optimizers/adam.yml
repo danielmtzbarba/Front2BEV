@@ -1,5 +1,5 @@
 # optimizer
-optimizer: adam
+name: adam
 learning_rate: 0.0001
 weight_decay: 0.0001
 

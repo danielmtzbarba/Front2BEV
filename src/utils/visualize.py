@@ -1,13 +1,13 @@
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import transforms
-from matplotlib.cm import get_cmap
 import numpy as np
 from scipy import ndimage
 
 def colorise(tensor, cmap, vmin=None, vmax=None):
 
     if isinstance(cmap, str):
-        cmap = get_cmap(cmap)
+        cmap = matplotlib.colormaps[cmap]
     
     tensor = tensor.detach().cpu().float()
 

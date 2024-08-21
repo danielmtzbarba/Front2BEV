@@ -17,11 +17,10 @@ def get_console_args():
     parser = ArgumentParser()
     parser.add_argument('--experiment', default='test', 
                         help='name of experiment config to load')
-    parser.add_argument('--dataset', choices=['front2bev', 'front2bev-aug', 'front2bev-aug-cl'],
-                        default='front2bev', help='dataset to train on')
+    parser.add_argument('--dataset', default='front2bev', help='dataset to train on')
     parser.add_argument('--map_config', choices=['traffic', 'aug', 'aug_cl'], 
                         default='traffic', help='dataset map config')
-    parser.add_argument('--model', choices=['ved', 'pon'],
+    parser.add_argument('--model', choices=['ved', 'pon', 'rgved', 'rgved_2h'],
                         default='ved', help='model to train')
     parser.add_argument('--optimizer', choices=['sgd', 'adam'],
                         default='adam', help='optimizer')
@@ -67,12 +66,11 @@ def get_configuration(train=True):
     
     config.name = f'{config.name}-{config.map_config}-{config.model}-{config.optimizer}-{config.weight_mode}'
     config.logdir = os.path.join(config.logdir, config.name)
-
+    
     if train:
         create_experiment(config, args.resume)
     else:
         config.distributed = False
-
     # Finalize config
     config.freeze()
 

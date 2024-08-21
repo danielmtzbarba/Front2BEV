@@ -111,7 +111,7 @@ class Builder(object):
 # ----------------------------------------------------------------------------
 
     def attach2trainer(self):
-        if self._config.model == "ved":
+        if 'ved' in self._config.model:
             trainer = trainers.VedTrainer(self.model, self.criterion, 
                                 self._config, self._gpu_id)
             

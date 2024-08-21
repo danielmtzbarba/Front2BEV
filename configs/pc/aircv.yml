@@ -1,10 +1,9 @@
 #******************  Directory options ******************
 
-dataset_root: /home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/Dan-2024-Front2BEV/
-
+dataset_root: /home/aircv1/Data/Luis/aisyslab/Daniel/Datasets/
+datadir: Front2BEV-RGBD/
 # Directory to save experiment to
-logdir: /home/aircv1/Data/Luis/aisyslab/Daniel/results
-logdir: /home/aircv1/Data/Luis/aisyslab/Daniel/results/run4
+logdir: /home/aircv1/Data/Luis/aisyslab/Daniel/results/f2b-rgbd/
 
 # GPU Options
 distributed: True

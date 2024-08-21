@@ -1,11 +1,9 @@
 import os
 import numpy as np
 
-from dan.utils import save_pkl_file
+from deeplab.models import save_pkl_file
 
 from torch.utils.tensorboard import SummaryWriter
-
-from src.data.nuscenes.utils import NUSCENES_CLASS_NAMES
 
 from src.utils.visualize import colorise
 

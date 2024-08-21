@@ -1,4 +1,4 @@
-import os
+import os, cv2
 import torch
 import numpy as np
 from tqdm import tqdm
@@ -6,14 +6,22 @@ import matplotlib.pyplot as plt
 from time import process_time
 from PIL import Image  
 
+import src.data.front2bev.utils as utils
 import src.data.front2bev.bev as bev
 from src.data.front2bev.bev_classes import bev_class2color 
 from src.utils.visualize import bevAsRGB
 
+MASK = utils.setup_mask()
+
+MASK = cv2.resize(MASK, (200,196), interpolation=cv2.INTER_AREA)
+
 def plot(imgs):
     fig, ax = plt.subplots(1, 2)
     ax[0].imshow(imgs[0])
+    ax[0].axis("off")
+
     ax[1].imshow(imgs[1])
+    ax[1].axis("off")
     plt.show()  
 
 def binarize_mask(tensor):
@@ -47,9 +55,11 @@ def plot_results(i, logits, batch, thresh):
     cmap = bev_class2color
     labels =  bevAsRGB(labels.numpy(), 5, cmap)
     preds = bevAsRGB(preds.numpy(), 5, cmap)
-    Image.fromarray(labels.astype(np.uint8)).save(f"{i}-gt.jpg")
-    Image.fromarray(preds.astype(np.uint8)).save(f"{i}-pred.jpg")
-    plot([labels, preds])
+    labels = labels * np.expand_dims(MASK, 2)
+    preds = preds * np.expand_dims(MASK, 2)
+    Image.fromarray(labels.astype(np.uint8)).save(f"vis-test/gt/{i}-gt.jpg")
+    Image.fromarray(preds.astype(np.uint8)).save(f"vis-test/pred/{i}-pred.jpg")
+#    plot([labels, preds])
 
 def log_metrics(config, confusion):
     print('-' * 50, f'\nResults {config.name}:')
@@ -77,7 +87,7 @@ def test(tester, dataloader, config):
             metrics = tester.metrics(logits, batch)
 
             plot_results(i, logits, batch, 0.5)
-        
+            i += 1            
     log_metrics(config,  tester.cm)
     print("Mean inference time: ", inference_time/len(dataloader))        
     

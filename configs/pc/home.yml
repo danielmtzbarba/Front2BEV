@@ -1,13 +1,11 @@
 #******************  Directory options ******************
 
-dataset_root: /media/danielmtz/data/datasets/Dan-2024-Front2BEV/
-
+dataset_root: /home/danielmtz/Data/datasets/
 # Directory to save experiment to
-logdir: /media/danielmtz/data/logs
-logdir: /media/danielmtz/data/ckpts
+logdir: /home/danielmtz/Data/results/f2b-rgbd/
 
 # GPU Options
-distributed: False
+distributed: True 
 num_gpus: 1
 
 #******************  Directory options ******************

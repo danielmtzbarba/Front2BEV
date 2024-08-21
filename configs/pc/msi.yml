@@ -1,12 +1,11 @@
 #******************  Directory options ******************
 
-dataset_root: /media/dan/data/datasets/Dan-2024-Front2BEV/
-
+dataset_root: /home/dan/Data/datasets/
 # Directory to save experiment to
-logdir: /media/dan/data/results
+logdir: /home/dan/Data/results/f2b-rgbd/
 
 # GPU Options
-distributed: False
+distributed: False 
 num_gpus: 1
 
 #******************  Directory options ******************
