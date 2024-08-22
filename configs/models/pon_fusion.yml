@@ -1,0 +1,31 @@
+#******* Roddick et al. PON config *******
+name: pon_fusion
+rgbd: True
+
+num_class: 5
+
+tfm_channels: 64
+ymin: -2
+ymax: 4
+focal_length: 630.
+topdown:
+  channels: 128
+  layers: [4, 4]
+  strides: [1, 2]
+  blocktype: bottleneck
+
+# Whether to use Bayesian classifier
+bayesian: False
+
+find_unused_params: False
+
+#******* Roddick et al. PON config *******
+
+# Binary cross entropy loss weight
+xent_weight: 1.0
+
+# Max entropy uncertainty loss weight
+uncert_weight: 0.001
+
+map_extents: [-25., 1., 25., 50.]
+map_resolution: 0.25
